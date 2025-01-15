@@ -16,7 +16,7 @@ terraform {
 }
 
 provider "kubernetes" {
-  config_path = "${path_relative_from_include()}/../kubeconfig.yaml"
+  config_path = "${get_path_to_repo_root()}/kubeconfig.yaml"
   config_context = "nl"
 
   # NOTE: in case of loss of access to tailscale-operator, use this.
@@ -25,7 +25,7 @@ provider "kubernetes" {
 
 provider "helm" {
   kubernetes {
-    config_path = "${path_relative_from_include()}/../kubeconfig.yaml"
+    config_path = "${get_path_to_repo_root()}/kubeconfig.yaml"
     config_context = "nl"
 
     # NOTE: read the notes in the "kubernetes" provider.
@@ -41,8 +41,8 @@ generate "backend" {
   contents = <<EOF
 terraform {
   backend "kubernetes" {
-    secret_suffix = "terraform-state"
-    config_path   = "${path_relative_from_include()}/../kubeconfig.yaml"
+    secret_suffix = "${basename(get_working_dir())}-terraform-state"
+    config_path   = "${get_path_to_repo_root()}/kubeconfig.yaml"
     config_context = "nl"
 
     # NOTE: read the notes in the "kubernetes" provider.

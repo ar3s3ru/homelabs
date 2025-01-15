@@ -3,6 +3,6 @@ include "root" {
 }
 
 dependency "tailscale" { # Necessary for Ingress class name.
-  config_path  = "../../networking/tailscale"
+  config_path  = "${get_path_to_repo_root()}/nl/networking/tailscale"
   skip_outputs = true
 }

@@ -3,11 +3,11 @@ include "root" {
 }
 
 dependency "tailscale" { # Necessary for Ingress class name.
-  config_path  = "../../networking/tailscale"
+  config_path  = "${get_path_to_repo_root()}/nl/networking/tailscale"
   skip_outputs = true
 }
 
 dependency "prometheus" { # Necessary for data source.
-  config_path  = "../prometheus"
+  config_path  = "${get_path_to_repo_root()}/nl/telemetry/prometheus"
   skip_outputs = true
 }
