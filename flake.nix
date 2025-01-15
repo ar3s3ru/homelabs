@@ -12,16 +12,25 @@
             inherit system;
             config.allowUnfree = true;
           };
+
+          realpath = "${pkgs.coreutils}/bin/realpath";
         in
         {
-          devShells.default = with pkgs; mkShellNoCC {
+          devShell = with pkgs; mkShellNoCC {
             packages = [
               nil
+              nixpkgs-fmt
               gnumake
               git-crypt
               terraform
               terragrunt
+              kubectl
+              k9s
             ];
+
+            shellHook = ''
+              export KUBECONFIG="$(${realpath} ./nl/kubeconfig.yaml)"
+            '';
           };
         }
       );

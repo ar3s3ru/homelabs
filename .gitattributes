@@ -1,0 +1,10 @@
+# Hiding the Kubernetes config file as they may contain private secrets
+# when setting up the cluster initially.
+**/kubeconfig.yaml filter=git-crypt diff=git-crypt
+
+# For now, we apply Terraform manually.
+# The state and its backup should be encrypted to avoid secrets leaking.
+**/terraform.tfstate* filter=git-crypt diff=git-crypt
+
+# Any variable secrets to pass to a Terraform module should be encrypted.
+**/secrets.auto.tfvars filter=git-crypt diff=git-crypt
