@@ -26,10 +26,11 @@
               terragrunt
               kubectl
               k9s
+              kubernetes-helm
             ];
 
             shellHook = ''
-              export KUBECONFIG="$(${realpath} ./nl/kubeconfig.yaml)"
+              export KUBECONFIG="$(${realpath} ./kubeconfig.yaml)"
             '';
           };
         }
