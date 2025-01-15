@@ -41,7 +41,7 @@ generate "backend" {
   contents = <<EOF
 terraform {
   backend "kubernetes" {
-    secret_suffix = "${basename(get_working_dir())}-terraform-state"
+    secret_suffix = "${basename(get_working_dir())}"
     config_path   = "${get_path_to_repo_root()}/kubeconfig.yaml"
     config_context = "nl"
 
