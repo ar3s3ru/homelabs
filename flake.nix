@@ -31,6 +31,10 @@
 
             shellHook = ''
               export KUBECONFIG="$(${realpath} ./kubeconfig.yaml)"
+
+              # NOTE: since the pass-operator chart is not public, we add it here as a submodule.
+              # FIXME: is there a better way to do this?
+              git submodule update --init --recursive
             '';
           };
         }

@@ -1,0 +1,3 @@
+[submodule "hack/pass-operator"]
+	path = hack/pass-operator
+	url = https://github.com/premiscale/pass-operator
