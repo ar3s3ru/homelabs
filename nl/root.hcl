@@ -34,3 +34,20 @@ provider "helm" {
 }
   EOF
 }
+
+generate "backend" {
+  path      = "backend.tf"
+  if_exists = "overwrite_terragrunt"
+  contents = <<EOF
+terraform {
+  backend "kubernetes" {
+    secret_suffix = "terraform-state"
+    config_path   = "${path_relative_from_include()}/../kubeconfig.yaml"
+    config_context = "nl"
+
+    # NOTE: read the notes in the "kubernetes" provider.
+    # config_context = "nl-private-admin-init"
+  }
+}
+EOF
+}
