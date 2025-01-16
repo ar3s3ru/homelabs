@@ -55,7 +55,6 @@ resource "helm_release" "home_assistant" {
         replicas = 1
 
         annotations = {
-          # TODO(ar3s3ru): install https://github.com/stakater/Reloader?
           "reloader.stakater.com/auto" = "true"
         }
 
