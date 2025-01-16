@@ -41,12 +41,13 @@ resource "helm_release" "home_assistant" {
   values = [yamlencode({
     defaultPodOptions = {
       hostNetwork = true # Required for certain network features.
-      securityContext = {
-        runAsUser           = 1000
-        runAsGroup          = 1000
-        fsGroup             = 1000
-        fsGroupChangePolicy = "OnRootMismatch"
-      }
+      # NOTE: seems like this doesn't play well with custom components sadly...
+      # securityContext = {
+      #   runAsUser           = 1000
+      #   runAsGroup          = 1000
+      #   fsGroup             = 1000
+      #   fsGroupChangePolicy = "OnRootMismatch"
+      # }
     }
 
     controllers = {
