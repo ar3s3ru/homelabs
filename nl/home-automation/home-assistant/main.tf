@@ -19,6 +19,17 @@ resource "kubernetes_persistent_volume_v1" "home_assistant_config" {
   }
 }
 
+resource "kubernetes_config_map_v1" "home_assistant_configuration" {
+  metadata {
+    name      = "home-assistant-configuration"
+    namespace = "home-automation"
+  }
+
+  data = {
+    "configuration.yaml" = file("./configuration.yaml")
+  }
+}
+
 resource "helm_release" "home_assistant" {
   name            = "home-assistant"
   repository      = "https://bjw-s.github.io/helm-charts"
@@ -104,13 +115,23 @@ resource "helm_release" "home_assistant" {
       }
     }
 
-
-
     persistence = {
       tmp = {
         enabled      = true
         type         = "emptyDir"
         globalMounts = [{ path = "/tmp" }]
+      }
+      udev = { # This is used for access to Bluetooth.
+        enabled      = true
+        type         = "hostPath"
+        hostPath     = "/run/udev"
+        globalMounts = [{ path = "/run/udev" }]
+      }
+      dbus = { # This is used for access to Bluetooth.
+        enabled      = true
+        type         = "hostPath"
+        hostPath     = "/run/dbus"
+        globalMounts = [{ path = "/run/dbus", readOnly = true }]
       }
       config = {
         enabled      = true
@@ -119,6 +140,12 @@ resource "helm_release" "home_assistant" {
         size         = "10G"
         globalMounts = [{ path = "/config" }]
         volumeName   = kubernetes_persistent_volume_v1.home_assistant_config.metadata[0].name
+      }
+      configuration = {
+        enabled      = true
+        type         = "configMap"
+        name         = kubernetes_config_map_v1.home_assistant_configuration.metadata[0].name
+        globalMounts = [{ path = "/config/configuration.yaml", subPath = "configuration.yaml", readOnly = true }]
       }
     }
   })]
