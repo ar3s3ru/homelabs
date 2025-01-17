@@ -10,10 +10,6 @@ data "authentik_property_mapping_provider_scope" "oauth_scope_profile" {
   managed = "goauthentik.io/providers/oauth2/scope-profile"
 }
 
-data "authentik_property_mapping_provider_scope" "oauth_scope_groups" {
-  managed = "goauthentik.io/providers/oauth2/scope-groups"
-}
-
 variable "home_assistant_host" {
   type        = string
   description = "Host address for the Home Assistant instance"

@@ -21,6 +21,6 @@ variable "authentik_token" {
 provider "random" {}
 
 provider "authentik" {
-  url   = "https://nl-auth.tail2ff90.ts.net"
+  url   = "https://auth.nl.ar3s3ru.dev"
   token = var.authentik_token
 }

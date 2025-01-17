@@ -52,10 +52,10 @@ resource "helm_release" "authentik" {
         serviceMonitor = { enabled = true }
 
         ingress = {
-          enabled          = true
-          ingressClassName = "tailscale"
-          hosts            = ["nl-auth.tail2ff90.ts.net"]
-          tls              = [{ hosts = ["nl-auth.tail2ff90.ts.net"] }]
+          enabled     = true
+          annotations = { "cert-manager.io/cluster-issuer" = "acme" }
+          hosts       = ["auth.nl.ar3s3ru.dev"]
+          tls         = [{ hosts = ["auth.nl.ar3s3ru.dev"], secretName = "authentik-tls" }]
         }
       }
 
