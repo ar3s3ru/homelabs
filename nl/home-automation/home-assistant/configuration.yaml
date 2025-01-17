@@ -2,6 +2,8 @@
 default_config: {}
 logger:
   default: info
+  logs:
+    custom_components.auth_oidc: debug
 http:
   cors_allowed_origins:
     - https://nl-hass.tail2ff90.ts.net
@@ -17,8 +19,11 @@ auth_oidc:
   id_token_signing_alg: "RS256"
   features:
     automatic_user_linking: true
-    automatic_person_creation: false
+    automatic_person_creation: true
   claims:
     display_name: name
-    username: preferred_username
+    username: email
     groups: groups
+  roles:
+    admin: home-admin
+    user: home-user

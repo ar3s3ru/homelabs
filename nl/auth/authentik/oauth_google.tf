@@ -16,6 +16,11 @@ resource "authentik_source_oauth" "name" {
   authentication_flow = data.authentik_flow.default_source_authentication.id
   enrollment_flow     = data.authentik_flow.default_source_enrollment.id
 
+  access_token_url  = "https://oauth2.googleapis.com/token"
+  authorization_url = "https://accounts.google.com/o/oauth2/v2/auth"
+  oidc_jwks_url     = "https://www.googleapis.com/oauth2/v3/certs"
+  profile_url       = "https://openidconnect.googleapis.com/v1/userinfo"
+
   provider_type   = "google"
   consumer_key    = var.google_oauth_client_id
   consumer_secret = var.google_oauth_client_secret

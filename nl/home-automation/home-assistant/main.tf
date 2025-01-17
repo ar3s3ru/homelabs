@@ -30,6 +30,11 @@ variable "oauth_client_secret" {
   sensitive   = true
 }
 
+variable "home_assistant_hostname" {
+  type        = string
+  description = "Ingress hostname for Home Assistant on Tailscale"
+}
+
 locals {
   configuration = yamldecode(file("./configuration.yaml"))
   configuration_auth_oidc = merge(local.configuration.auth_oidc, {
@@ -42,7 +47,7 @@ locals {
   })
 }
 
-resource "kubernetes_secret_v1" "home_assistant_configuration" {
+resource "kubernetes_config_map_v1" "home_assistant_configuration" {
   metadata {
     name      = "home-assistant-configuration"
     namespace = "home-automation"
@@ -123,7 +128,7 @@ resource "helm_release" "home_assistant" {
         className = "tailscale"
 
         hosts = [{
-          host = "nl-hass",
+          host = var.home_assistant_hostname,
           paths = [{
             path     = "/",
             pathType = "Prefix",
@@ -134,7 +139,7 @@ resource "helm_release" "home_assistant" {
           }]
         }]
 
-        tls = [{ hosts = ["nl-hass"] }]
+        tls = [{ hosts = [var.home_assistant_hostname] }]
       }
     }
 
@@ -166,8 +171,8 @@ resource "helm_release" "home_assistant" {
       }
       configuration = {
         enabled      = true
-        type         = "secret"
-        name         = kubernetes_secret_v1.home_assistant_configuration.metadata[0].name
+        type         = "configMap"
+        name         = kubernetes_config_map_v1.home_assistant_configuration.metadata[0].name
         globalMounts = [{ path = "/config/configuration.yaml", subPath = "configuration.yaml", readOnly = true }]
       }
     }

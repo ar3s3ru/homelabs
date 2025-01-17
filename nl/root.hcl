@@ -38,7 +38,7 @@ provider "helm" {
 generate "backend" {
   path      = "backend.tf"
   if_exists = "overwrite_terragrunt"
-  contents = <<EOF
+  contents  = <<EOF
 terraform {
   backend "kubernetes" {
     secret_suffix = "${basename(get_working_dir())}"
@@ -50,4 +50,14 @@ terraform {
   }
 }
 EOF
+}
+
+locals {
+  tailscale_domain        = "tail2ff90.ts.net"
+  home_assistant_hostname = "nl-hass"
+}
+
+inputs = {
+  home_assistant_hostname = local.home_assistant_hostname
+  home_assistant_host     = "${local.home_assistant_hostname}.${local.tailscale_domain}"
 }

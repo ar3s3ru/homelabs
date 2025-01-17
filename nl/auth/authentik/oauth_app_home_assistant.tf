@@ -10,6 +10,15 @@ data "authentik_property_mapping_provider_scope" "oauth_scope_profile" {
   managed = "goauthentik.io/providers/oauth2/scope-profile"
 }
 
+data "authentik_property_mapping_provider_scope" "oauth_scope_groups" {
+  managed = "goauthentik.io/providers/oauth2/scope-groups"
+}
+
+variable "home_assistant_host" {
+  type        = string
+  description = "Host address for the Home Assistant instance"
+}
+
 resource "authentik_provider_oauth2" "home_assistant" {
   name                       = "Home Assistant"
   client_id                  = "home-assistant"
@@ -22,7 +31,7 @@ resource "authentik_provider_oauth2" "home_assistant" {
   signing_key                = data.authentik_certificate_key_pair.self_signed.id
 
   allowed_redirect_uris = [{
-    url           = "https://nl-hass.tail2ff90.ts.net/auth/oidc/callback"
+    url           = "https://${var.home_assistant_host}/auth/oidc/callback"
     matching_mode = "strict"
   }]
 
