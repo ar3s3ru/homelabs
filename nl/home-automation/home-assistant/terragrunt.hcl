@@ -26,3 +26,12 @@ dependency "govee2mqtt" {
   config_path  = "${get_path_to_repo_root()}/nl/home-automation/govee2mqtt"
   skip_outputs = true
 }
+
+dependency "authentik" {
+  config_path = "${get_path_to_repo_root()}/nl/auth/authentik"
+}
+
+inputs = {
+  oauth_client_id     = dependency.authentik.outputs.home_assistant_client_id
+  oauth_client_secret = dependency.authentik.outputs.home_assistant_client_secret
+}

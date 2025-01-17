@@ -19,14 +19,37 @@ resource "kubernetes_persistent_volume_v1" "home_assistant_config" {
   }
 }
 
-resource "kubernetes_config_map_v1" "home_assistant_configuration" {
+variable "oauth_client_id" {
+  type        = string
+  description = "OAuth client ID to use for Home Assistant authentication"
+}
+
+variable "oauth_client_secret" {
+  type        = string
+  description = "OAuth client ID to use for Home Assistant authentication"
+  sensitive   = true
+}
+
+locals {
+  configuration = yamldecode(file("./configuration.yaml"))
+  configuration_auth_oidc = merge(local.configuration.auth_oidc, {
+    client_id     = var.oauth_client_id
+    client_secret = var.oauth_client_secret
+  })
+
+  final_configuration = merge(local.configuration, {
+    auth_oidc = local.configuration_auth_oidc
+  })
+}
+
+resource "kubernetes_secret_v1" "home_assistant_configuration" {
   metadata {
     name      = "home-assistant-configuration"
     namespace = "home-automation"
   }
 
   data = {
-    "configuration.yaml" = file("./configuration.yaml")
+    "configuration.yaml" = yamlencode(local.final_configuration)
   }
 }
 
@@ -143,8 +166,8 @@ resource "helm_release" "home_assistant" {
       }
       configuration = {
         enabled      = true
-        type         = "configMap"
-        name         = kubernetes_config_map_v1.home_assistant_configuration.metadata[0].name
+        type         = "secret"
+        name         = kubernetes_secret_v1.home_assistant_configuration.metadata[0].name
         globalMounts = [{ path = "/config/configuration.yaml", subPath = "configuration.yaml", readOnly = true }]
       }
     }

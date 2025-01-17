@@ -6,6 +6,7 @@ provider "registry.terraform.io/goauthentik/authentik" {
   constraints = "2024.12.0"
   hashes = [
     "h1:0o3y2j790uXjLbMyr/DvSs9b69oHLDekl5txp4lBZuE=",
+    "h1:lMU2fRhaoBA9wa/CRHQNZsuwzRUtYo1TbN/+VohbYac=",
     "zh:00e0f693660c75f66660a40626dfe2f1d1f4798adeccbecd3464e06652ef20b4",
     "zh:1469a77658b14bf40d90aaa3d26ce614427281d2fe5d762b8f788804b2ae5d25",
     "zh:19123fd8017728023ed776a33df02d06f7572b0825644e516d0a576e69822ef1",
@@ -28,6 +29,7 @@ provider "registry.terraform.io/hashicorp/helm" {
   constraints = "2.17.0"
   hashes = [
     "h1:K5FEjxvDnxb1JF1kG1xr8J3pNGxoaR3Z0IBG9Csm/Is=",
+    "h1:kQMkcPVvHOguOqnxoEU2sm1ND9vCHiT8TvZ2x6v/Rsw=",
     "zh:06fb4e9932f0afc1904d2279e6e99353c2ddac0d765305ce90519af410706bd4",
     "zh:104eccfc781fc868da3c7fec4385ad14ed183eb985c96331a1a937ac79c2d1a7",
     "zh:129345c82359837bb3f0070ce4891ec232697052f7d5ccf61d43d818912cf5f3",
@@ -48,6 +50,7 @@ provider "registry.terraform.io/hashicorp/kubernetes" {
   constraints = "2.35.1"
   hashes = [
     "h1:Av0Wk8g2XjY2oap7nyWNHEgfCRfphdJvrkqJjEM2ZKM=",
+    "h1:zgXeWvp4//Ry+4glwNrLMpPFOU8QBQlARNmR9WCNe9o=",
     "zh:12212ca5ae47823ce14bfafb909eeb6861faf1e2435fb2fc4a8b334b3544b5f5",
     "zh:3f49b3d77182df06b225ab266667de69681c2e75d296867eb2cf06a8f8db768c",
     "zh:40832494d19f8a2b3cd0c18b80294d0b23ef6b82f6f6897b5fe00248a9997460",
@@ -68,6 +71,7 @@ provider "registry.terraform.io/hashicorp/random" {
   constraints = "3.6.3"
   hashes = [
     "h1:Fnaec9vA8sZ8BXVlN3Xn9Jz3zghSETIKg7ch8oXhxno=",
+    "h1:zG9uFP8l9u+yGZZvi5Te7PV62j50azpgwPunq2vTm1E=",
     "zh:04ceb65210251339f07cd4611885d242cd4d0c7306e86dda9785396807c00451",
     "zh:448f56199f3e99ff75d5c0afacae867ee795e4dfda6cb5f8e3b2a72ec3583dd8",
     "zh:4b4c11ccfba7319e901df2dac836b1ae8f12185e37249e8d870ee10bb87a13fe",
