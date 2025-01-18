@@ -13,3 +13,35 @@ resource "helm_release" "metallb" {
     }
   })]
 }
+
+resource "kubernetes_manifest" "ip_address_pool" {
+  depends_on = [helm_release.metallb]
+
+  manifest = yamldecode(<<EOF
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: default
+  namespace: networking
+spec:
+  addresses:
+  - 192.168.2.200-192.168.2.253
+  EOF
+  )
+}
+
+resource "kubernetes_manifest" "bgp_advertisement" {
+  depends_on = [kubernetes_manifest.ip_address_pool]
+
+  manifest = yamldecode(<<EOF
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: l2-advertisement
+  namespace: networking
+spec:
+  ipAddressPools:
+  - default
+  EOF
+  )
+}
