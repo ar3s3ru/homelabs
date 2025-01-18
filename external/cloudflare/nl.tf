@@ -1,6 +1,7 @@
 resource "cloudflare_record" "nl_records" {
   for_each = toset([
-    "auth.nl"
+    "auth.nl",
+    "jellyfin.nl"
   ])
 
   name    = each.key
