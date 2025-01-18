@@ -11,10 +11,10 @@ http:
   trusted_proxies:
     - "127.0.0.1"
     - "::1"
-    - "10.42.0.73"
+    - "10.42.0.0/24"
     - "100.0.0.0/8"
 auth_oidc:
-  discovery_url: "https://nl-auth.tail2ff90.ts.net/application/o/home-assistant/.well-known/openid-configuration"
+  discovery_url: "https://auth.nl.ar3s3ru.dev/application/o/home-assistant/.well-known/openid-configuration"
   display_name: "Log in with Authentik"
   id_token_signing_alg: "RS256"
   features:
