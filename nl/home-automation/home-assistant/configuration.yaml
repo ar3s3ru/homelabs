@@ -26,4 +26,4 @@ auth_oidc:
     groups: groups
   roles:
     admin: home-admin
-    user: home-user
+    user: home-member
