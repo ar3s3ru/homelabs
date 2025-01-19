@@ -1,0 +1,43 @@
+---
+image:
+  tag: v1.122.2
+
+server:
+  ingress:
+    main:
+      enabled: true
+      ingressClassName: tailscale
+      annotations:
+        # Exposes the service to the internet through Tailscale Funnel
+        tailscale.com/funnel: "true"
+      hosts:
+        - host: immich
+          paths:
+            - path: "/"
+      tls:
+        - hosts:
+            - immich
+
+postgresql:
+  enabled: true
+  primary:
+    # NOTE: after updating to v1.122.2 the pg node keeps crashing with OOMKilled.
+    resources:
+      requests:
+        memory: 512Mi
+      limits:
+        memory: 1024Mi
+
+redis:
+  enabled: true
+
+immich:
+  persistence:
+    library:
+      existingClaim: immich-pvc
+  metrics:
+    enabled: true
+  configuration:
+    logging:
+      enabled: true
+      level: log
