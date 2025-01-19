@@ -1,0 +1,49 @@
+---
+prometheus:
+  prometheusSpec:
+    retention: 14d
+    retentionSize: 37GB
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 35Gi
+          # Binds this Volume Claim to the telemetry PV, defined
+          # in the Terraform code.
+          volumeName: "telemetry-pv"
+
+    # This config block allows Prometheus to scrape any Monitor or Rule
+    # in all namespaces, not just the namespace where the stack is deployed.
+    podMonitorNamespaceSelector:
+      any: true
+    podMonitorSelector: {}
+    podMonitorSelectorNilUsesHelmValues: false
+    ruleNamespaceSelector:
+      any: true
+    ruleSelector: {}
+    ruleSelectorNilUsesHelmValues: false
+    serviceMonitorNamespaceSelector:
+      any: true
+    serviceMonitorSelector: {}
+    serviceMonitorSelectorNilUsesHelmValues: false
+
+  ingress:
+    enabled: true
+    ingressClassName: tailscale
+    hosts:
+      - it-prometheus
+    tls:
+      - hosts:
+          - it-prometheus
+
+grafana:
+  ingress:
+    enabled: true
+    ingressClassName: tailscale
+    hosts:
+      - it-grafana
+    tls:
+      - hosts:
+          - it-grafana
