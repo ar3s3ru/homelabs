@@ -118,34 +118,6 @@ resource "helm_release" "jellyfin" {
     #   serviceMonitor = { enabled = true }
     # }
 
-    volumes = [
-      {
-        enabled = true
-        name    = "hw-accel-dri"
-        type    = "hostPath"
-        hostPath = {
-          path = "/dev/dri/renderD128"
-        }
-      },
-      # {
-      #   name      = "sso-auth-config"
-      #   type      = "configMap"
-      #   configMap = { name = kubernetes_config_map_v1.jellyfin_sso_auth_config.metadata[0].name }
-      # }
-    ]
-
-    volumeMounts = [
-      {
-        name      = "hw-accel-dri"
-        mountPath = "/dev/dri/renderD128"
-      },
-      # {
-      #   name      = "sso-auth-config"
-      #   mountPath = "/config/plugins/configurations/SSO-Auth.xml"
-      #   subPath   = "SSO-Auth.xml"
-      # }
-    ]
-
     persistence = {
       config = {
         enabled    = true
