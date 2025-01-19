@@ -58,6 +58,8 @@ locals {
 }
 
 inputs = {
+  authentik_host          = "auth.nl.ar3s3ru.dev"
   home_assistant_hostname = local.home_assistant_hostname
   home_assistant_host     = "${local.home_assistant_hostname}.${local.tailscale_domain}"
+  jellyfin_host           = "jellyfin.nl.ar3s3ru.dev"
 }
