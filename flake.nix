@@ -27,6 +27,7 @@
               kubectl
               k9s
               kubernetes-helm
+              tfk8s
             ];
 
             shellHook = ''
