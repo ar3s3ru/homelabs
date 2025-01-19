@@ -14,18 +14,12 @@ terraform {
 
 provider "kubernetes" {
   config_path = "../../../kubeconfig.yaml"
-  config_context = "nl"
-
-  # NOTE: in case of loss of access to tailscale-operator, use this.
-  # config_context = "nl-private-admin-init"
+  config_context = var.kubernetes_context
 }
 
 provider "helm" {
   kubernetes {
     config_path = "../../../kubeconfig.yaml"
-    config_context = "nl"
-
-    # NOTE: read the notes in the "kubernetes" provider.
-    # config_context = "nl-private-admin-init"
+    config_context = var.kubernetes_context
   }
 }

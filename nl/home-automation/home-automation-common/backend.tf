@@ -4,8 +4,5 @@ terraform {
     secret_suffix = "home-automation-common"
     config_path   = "../../../kubeconfig.yaml"
     config_context = "nl"
-
-    # NOTE: read the notes in the "kubernetes" provider.
-    # config_context = "nl-private-admin-init"
   }
 }

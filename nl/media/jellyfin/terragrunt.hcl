@@ -2,6 +2,10 @@ include "root" {
   path = find_in_parent_folders("root.hcl")
 }
 
+include "cluster" {
+  path = find_in_parent_folders("cluster.hcl")
+}
+
 dependency "cloudflare" { # Necessary for public CNAME records.
   config_path  = "${get_path_to_repo_root()}/external/cloudflare"
   skip_outputs = true
@@ -18,7 +22,7 @@ dependency "intel-gpu" { # Necessary for hardware acceleration.
 }
 
 dependency "authentik" { # Necessary for authentication.
-  config_path  = "${get_path_to_repo_root()}/nl/auth/authentik"
+  config_path = "${get_path_to_repo_root()}/nl/auth/authentik"
 }
 
 inputs = {

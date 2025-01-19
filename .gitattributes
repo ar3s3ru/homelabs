@@ -7,3 +7,8 @@
 
 # Any secret files should be encrypted.
 **/secrets/** filter=git-crypt diff=git-crypt
+
+# Mark Terragrunt-generated files as generated.
+**/backend.tf linguist-generated=true
+**/provider_override.tf linguist-generated=true
+**/provider_variables.tf linguist-generated=true

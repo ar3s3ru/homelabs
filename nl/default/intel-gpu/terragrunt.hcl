@@ -2,6 +2,10 @@ include "root" {
   path = find_in_parent_folders("root.hcl")
 }
 
+include "cluster" {
+  path = find_in_parent_folders("cluster.hcl")
+}
+
 dependency "cert-manager" { # Necessary for TLS certificates.
   config_path  = "${get_path_to_repo_root()}/nl/networking/cert-manager"
   skip_outputs = true
