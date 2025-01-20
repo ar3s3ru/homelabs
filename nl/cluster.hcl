@@ -19,6 +19,7 @@ locals {
 
 inputs = {
   kubernetes_context      = "nl"
+  tailscale_domain        = local.tailscale_domain
   authentik_host          = "auth.nl.ar3s3ru.dev"
   home_assistant_hostname = local.home_assistant_hostname
   home_assistant_host     = "${local.home_assistant_hostname}.${local.tailscale_domain}"
