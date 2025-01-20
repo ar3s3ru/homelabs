@@ -19,4 +19,5 @@ locals {
 inputs = {
   kubernetes_context = "it"
   authentik_host     = "auth.nl.ar3s3ru.dev"
+  jellyfin_host      = "jellyfin.it.ar3s3ru.dev"
 }
