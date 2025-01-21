@@ -1,31 +1,5 @@
-locals {
-  webui_port      = 8080
-  torrenting_port = 6881
-}
-
-resource "kubernetes_persistent_volume_v1" "qbittorrent_downloads" {
-  metadata {
-    name = "qbittorrent-downloads"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-
-    capacity = {
-      storage = "50G"
-    }
-
-    persistent_volume_source {
-      host_path {
-        path = "/home/k3s/media/qbittorrent"
-      }
-    }
-  }
-}
-
-resource "helm_release" "qbittorrent" {
-  name             = "qbittorrent"
+resource "helm_release" "sonarr" {
+  name             = "sonarr"
   repository       = "https://bjw-s.github.io/helm-charts"
   chart            = "app-template"
   namespace        = "media"
@@ -55,15 +29,13 @@ resource "helm_release" "qbittorrent" {
         containers = {
           main = {
             image = {
-              repository = "ghcr.io/linuxserver/qbittorrent"
-              tag        = "5.0.3"
+              repository = "ghcr.io/linuxserver/sonarr"
+              tag        = "4.0.12"
             }
             env = {
-              TZ              = "Europe/Amsterdam"
-              PGUID           = 1000
-              PGID            = 1000
-              WEBUI_PORT      = local.webui_port
-              TORRENTING_PORT = local.torrenting_port
+              TZ    = "Europe/Amsterdam"
+              PGUID = 1000
+              PGID  = 1000
             }
             probes = {
               # FIXME(ar3s3ru): find a way to enable these?
@@ -82,25 +54,7 @@ resource "helm_release" "qbittorrent" {
         type       = "ClusterIP"
         ports = {
           http = {
-            port = local.webui_port
-          }
-        }
-      }
-      bittorrent = {
-        controller = "main"
-        type       = "LoadBalancer"
-        ports = {
-          bittorrent-tcp = {
-            enabled    = true
-            port       = local.torrenting_port
-            protocol   = "TCP"
-            targetPort = local.torrenting_port
-          }
-          bittorrent-udp = {
-            enabled    = true
-            port       = local.torrenting_port
-            protocol   = "UDP"
-            targetPort = local.torrenting_port
+            port = 8989
           }
         }
       }
@@ -112,7 +66,7 @@ resource "helm_release" "qbittorrent" {
         className = "tailscale"
 
         hosts = [{
-          host = "nl-torrent",
+          host = "nl-sonarr",
           paths = [{
             path     = "/",
             pathType = "Prefix",
@@ -123,7 +77,7 @@ resource "helm_release" "qbittorrent" {
           }]
         }]
 
-        tls = [{ hosts = ["nl-torrent"] }]
+        tls = [{ hosts = ["nl-sonarr"] }]
       }
     }
 
@@ -132,16 +86,22 @@ resource "helm_release" "qbittorrent" {
         enabled      = true
         type         = "persistentVolumeClaim"
         accessMode   = "ReadWriteOnce"
-        size         = "50M"
+        size         = "100M"
         globalMounts = [{ path = "/config" }]
+      }
+      # NOTE: using the TRaSH guide on directory structure.
+      # Source: https://trash-guides.info/File-and-Folder-Structure/How-to-set-up/Docker/
+      media = {
+        enabled      = true
+        type         = "hostPath"
+        hostPath     = "/home/k3s/media/jellyfin"
+        globalMounts = [{ path = "/data/media" }]
       }
       downloads = {
         enabled      = true
-        type         = "persistentVolumeClaim"
-        accessMode   = "ReadWriteOnce"
-        size         = "50G"
+        type         = "hostPath"
+        hostPath     = "/home/k3s/media/qbittorrent"
         globalMounts = [{ path = "/data/torrents" }]
-        volumeName   = kubernetes_persistent_volume_v1.qbittorrent_downloads.metadata[0].name
       }
     }
   })]

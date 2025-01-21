@@ -10,6 +10,7 @@ module "cloudflare_ddns" {
   api_token            = var.cloudflare_api_token
   domains = [
     "auth.nl.ar3s3ru.dev",
-    "jellyfin.nl.ar3s3ru.dev"
+    "jellyfin.nl.ar3s3ru.dev",
+    "jellyseerr.nl.ar3s3ru.dev"
   ]
 }
