@@ -8,7 +8,7 @@ resource "helm_release" "emqx" {
   cleanup_on_fail = true
 
   values = [yamlencode({
-    replicaCount = 3
+    replicaCount = 1
     recreatePods = true
 
     emqxConfig = {

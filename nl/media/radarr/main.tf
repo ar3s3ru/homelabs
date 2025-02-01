@@ -1,7 +1,5 @@
 resource "helm_release" "radarr" {
-  for_each = set(["1080p", "2160p"])
-
-  name             = "radarr-${each.key}"
+  name             = "radarr"
   repository       = "https://bjw-s.github.io/helm-charts"
   chart            = "app-template"
   namespace        = "media"
@@ -68,7 +66,7 @@ resource "helm_release" "radarr" {
         className = "tailscale"
 
         hosts = [{
-          host = "nl-radarr-${each.key}",
+          host = "nl-radarr",
           paths = [{
             path     = "/",
             pathType = "Prefix",
@@ -79,7 +77,7 @@ resource "helm_release" "radarr" {
           }]
         }]
 
-        tls = [{ hosts = ["nl-radarr-${each.key}"] }]
+        tls = [{ hosts = ["nl-radarr"] }]
       }
     }
 
@@ -96,14 +94,8 @@ resource "helm_release" "radarr" {
       media = {
         enabled      = true
         type         = "hostPath"
-        hostPath     = "/home/k3s/media/jellyfin"
-        globalMounts = [{ path = "/data/media" }]
-      }
-      downloads = {
-        enabled      = true
-        type         = "hostPath"
-        hostPath     = "/home/k3s/media/qbittorrent"
-        globalMounts = [{ path = "/data/torrents" }]
+        hostPath     = "/home/k3s/media"
+        globalMounts = [{ path = "/media" }]
       }
     }
   })]

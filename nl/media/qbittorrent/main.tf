@@ -3,27 +3,6 @@ locals {
   torrenting_port = 6881
 }
 
-resource "kubernetes_persistent_volume_v1" "qbittorrent_downloads" {
-  metadata {
-    name = "qbittorrent-downloads"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-
-    capacity = {
-      storage = "50G"
-    }
-
-    persistent_volume_source {
-      host_path {
-        path = "/home/k3s/media/qbittorrent"
-      }
-    }
-  }
-}
-
 resource "helm_release" "qbittorrent" {
   name             = "qbittorrent"
   repository       = "https://bjw-s.github.io/helm-charts"
@@ -137,11 +116,9 @@ resource "helm_release" "qbittorrent" {
       }
       downloads = {
         enabled      = true
-        type         = "persistentVolumeClaim"
-        accessMode   = "ReadWriteOnce"
-        size         = "50G"
-        globalMounts = [{ path = "/data/torrents" }]
-        volumeName   = kubernetes_persistent_volume_v1.qbittorrent_downloads.metadata[0].name
+        type         = "hostPath"
+        hostPath     = "/home/k3s/media"
+        globalMounts = [{ path = "/media" }]
       }
     }
   })]

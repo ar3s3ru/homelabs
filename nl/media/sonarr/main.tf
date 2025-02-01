@@ -94,14 +94,8 @@ resource "helm_release" "sonarr" {
       media = {
         enabled      = true
         type         = "hostPath"
-        hostPath     = "/home/k3s/media/jellyfin"
-        globalMounts = [{ path = "/data/media" }]
-      }
-      downloads = {
-        enabled      = true
-        type         = "hostPath"
-        hostPath     = "/home/k3s/media/qbittorrent"
-        globalMounts = [{ path = "/data/torrents" }]
+        hostPath     = "/home/k3s/media"
+        globalMounts = [{ path = "/media" }]
       }
     }
   })]
