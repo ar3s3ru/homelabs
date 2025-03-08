@@ -21,16 +21,6 @@ dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reload
   skip_outputs = true
 }
 
-dependency "emqx" {
-  config_path  = "${get_path_to_repo_root()}/nl/home-automation/emqx"
-  skip_outputs = true
-}
-
-dependency "govee2mqtt" {
-  config_path  = "${get_path_to_repo_root()}/nl/home-automation/govee2mqtt"
-  skip_outputs = true
-}
-
 dependency "authentik" {
   config_path = "${get_path_to_repo_root()}/nl/auth/authentik"
 }
