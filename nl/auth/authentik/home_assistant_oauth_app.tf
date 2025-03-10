@@ -20,7 +20,7 @@ resource "authentik_provider_oauth2" "home_assistant" {
   client_id                  = "home-assistant"
   client_type                = "confidential"
   authentication_flow        = data.authentik_flow.default_authentication_flow.id
-  authorization_flow         = data.authentik_flow.default_provider_authorization_implicit_consent.id
+  authorization_flow         = data.authentik_flow.default_provider_authorization_explicit_consent.id
   invalidation_flow          = data.authentik_flow.default_provider_invalidation_flow.id
   include_claims_in_id_token = true
   issuer_mode                = "per_provider"

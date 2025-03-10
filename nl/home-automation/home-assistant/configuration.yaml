@@ -13,6 +13,7 @@ http:
     - "::1"
     - "10.42.0.0/24"
     - "100.0.0.0/8"
+
 auth_oidc:
   discovery_url: "https://auth.nl.ar3s3ru.dev/application/o/home-assistant/.well-known/openid-configuration"
   display_name: "Log in with Authentik"
@@ -27,3 +28,16 @@ auth_oidc:
   roles:
     admin: home-admin
     user: home-member
+
+script:
+  play_music_in_the_toilet:
+    alias: Play music in the Toilet
+    sequence:
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.toilet_speaker
+        data:
+          media_content_id: '{ "app_name": "youtube", "playlist_id": "PLSlWCUnZ5deDcEWu50m_I-iCgIfm0jqv9", "media_id": "CoHD4weW5NI" }'
+          media_content_type: cast
+    mode: single
+    icon: mdi:youtube

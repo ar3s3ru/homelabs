@@ -14,6 +14,10 @@ data "authentik_flow" "default_provider_authorization_implicit_consent" {
   slug = "default-provider-authorization-implicit-consent"
 }
 
+data "authentik_flow" "default_provider_authorization_explicit_consent" {
+  slug = "default-provider-authorization-explicit-consent"
+}
+
 data "authentik_flow" "default_provider_invalidation_flow" {
   slug = "default-provider-invalidation-flow"
 }

@@ -58,6 +58,17 @@ resource "kubernetes_config_map_v1" "home_assistant_configuration" {
   }
 }
 
+resource "kubernetes_config_map_v1" "home_assistant_scripts" {
+  metadata {
+    name      = "home-assistant-scripts"
+    namespace = "home-automation"
+  }
+
+  data = {
+    "scripts.yaml" = yamlencode(file("./scripts.yaml"))
+  }
+}
+
 resource "helm_release" "home_assistant" {
   name            = "home-assistant"
   repository      = "https://bjw-s.github.io/helm-charts"
@@ -91,7 +102,7 @@ resource "helm_release" "home_assistant" {
           main = {
             image = {
               repository = "ghcr.io/home-assistant/home-assistant"
-              tag        = "2025.1.2"
+              tag        = "2025.3.1"
             }
             env = {
               TZ               = "Europe/Amsterdam"
@@ -174,6 +185,12 @@ resource "helm_release" "home_assistant" {
         type         = "configMap"
         name         = kubernetes_config_map_v1.home_assistant_configuration.metadata[0].name
         globalMounts = [{ path = "/config/configuration.yaml", subPath = "configuration.yaml", readOnly = true }]
+      }
+      scripts = {
+        enabled      = true
+        type         = "configMap"
+        name         = kubernetes_config_map_v1.home_assistant_scripts.metadata[0].name
+        globalMounts = [{ path = "/config/scripts.yaml", subPath = "scripts.yaml", readOnly = true }]
       }
     }
   })]
