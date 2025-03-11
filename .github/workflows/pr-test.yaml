@@ -24,9 +24,12 @@ jobs:
         uses: ./.github/actions/nix-setup
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Unlock git-crypt secrets
-        uses: amplium/git-crypt-action@v0.1.5
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
         with:
-          key_encoded: ${{ secrets.GIT_CRYPT_KEY_ENCODED }}
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+      - name: Unlock git-crypt secrets
+        run: git-crypt unlock
+        shell: nix develop --quiet -c bash -e {0}
       - run: terragrunt run-all plan
         shell: nix develop --quiet -c bash -e {0}
