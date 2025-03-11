@@ -24,6 +24,12 @@ jobs:
         uses: ./.github/actions/nix-setup
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
+          tags: "tag:ci"
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
         with:
