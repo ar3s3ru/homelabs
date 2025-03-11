@@ -1,0 +1,32 @@
+---
+name: Test
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+on: # yamllint disable-line rule:truthy
+  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  terragrunt-plan:
+    name: Terragrunt Plan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Nix system
+        uses: ./.github/actions/nix-setup
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Unlock git-crypt secrets
+        uses: amplium/git-crypt-action@v0.1.5
+        with:
+          key_encoded: ${{ secrets.GIT_CRYPT_KEY_ENCODED }}
+      - run: terragrunt run-all plan
+        shell: nix develop --quiet -c bash -e {0}
