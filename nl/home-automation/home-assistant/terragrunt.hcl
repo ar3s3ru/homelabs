@@ -20,6 +20,16 @@ dependency "authentik" {
   config_path = "${get_path_to_repo_root()}/nl/auth/authentik"
 }
 
+dependency "emqx" {
+  config_path = "${get_path_to_repo_root()}/nl/home-automation/emqx"
+  skip_outputs = true
+}
+
+dependency "zigbee2mqtt" {
+  config_path = "${get_path_to_repo_root()}/nl/home-automation/zigbee2mqtt"
+  skip_outputs = true
+}
+
 inputs = {
   oauth_client_id     = dependency.authentik.outputs.home_assistant_client_id
   oauth_client_secret = dependency.authentik.outputs.home_assistant_client_secret

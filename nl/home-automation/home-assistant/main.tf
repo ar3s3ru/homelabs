@@ -206,12 +206,12 @@ resource "helm_release" "home_assistant" {
         hostPath     = "/run/dbus"
         globalMounts = [{ path = "/run/dbus", readOnly = true }]
       }
-      zigbee-antenna = {
-        enabled      = true
-        type         = "hostPath"
-        hostPath     = "/dev/ttyUSB0"
-        globalMounts = [{ path = "/dev/ttyUSB0" }]
-      }
+      # zigbee-antenna = {
+      #   enabled      = true
+      #   type         = "hostPath"
+      #   hostPath     = "/dev/ttyUSB0"
+      #   globalMounts = [{ path = "/dev/ttyUSB0" }]
+      # }
       config = {
         enabled       = true
         type          = "persistentVolumeClaim"
