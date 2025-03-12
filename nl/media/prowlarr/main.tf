@@ -1,3 +1,55 @@
+resource "kubernetes_persistent_volume_v1" "prowlarr_config" {
+  metadata {
+    name = "prowlarr-config-pv"
+  }
+
+  spec {
+    storage_class_name = "local-path"
+    access_modes       = ["ReadWriteOnce"]
+
+    capacity = {
+      storage = "100M" # NOTE: this is the size of the partition.
+    }
+
+    persistent_volume_source {
+      host_path {
+        path = "/media/config/prowlarr"
+      }
+    }
+
+    node_affinity {
+      required {
+        node_selector_term {
+          match_expressions {
+            key      = "kubernetes.io/hostname"
+            operator = "In"
+            values   = ["eq14-001"]
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_persistent_volume_claim_v1" "prowlarr_config" {
+  metadata {
+    name      = "prowlarr-config-pvc"
+    namespace = "media"
+  }
+
+  spec {
+    storage_class_name = "local-path"
+    access_modes       = ["ReadWriteOnce"]
+    volume_name        = kubernetes_persistent_volume_v1.prowlarr_config.metadata[0].name
+
+    resources {
+      requests = {
+        storage = "100M"
+      }
+    }
+  }
+}
+
 resource "helm_release" "prowlarr" {
   depends_on = [helm_release.flaresolverr]
 
@@ -85,11 +137,10 @@ resource "helm_release" "prowlarr" {
 
     persistence = {
       config = {
-        enabled      = true
-        type         = "persistentVolumeClaim"
-        accessMode   = "ReadWriteOnce"
-        size         = "100M"
-        globalMounts = [{ path = "/config" }]
+        enabled       = true
+        type          = "persistentVolumeClaim"
+        existingClaim = kubernetes_persistent_volume_claim_v1.prowlarr_config.metadata[0].name
+        globalMounts  = [{ path = "/config" }]
       }
     }
   })]

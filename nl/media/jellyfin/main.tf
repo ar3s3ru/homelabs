@@ -8,12 +8,24 @@ resource "kubernetes_persistent_volume_v1" "jellyfin_media" {
     access_modes       = ["ReadWriteOnce"]
 
     capacity = {
-      storage = "100G"
+      storage = "263.7G" # NOTE: this is the size of the partition.
     }
 
     persistent_volume_source {
       host_path {
-        path = "/home/k3s/media/jellyfin"
+        path = "/media/jellyfin"
+      }
+    }
+
+    node_affinity {
+      required {
+        node_selector_term {
+          match_expressions {
+            key      = "kubernetes.io/hostname"
+            operator = "In"
+            values   = ["eq14-001"]
+          }
+        }
       }
     }
   }
@@ -32,7 +44,59 @@ resource "kubernetes_persistent_volume_claim_v1" "jellyfin_media" {
 
     resources {
       requests = {
-        storage = "100G"
+        storage = "263.7G"
+      }
+    }
+  }
+}
+
+resource "kubernetes_persistent_volume_v1" "jellyfin_config" {
+  metadata {
+    name = "jellyfin-config-pv"
+  }
+
+  spec {
+    storage_class_name = "local-path"
+    access_modes       = ["ReadWriteOnce"]
+
+    capacity = {
+      storage = "5G" # NOTE: this is the size of the partition.
+    }
+
+    persistent_volume_source {
+      host_path {
+        path = "/media/config/jellyfin"
+      }
+    }
+
+    node_affinity {
+      required {
+        node_selector_term {
+          match_expressions {
+            key      = "kubernetes.io/hostname"
+            operator = "In"
+            values   = ["eq14-001"]
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_persistent_volume_claim_v1" "jellyfin_config" {
+  metadata {
+    name      = "jellyfin-config-pvc"
+    namespace = "media"
+  }
+
+  spec {
+    storage_class_name = "local-path"
+    access_modes       = ["ReadWriteOnce"]
+    volume_name        = kubernetes_persistent_volume_v1.jellyfin_config.metadata[0].name
+
+    resources {
+      requests = {
+        storage = "5G"
       }
     }
   }
@@ -120,9 +184,8 @@ resource "helm_release" "jellyfin" {
 
     persistence = {
       config = {
-        enabled    = true
-        accessMode = "ReadWriteOnce"
-        size       = "1G"
+        enabled       = true
+        existingClaim = kubernetes_persistent_volume_claim_v1.jellyfin_config.metadata[0].name
       }
       media = {
         enabled       = true

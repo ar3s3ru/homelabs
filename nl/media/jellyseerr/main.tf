@@ -2,6 +2,59 @@ locals {
   hostname = "jellyseerr.nl.ar3s3ru.dev"
 }
 
+
+resource "kubernetes_persistent_volume_v1" "jellyseerr_config" {
+  metadata {
+    name = "jellyseerr-config-pv"
+  }
+
+  spec {
+    storage_class_name = "local-path"
+    access_modes       = ["ReadWriteOnce"]
+
+    capacity = {
+      storage = "50M"
+    }
+
+    persistent_volume_source {
+      host_path {
+        path = "/media/config/jellyseerr"
+      }
+    }
+
+    node_affinity {
+      required {
+        node_selector_term {
+          match_expressions {
+            key      = "kubernetes.io/hostname"
+            operator = "In"
+            values   = ["eq14-001"]
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_persistent_volume_claim_v1" "jellyseerr_config" {
+  metadata {
+    name      = "jellyseerr-config-pvc"
+    namespace = "media"
+  }
+
+  spec {
+    storage_class_name = "local-path"
+    access_modes       = ["ReadWriteOnce"]
+    volume_name        = kubernetes_persistent_volume_v1.jellyseerr_config.metadata[0].name
+
+    resources {
+      requests = {
+        storage = "50M"
+      }
+    }
+  }
+}
+
 resource "helm_release" "jellyseerr" {
   name            = "jellyseerr"
   repository      = "https://bjw-s.github.io/helm-charts"
@@ -89,11 +142,10 @@ resource "helm_release" "jellyseerr" {
 
     persistence = {
       config = {
-        enabled      = true
-        type         = "persistentVolumeClaim"
-        accessMode   = "ReadWriteOnce"
-        size         = "1G"
-        globalMounts = [{ path = "/app/config" }]
+        enabled       = true
+        type          = "persistentVolumeClaim"
+        existingClaim = kubernetes_persistent_volume_claim_v1.jellyseerr_config.metadata[0].name
+        globalMounts  = [{ path = "/app/config" }]
       }
     }
   })]
