@@ -3,7 +3,7 @@ resource "helm_release" "emqx" {
   repository      = "https://repos.emqx.io/charts"
   chart           = "emqx"
   namespace       = "home-automation"
-  version         = "5.8.4"
+  version         = "5.8.5"
   cleanup_on_fail = true
 
   values = [yamlencode({

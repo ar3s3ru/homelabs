@@ -2,12 +2,12 @@ terraform {
   required_providers {
     random = {
       source  = "hashicorp/random"
-      version = "3.6.3"
+      version = "3.7.1"
     }
 
     authentik = {
       source  = "goauthentik/authentik"
-      version = "2024.12.0"
+      version = "2024.12.1"
     }
   }
 }
