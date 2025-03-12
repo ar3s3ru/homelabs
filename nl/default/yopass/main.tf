@@ -53,7 +53,6 @@ resource "helm_release" "yopass" {
             args = [
               "--database", "redis",
               "--redis", "redis://yopass-redis-master.default.svc.cluster.local:6379/0",
-              "--cors-allow-origin", "${local.service_name}.${var.tailscale_domain}"
             ]
             probes = {
               # FIXME(ar3s3ru): find a way to enable these?
