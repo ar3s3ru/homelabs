@@ -86,7 +86,7 @@ resource "helm_release" "jellyseerr" {
           main = {
             image = {
               repository = "docker.io/fallenbagel/jellyseerr"
-              tag        = "2.3.0"
+              tag        = "2.5.0"
             }
             env = {
               TZ        = "Europe/Amsterdam"
