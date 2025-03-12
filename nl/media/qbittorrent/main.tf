@@ -1,6 +1,57 @@
 locals {
-  webui_port      = 8080
-  torrenting_port = 6881
+  webui_port = 8080
+}
+
+resource "kubernetes_persistent_volume_v1" "qbittorrent" {
+  metadata {
+    name = "qbittorrent-pv"
+  }
+
+  spec {
+    storage_class_name = "local-path"
+    access_modes       = ["ReadWriteOnce"]
+
+    capacity = {
+      storage = "263.7G" # NOTE: this is the size of the partition.
+    }
+
+    persistent_volume_source {
+      host_path {
+        path = "/media"
+      }
+    }
+
+    node_affinity {
+      required {
+        node_selector_term {
+          match_expressions {
+            key      = "kubernetes.io/hostname"
+            operator = "In"
+            values   = ["eq14-001"]
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_persistent_volume_claim_v1" "qbittorrent" {
+  metadata {
+    name      = "qbittorrent-pvc"
+    namespace = "media"
+  }
+
+  spec {
+    storage_class_name = "local-path"
+    access_modes       = ["ReadWriteOnce"]
+    volume_name        = kubernetes_persistent_volume_v1.qbittorrent.metadata[0].name
+
+    resources {
+      requests = {
+        storage = "263.7G" # NOTE: this is the size of the partition.
+      }
+    }
+  }
 }
 
 resource "helm_release" "qbittorrent" {
@@ -14,6 +65,7 @@ resource "helm_release" "qbittorrent" {
 
   values = [yamlencode({
     defaultPodOptions = {
+      hostNetwork = true
       securityContext = {
         runAsUser           = 1000
         runAsGroup          = 1000
@@ -42,7 +94,7 @@ resource "helm_release" "qbittorrent" {
               PGUID           = 1000
               PGID            = 1000
               WEBUI_PORT      = local.webui_port
-              TORRENTING_PORT = local.torrenting_port
+              TORRENTING_PORT = 6881
             }
             probes = {
               # FIXME(ar3s3ru): find a way to enable these?
@@ -62,24 +114,6 @@ resource "helm_release" "qbittorrent" {
         ports = {
           http = {
             port = local.webui_port
-          }
-        }
-      }
-      bittorrent = {
-        controller = "main"
-        type       = "LoadBalancer"
-        ports = {
-          bittorrent-tcp = {
-            enabled    = true
-            port       = local.torrenting_port
-            protocol   = "TCP"
-            targetPort = local.torrenting_port
-          }
-          bittorrent-udp = {
-            enabled    = true
-            port       = local.torrenting_port
-            protocol   = "UDP"
-            targetPort = local.torrenting_port
           }
         }
       }
@@ -115,10 +149,10 @@ resource "helm_release" "qbittorrent" {
         globalMounts = [{ path = "/config" }]
       }
       downloads = {
-        enabled      = true
-        type         = "hostPath"
-        hostPath     = "/home/k3s/media"
-        globalMounts = [{ path = "/media" }]
+        enabled       = true
+        type          = "persistentVolumeClaim"
+        existingClaim = kubernetes_persistent_volume_claim_v1.qbittorrent.metadata[0].name
+        globalMounts  = [{ path = "/media" }]
       }
     }
   })]
