@@ -87,7 +87,7 @@ resource "helm_release" "qbittorrent" {
           main = {
             image = {
               repository = "ghcr.io/linuxserver/qbittorrent"
-              tag        = "5.0.3"
+              tag        = "5.0.4"
             }
             env = {
               TZ              = "Europe/Amsterdam"
