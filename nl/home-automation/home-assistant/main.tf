@@ -16,6 +16,37 @@ resource "kubernetes_persistent_volume_v1" "home_assistant_config" {
         path = "/home/k3s/home-automation/home-assistant/config"
       }
     }
+
+    node_affinity {
+      required {
+        node_selector_term {
+          match_expressions {
+            key      = "kubernetes.io/hostname"
+            operator = "In"
+            values   = ["momonoke"]
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_persistent_volume_claim_v1" "home_assistant_config" {
+  metadata {
+    name      = "home-assistant-config"
+    namespace = "home-automation"
+  }
+
+  spec {
+    storage_class_name = "local-path"
+    access_modes       = ["ReadWriteOnce"]
+    volume_name        = kubernetes_persistent_volume_v1.home_assistant_config.metadata[0].name
+
+    resources {
+      requests = {
+        storage = "10G"
+      }
+    }
   }
 }
 
@@ -173,12 +204,10 @@ resource "helm_release" "home_assistant" {
         globalMounts = [{ path = "/run/dbus", readOnly = true }]
       }
       config = {
-        enabled      = true
-        type         = "persistentVolumeClaim"
-        accessMode   = "ReadWriteOnce"
-        size         = "10G"
-        globalMounts = [{ path = "/config" }]
-        volumeName   = kubernetes_persistent_volume_v1.home_assistant_config.metadata[0].name
+        enabled       = true
+        type          = "persistentVolumeClaim"
+        existingClaim = kubernetes_persistent_volume_claim_v1.home_assistant_config.metadata[0].name
+        globalMounts  = [{ path = "/config" }]
       }
       configuration = {
         enabled      = true
