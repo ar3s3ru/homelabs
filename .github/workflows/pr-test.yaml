@@ -35,5 +35,6 @@ jobs:
       - name: Unlock git-crypt secrets
         run: git-crypt unlock
         shell: nix develop --quiet -c bash -e {0}
-      - run: terragrunt run-all plan
+      - name: Run terragrunt plan
+        run: terragrunt --non-interactive run-all plan -lock=false
         shell: nix develop --quiet -c bash -e {0}
