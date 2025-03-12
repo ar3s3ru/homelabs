@@ -141,6 +141,9 @@ resource "helm_release" "home_assistant" {
               UV_SYSTEM_PYTHON = "true"
               UV_NO_CACHE      = "true"
             }
+            securityContext = {
+              privileged = true # Required to access the /dev/ttyUSB0 device
+            }
             probes = {
               # FIXME(ar3s3ru): find a way to enable these?
               liveness  = { enabled = false }
@@ -202,6 +205,12 @@ resource "helm_release" "home_assistant" {
         type         = "hostPath"
         hostPath     = "/run/dbus"
         globalMounts = [{ path = "/run/dbus", readOnly = true }]
+      }
+      zigbee-antenna = {
+        enabled      = true
+        type         = "hostPath"
+        hostPath     = "/dev/ttyUSB0"
+        globalMounts = [{ path = "/dev/ttyUSB0" }]
       }
       config = {
         enabled       = true
