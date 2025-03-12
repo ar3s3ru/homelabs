@@ -1,6 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", "group:allNonMajor"],
+  "extends": [
+    "config:recommended",
+    "group:allNonMajor"
+  ],
   "branchPrefix": "chore/renovate-",
   "rebaseWhen": "behind-base-branch",
   "ignorePaths": [
@@ -10,6 +13,19 @@
     // Group all Github Actions updates in a single PR.
     {
       "matchManagers": "github-actions"
+    }
+  ],
+  "customManagers": [
+    // Updates Docker images in Terraform files.
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)*\\.tf$"
+      ],
+      "datasourceTemplate": "docker",
+      "matchStrings": [
+        "\\s+repository\\s+=\\s+\"(?<depName>.*?)\"\\s+tag\\s+=\\s+\"(?<currentValue>[\\w+\\.\\-]*)\""
+      ]
     }
   ]
 }
