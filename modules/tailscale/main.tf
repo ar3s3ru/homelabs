@@ -36,7 +36,7 @@ resource "kubernetes_cluster_role_binding" "ar3s3ru_cluster_admin" {
 resource "helm_release" "tailscale_operator" {
   name             = "tailscale-operator"
   repository       = "https://pkgs.tailscale.com/helmcharts"
-  version          = "1.78.3"
+  version          = "1.80.3"
   chart            = "tailscale-operator"
   namespace        = var.kubernetes_namespace
   create_namespace = true

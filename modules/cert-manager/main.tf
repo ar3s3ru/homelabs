@@ -8,7 +8,7 @@ resource "helm_release" "cert_manager" {
   repository       = "https://charts.jetstack.io"
   chart            = "cert-manager"
   namespace        = var.kubernetes_namespace
-  version          = "1.16.3"
+  version          = "v1.17.1"
   create_namespace = true
   cleanup_on_fail  = true
 
