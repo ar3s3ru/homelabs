@@ -17,7 +17,7 @@ dependency "cloudflare-ddns" { # Necessary to ensure DNS records are set.
 }
 
 dependency "intel-gpu" { # Necessary for hardware acceleration.
-  config_path  = "${get_path_to_repo_root()}/nl/default/intel-gpu"
+  config_path  = "${get_path_to_repo_root()}/nl/kube-system/intel-gpu"
   skip_outputs = true
 }
 

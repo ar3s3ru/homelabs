@@ -12,6 +12,6 @@ dependency "cert-manager" { # Necessary for TLS certificates.
 }
 
 dependency "node-feature-discovery" { # Necessary for GPU detection.
-  config_path  = "${get_path_to_repo_root()}/nl/default/node-feature-discovery"
+  config_path  = "${get_path_to_repo_root()}/nl/kube-system/node-feature-discovery"
   skip_outputs = true
 }
