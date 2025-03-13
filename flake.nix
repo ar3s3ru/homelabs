@@ -2,10 +2,16 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, flake-utils, ... }:
-    flake-utils.lib.eachDefaultSystem
+  outputs = inputs@{ nixpkgs, flake-utils, self, ... }:
+    {
+      colmena = import ./machines inputs;
+    } // flake-utils.lib.eachDefaultSystem
       (system:
         let
           pkgs = import nixpkgs {
@@ -28,6 +34,7 @@
               k9s
               kubernetes-helm
               tfk8s
+              colmena
             ];
 
             shellHook = ''
