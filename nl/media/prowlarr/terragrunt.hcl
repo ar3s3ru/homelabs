@@ -15,3 +15,8 @@ dependency "qbittorrent" { # Ensure the torrent dependency is up.
   config_path  = "${get_path_to_repo_root()}/nl/media/qbittorrent"
   skip_outputs = true
 }
+
+dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reloader.
+  config_path  = "${get_path_to_repo_root()}/nl/kube-system/reloader"
+  skip_outputs = true
+}

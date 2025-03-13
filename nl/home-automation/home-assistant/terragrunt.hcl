@@ -12,7 +12,7 @@ dependency "tailscale" { # Necessary for Ingress class name.
 }
 
 dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reloader.
-  config_path  = "${get_path_to_repo_root()}/nl/default/reloader"
+  config_path  = "${get_path_to_repo_root()}/nl/kube-system/reloader"
   skip_outputs = true
 }
 

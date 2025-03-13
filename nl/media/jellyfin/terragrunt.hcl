@@ -25,6 +25,11 @@ dependency "authentik" { # Necessary for authentication.
   config_path = "${get_path_to_repo_root()}/nl/auth/authentik"
 }
 
+dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reloader.
+  config_path  = "${get_path_to_repo_root()}/nl/kube-system/reloader"
+  skip_outputs = true
+}
+
 inputs = {
   oauth_client_id     = dependency.authentik.outputs.jellyfin_client_id
   oauth_client_secret = dependency.authentik.outputs.jellyfin_client_secret
