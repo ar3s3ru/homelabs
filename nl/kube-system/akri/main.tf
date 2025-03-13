@@ -10,5 +10,11 @@ resource "helm_release" "akri" {
   values = [yamlencode({
     # Expose metrics.
     prometheus = { enabled = true }
+
+    udev = {
+      discovery = {
+        enabled = true
+      }
+    }
   })]
 }

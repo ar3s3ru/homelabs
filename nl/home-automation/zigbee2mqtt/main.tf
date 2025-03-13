@@ -1,8 +1,43 @@
-locals {
-  zigbee_dongle_path = "/dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_76fad97b4a4eef11986846b3174bec31-if00-port0"
+resource "kubernetes_manifest" "akri_sonoff_zigbee_antenna" {
+  manifest = yamldecode(file("./sonoff-antenna.yaml"))
+}
+
+resource "kubernetes_persistent_volume_v1" "zigbee2mqtt" {
+  metadata {
+    name = "zigbee2mqtt-pv"
+  }
+
+  spec {
+    storage_class_name = "local-path"
+    access_modes       = ["ReadWriteOnce"]
+
+    capacity = {
+      storage = "1Gi"
+    }
+
+    persistent_volume_source {
+      host_path {
+        path = "/home/k3s/home-automation/zigbee2mqtt"
+      }
+    }
+
+    node_affinity {
+      required {
+        node_selector_term {
+          match_expressions {
+            key      = "kubernetes.io/hostname"
+            operator = "In"
+            values   = ["momonoke"]
+          }
+        }
+      }
+    }
+  }
 }
 
 resource "helm_release" "zigbee2mqtt" {
+  depends_on = [kubernetes_manifest.akri_sonoff_zigbee_antenna]
+
   name            = "zigbee2mqtt"
   repository      = "https://charts.zigbee2mqtt.io/"
   chart           = "zigbee2mqtt"
@@ -22,19 +57,20 @@ resource "helm_release" "zigbee2mqtt" {
     }
 
     statefulset = {
-      nodeSelector = {
-        "kubernetes.io/hostname" = "momonoke"
+      resources = {
+        requests = {
+          "akri.sh/sonoff-zigbee-antenna" = "1"
+        }
+        limits = {
+          "akri.sh/sonoff-zigbee-antenna" = "1"
+        }
       }
 
-      volumes = [{
-        name     = "zigbee-antenna"
-        hostPath = { path = local.zigbee_dongle_path }
-      }]
-
-      volumeMounts = [{
-        name      = "zigbee-antenna"
-        mountPath = local.zigbee_dongle_path
-      }]
+      storage = {
+        enabled          = true
+        storageClassName = "local-path"
+        existingVolume   = kubernetes_persistent_volume_v1.zigbee2mqtt.metadata[0].name
+      }
     }
 
     zigbee2mqtt = {
@@ -45,7 +81,7 @@ resource "helm_release" "zigbee2mqtt" {
       }
 
       serial = {
-        port    = local.zigbee_dongle_path
+        port    = "/dev/ttyUSB0"
         adapter = "ezsp" # Sonoff dongle is based on Silicon Labs.
       }
     }
