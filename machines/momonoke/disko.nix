@@ -1,63 +1,83 @@
 {
-  disko.devices.disk.main = {
-    type = "disk";
-    device = "/dev/sda";
-    content = {
-      type = "gpt";
-      partitions = {
-        boot = {
-          size = "256MiB";
-          type = "EF00";
-          content.type = "filesystem";
-          content.format = "vfat";
-          content.mountpoint = "/boot";
-        };
-        cryptroot = {
-          size = "100%";
-          content.type = "luks";
-          content.name = "cryptroot";
-          content.settings.keyFile = "/tmp/cryptroot.key";
-          content.content.type = "lvm_pv";
-          content.content.vg = "nixos";
-        };
+  disko.devices = {
+    disk.sda = {
+      type = "disk";
+      device = "/dev/sda";
+      content = {
+        type = "table";
+        format = "gpt";
+        partitions = [
+          {
+            name = "ESP";
+            start = "1MiB";
+            end = "256MiB";
+            bootable = true;
+            content = {
+              type = "filesystem";
+              format = "vfat";
+              mountpoint = "/boot";
+            };
+          }
+          {
+            name = "luks";
+            start = "256MiB";
+            end = "100%";
+            content = {
+              type = "luks";
+              name = "cryptroot";
+              keyFile = "/tmp/cryptroot.key";
+              content = {
+                type = "lvm_pv";
+                vg = "nixos";
+              };
+            };
+          }
+        ];
       };
     };
-  };
 
-  disko.devices.lvm_vg.nixos = {
-    type = "lvm_vg";
-
-    lvs.root = {
-      size = "5G";
-      content.type = "filesystem";
-      content.format = "ext4";
-      content.mountpoint = "/";
-    };
-
-    lvs.swap = {
-      size = "8G";
-      content.type = "swap";
-    };
-
-    lvs.var = {
-      size = "30G";
-      content.type = "filesystem";
-      content.format = "ext4";
-      content.mountpoint = "/var";
-    };
-
-    lvs.nix = {
-      size = "200G";
-      content.type = "filesystem";
-      content.format = "ext4";
-      content.mountpoint = "/nix";
-    };
-
-    lvs.home = {
-      size = "157G";
-      content.type = "filesystem";
-      content.format = "ext4";
-      content.mountpoint = "/home";
+    lvm_vg.nixos = {
+      type = "lvm_vg";
+      lvs = {
+        root = {
+          size = "5G";
+          content = {
+            type = "filesystem";
+            format = "ext4";
+            mountpoint = "/";
+          };
+        };
+        swap = {
+          size = "8G";
+          content = {
+            type = "swap";
+          };
+        };
+        var = {
+          size = "30G";
+          content = {
+            type = "filesystem";
+            format = "ext4";
+            mountpoint = "/var";
+          };
+        };
+        nix = {
+          size = "200G";
+          content = {
+            type = "filesystem";
+            format = "ext4";
+            mountpoint = "/nix";
+          };
+        };
+        home = {
+          size = "157G";
+          content = {
+            type = "filesystem";
+            format = "ext4";
+            mountpoint = "/home";
+          };
+        };
+      };
     };
   };
 }

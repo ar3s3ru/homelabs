@@ -3,7 +3,7 @@ inputs@{ nixpkgs, ... }:
 {
   dejima = import ./dejima inputs;
   eq14-001 = import ./eq14-001 inputs;
-  # momonoke = import ./momonoke inputs;
+  momonoke = import ./momonoke inputs;
 
   meta.nixpkgs = import nixpkgs {
     system = "x86_64-linux";
