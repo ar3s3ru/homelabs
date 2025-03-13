@@ -1,7 +1,5 @@
-{ pkgs, lib, ... }:
-let
-  clusterToken = lib.readFile ../secrets/nl-homelab-k3s-token;
-in
+{ pkgs, config, ... }:
+
 {
   # Add the necessary packages for the Kubernetes experience.
   environment.systemPackages = with pkgs; [
@@ -30,11 +28,13 @@ in
     8472 # k3s flannel
   ];
 
+  sops.secrets."clusters/nl/token" = { };
+
   # Kubernetes through K3S.
   services.k3s = {
     enable = true;
     role = "agent";
-    token = clusterToken;
+    tokenFile = config.sops.secrets."clusters/nl/token".path;
     serverAddr = "https://192.168.2.109:6443";
   };
 }

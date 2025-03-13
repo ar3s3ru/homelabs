@@ -1,4 +1,8 @@
+{ config, ... }:
+
 {
+  sops.secrets."cryptroot".sopsFile = ./secrets.yaml;
+
   disko.devices = {
     disk.sda = {
       type = "disk";
@@ -25,7 +29,7 @@
             content = {
               type = "luks";
               name = "cryptroot";
-              keyFile = "/tmp/cryptroot.key";
+              keyFile = config.sops.secrets."cryptroot".path;
               content = {
                 type = "lvm_pv";
                 vg = "nixos";

@@ -1,4 +1,4 @@
-inputs@{ nixpkgs, ... }:
+inputs@{ nixpkgs, sops-nix, disko, ... }:
 
 {
   dejima = import ./dejima inputs;
@@ -10,7 +10,16 @@ inputs@{ nixpkgs, ... }:
   };
 
   defaults = { pkgs, lib, ... }: {
+    imports = [
+      disko.nixosModules.disko
+      sops-nix.nixosModules.sops
+    ];
+
     system.stateVersion = "23.11";
+
+    # Decrypt common secrets.
+    sops.defaultSopsFile = ./secrets.yaml;
+    sops.defaultSopsFormat = "yaml";
 
     # Use unstable Nix.
     nix.package = pkgs.nixVersions.latest;

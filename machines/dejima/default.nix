@@ -1,4 +1,4 @@
-{ disko, nixos-hardware, ... }:
+{ nixos-hardware, ... }:
 
 { ... }:
 
@@ -21,7 +21,6 @@
     nixos-hardware.nixosModules.common-pc-ssd
     nixos-hardware.nixosModules.common-cpu-intel
     nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
-    disko.nixosModules.disko
     ./hardware-configuration.nix
     ./disko.nix
     ./tailscale.nix

@@ -1,7 +1,5 @@
 { pkgs, lib, config, ... }:
-let
-  clusterToken = lib.readFile ../secrets/nl-homelab-k3s-token;
-in
+
 {
   # Add the necessary packages for the Kubernetes experience.
   environment.systemPackages = with pkgs; [
@@ -20,8 +18,9 @@ in
 
   # This is necessary to authenticate with the private Container Registry where
   # the application images are uploaded.
-  environment.etc."rancher/k3s/registries.yaml" = {
-    source = ./secrets/k3s-config-registries.yaml;
+  sops.secrets."k3s-config-registries" = {
+    sopsFile = ./secrets.yaml;
+    path = "/etc/rancher/k3s/registries.yaml";
   };
 
   environment.etc."rancher/k3s/config.yaml".text = ''
@@ -43,11 +42,13 @@ in
     8472 # k3s flannel
   ];
 
+  sops.secrets."clusters/nl/token" = { };
+
   # Kubernetes through K3S.
   services.k3s = {
     enable = true;
     role = "server";
-    token = clusterToken;
+    tokenFile = config.sops.secrets."clusters/nl/token".path;
     clusterInit = true;
   };
 
