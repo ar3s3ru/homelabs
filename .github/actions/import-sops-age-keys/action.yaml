@@ -1,0 +1,17 @@
+---
+name: Import sops age keys
+description: |
+  Imports the specified age keys file for use with sops.
+inputs:
+  age_keys:
+    description: "keys.txt file containing age keys"
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Import sops age keys
+      shell: bash
+      run: |
+        mkdir -p ~/.config/sops/age/
+        echo "${{ inputs.age_keys }}" > ~/.config/sops/age/keys.txt
+        chmod 600 ~/.config/sops/age/keys.txt

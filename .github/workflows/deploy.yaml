@@ -32,12 +32,9 @@ jobs:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
           tags: "tag:ci"
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
+      - name: Import sops age keys
+        uses: ./.github/actions/import-sops-age-keys
         with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-      - name: Unlock git-crypt secrets
-        run: git-crypt unlock
-        shell: nix develop --quiet -c bash -e {0}
+          age_keys: ${{ secrets.SOPS_AGE_KEYS }}
       - run: terragrunt --non-interactive run-all apply
         shell: nix develop --quiet -c bash -e {0}

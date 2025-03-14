@@ -1,13 +1,3 @@
-# Hiding the Kubernetes config file as they may contain private secrets
-# when setting up the cluster initially.
-**/kubeconfig.yaml filter=git-crypt diff=git-crypt
-
-# Any variable secrets to pass to a Terraform module should be encrypted.
-**/secrets.auto.tfvars filter=git-crypt diff=git-crypt
-
-# Any secret files should be encrypted.
-**/secrets/** filter=git-crypt diff=git-crypt
-
 # Mark Terragrunt-generated files as generated.
 **/backend.tf linguist-generated=true
 **/provider_override.tf linguist-generated=true

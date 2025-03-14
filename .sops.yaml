@@ -1,6 +1,7 @@
 ---
 keys:
   - &ar3s3ru C8DAE39DAA00FF97
+  - &github-actions age18eehnlpn44hpk4d823zfnkq72vqmf6kqhrh009uwdajneeaqzskqscx589
   - &eq14-001 age1z3t2tgda3cvzuppqqxc992q5npalwq6wzspnma4q6u7jp5wwds9qgv32wm
   # These are created using `ssh-to-age <tailscale-ssh-addr>`
   - &eq14-001-ts age1krvwskkgw5f3ufcwgl6l2jz0emxnkn40wpup2aqhqdulqy2x99js4p5fnq
@@ -12,6 +13,7 @@ creation_rules:
       - pgp:
           - *ar3s3ru
         age:
+          - *github-actions
           - *eq14-001
           - *eq14-001-ts
           - *momonoke-ts
@@ -21,18 +23,24 @@ creation_rules:
       - pgp:
           - *ar3s3ru
         age:
+          - *github-actions
           - *dejima-ts
   - path_regex: "machines/momonoke/secrets.yaml"
     key_groups:
       - pgp:
           - *ar3s3ru
         age:
+          - *github-actions
           - *momonoke-ts
   - path_regex: "it/.*/secrets.yaml"
     key_groups:
       - pgp:
           - *ar3s3ru
+        age:
+          - *github-actions
   - path_regex: "nl/.*/secrets.yaml"
     key_groups:
       - pgp:
           - *ar3s3ru
+        age:
+          - *github-actions
