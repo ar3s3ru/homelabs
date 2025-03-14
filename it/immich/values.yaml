@@ -2,6 +2,9 @@
 image:
   tag: v1.122.2
 
+# TODO: move postgres out of this.
+useDeprecatedPostgresChart: true
+
 server:
   ingress:
     main:
