@@ -27,13 +27,13 @@ terraform {
 }
 
 provider "kubernetes" {
-  config_path    = "${get_path_to_repo_root()}/kubeconfig.yaml"
+  config_path    = "${get_path_to_repo_root()}/clusters/kubeconfig.yaml"
   config_context = var.kubernetes_context
 }
 
 provider "helm" {
   kubernetes {
-    config_path    = "${get_path_to_repo_root()}/kubeconfig.yaml"
+    config_path    = "${get_path_to_repo_root()}/clusters/kubeconfig.yaml"
     config_context = var.kubernetes_context
   }
 }

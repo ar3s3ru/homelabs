@@ -1,3 +1,8 @@
 .direnv
 .terraform
 **/.terragrunt-cache
+
+# Terragrunt generated files
+**/backend.tf
+**/provider_override.tf
+**/provider_variables.tf

@@ -11,9 +11,7 @@ on: # yamllint disable-line rule:truthy
     branches:
       - main
     paths:
-      - "**.tf"
-      - "**.tfvars"
-      - "**.hcl"
+      - clusters/**
 
 jobs:
   terragrunt-apply:

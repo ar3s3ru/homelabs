@@ -42,7 +42,7 @@
             ];
 
             shellHook = ''
-              export KUBECONFIG="$(${realpath} ./kubeconfig.yaml)"
+              export KUBECONFIG="$(${realpath} ./clusters/kubeconfig.yaml)"
             '';
           };
         }
