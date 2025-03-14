@@ -107,7 +107,7 @@ resource "helm_release" "sonarr" {
   repository       = "https://bjw-s.github.io/helm-charts"
   chart            = "app-template"
   namespace        = "media"
-  version          = "3.7.2"
+  version          = "3.7.3"
   create_namespace = true
   cleanup_on_fail  = true
 

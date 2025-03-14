@@ -57,7 +57,7 @@ resource "helm_release" "prowlarr" {
   repository       = "https://bjw-s.github.io/helm-charts"
   chart            = "app-template"
   namespace        = "media"
-  version          = "3.7.2"
+  version          = "3.7.3"
   create_namespace = true
   cleanup_on_fail  = true
 
@@ -151,7 +151,7 @@ resource "helm_release" "flaresolverr" {
   repository       = "https://bjw-s.github.io/helm-charts"
   chart            = "app-template"
   namespace        = "media"
-  version          = "3.7.2"
+  version          = "3.7.3"
   create_namespace = true
   cleanup_on_fail  = true
 
