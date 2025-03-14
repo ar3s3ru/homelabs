@@ -28,7 +28,7 @@ resource "helm_release" "yopass" {
   repository      = "https://bjw-s.github.io/helm-charts"
   chart           = "app-template"
   namespace       = "default"
-  version         = "3.7.2"
+  version         = "3.7.3"
   cleanup_on_fail = true
 
   values = [yamlencode({
