@@ -141,9 +141,6 @@ resource "helm_release" "home_assistant" {
               UV_SYSTEM_PYTHON = "true"
               UV_NO_CACHE      = "true"
             }
-            securityContext = {
-              privileged = true # Required to access the /dev/ttyUSB0 device
-            }
             probes = {
               # FIXME(ar3s3ru): find a way to enable these?
               liveness  = { enabled = false }
