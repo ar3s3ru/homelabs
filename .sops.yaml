@@ -28,3 +28,11 @@ creation_rules:
           - *ar3s3ru
         age:
           - *momonoke-ts
+  - path_regex: "it/.*/secrets.yaml"
+    key_groups:
+      - pgp:
+          - *ar3s3ru
+  - path_regex: "nl/.*/secrets.yaml"
+    key_groups:
+      - pgp:
+          - *ar3s3ru

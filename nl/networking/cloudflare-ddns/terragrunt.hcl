@@ -10,3 +10,14 @@ dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reload
   config_path  = "${get_path_to_repo_root()}/nl/kube-system/reloader"
   skip_outputs = true
 }
+
+locals {
+  secrets = yamldecode(sops_decrypt_file("secrets.yaml"))
+}
+
+inputs = merge(
+  local.secrets,
+  {
+    # additional inputs
+  }
+)

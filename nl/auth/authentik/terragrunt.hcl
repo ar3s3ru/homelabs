@@ -15,3 +15,14 @@ dependency "cloudflare-ddns" { # Necessary to ensure DNS records are set.
   config_path  = "${get_path_to_repo_root()}/nl/networking/cloudflare-ddns"
   skip_outputs = true
 }
+
+locals {
+  secrets = yamldecode(sops_decrypt_file("secrets.yaml"))
+}
+
+inputs = merge(
+  local.secrets,
+  {
+    # additional inputs
+  }
+)
