@@ -22,6 +22,7 @@
     2380 # k3s etcd cluster coordination
     6443 # k8s apiserver
     8123 # home-assistant hostNetwork
+    10250 # metrics-server
   ];
 
   networking.firewall.allowedUDPPorts = [
