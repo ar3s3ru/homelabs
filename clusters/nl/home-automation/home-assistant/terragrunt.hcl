@@ -30,6 +30,16 @@ dependency "zigbee2mqtt" {
   skip_outputs = true
 }
 
+dependency "govee2mqtt" {
+  config_path = "${get_path_to_repo_root()}/clusters/nl/home-automation/govee2mqtt"
+  skip_outputs = true
+}
+
+dependency "music-assistant" {
+  config_path = "${get_path_to_repo_root()}/clusters/nl/home-automation/music-assistant"
+  skip_outputs = true
+}
+
 inputs = {
   oauth_client_id     = dependency.authentik.outputs.home_assistant_client_id
   oauth_client_secret = dependency.authentik.outputs.home_assistant_client_secret

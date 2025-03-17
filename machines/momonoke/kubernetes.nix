@@ -35,9 +35,10 @@
     2379
     2380 # k3s etcd cluster coordination
     6443 # k8s apiserver
-    8123 # home-assistant hostNetwork
+    8056 # govee2mqtt
     8095 # music-assistant webserver
     8097 # music-assistant streams
+    8123 # home-assistant hostNetwork
     10250 # metrics-server
   ];
 
