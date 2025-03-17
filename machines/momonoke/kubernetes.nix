@@ -36,6 +36,8 @@
     2380 # k3s etcd cluster coordination
     6443 # k8s apiserver
     8123 # home-assistant hostNetwork
+    8095 # music-assistant webserver
+    8097 # music-assistant streams
     10250 # metrics-server
   ];
 
