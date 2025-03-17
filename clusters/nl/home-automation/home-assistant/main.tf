@@ -50,6 +50,110 @@ resource "kubernetes_persistent_volume_claim_v1" "home_assistant_config" {
   }
 }
 
+resource "kubernetes_persistent_volume_v1" "home_assistant_media" {
+  metadata {
+    name = "home-assistant-media"
+  }
+
+  spec {
+    storage_class_name = "local-path"
+    access_modes       = ["ReadWriteOnce"]
+
+    capacity = {
+      storage = "10G"
+    }
+
+    persistent_volume_source {
+      host_path {
+        path = "/home/k3s/home-automation/home-assistant/media"
+      }
+    }
+
+    node_affinity {
+      required {
+        node_selector_term {
+          match_expressions {
+            key      = "kubernetes.io/hostname"
+            operator = "In"
+            values   = ["momonoke"]
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_persistent_volume_claim_v1" "home_assistant_media" {
+  metadata {
+    name      = "home-assistant-media"
+    namespace = "home-automation"
+  }
+
+  spec {
+    storage_class_name = "local-path"
+    access_modes       = ["ReadWriteOnce"]
+    volume_name        = kubernetes_persistent_volume_v1.home_assistant_media.metadata[0].name
+
+    resources {
+      requests = {
+        storage = "10G"
+      }
+    }
+  }
+}
+
+resource "kubernetes_persistent_volume_v1" "home_assistant_recordings" {
+  metadata {
+    name = "home-assistant-recordings"
+  }
+
+  spec {
+    storage_class_name = "local-path"
+    access_modes       = ["ReadWriteOnce"]
+
+    capacity = {
+      storage = "10G"
+    }
+
+    persistent_volume_source {
+      host_path {
+        path = "/home/k3s/home-automation/home-assistant/recordings"
+      }
+    }
+
+    node_affinity {
+      required {
+        node_selector_term {
+          match_expressions {
+            key      = "kubernetes.io/hostname"
+            operator = "In"
+            values   = ["momonoke"]
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_persistent_volume_claim_v1" "home_assistant_recordings" {
+  metadata {
+    name      = "home-assistant-recordings"
+    namespace = "home-automation"
+  }
+
+  spec {
+    storage_class_name = "local-path"
+    access_modes       = ["ReadWriteOnce"]
+    volume_name        = kubernetes_persistent_volume_v1.home_assistant_recordings.metadata[0].name
+
+    resources {
+      requests = {
+        storage = "10G"
+      }
+    }
+  }
+}
+
 variable "oauth_client_id" {
   type        = string
   description = "OAuth client ID to use for Home Assistant authentication"
@@ -66,16 +170,16 @@ variable "home_assistant_hostname" {
   description = "Ingress hostname for Home Assistant on Tailscale"
 }
 
-locals {
-  configuration = yamldecode(file("./configuration.yaml"))
-  configuration_auth_oidc = merge(local.configuration.auth_oidc, {
-    client_id     = var.oauth_client_id
-    client_secret = var.oauth_client_secret
-  })
+resource "kubernetes_secret_v1" "home_assistant_secrets" {
+  metadata {
+    name      = "home-assistant-secrets"
+    namespace = "home-automation"
+  }
 
-  final_configuration = merge(local.configuration, {
-    auth_oidc = local.configuration_auth_oidc
-  })
+  data = {
+    "HASS_OAUTH_CLIENT_ID"     = var.oauth_client_id
+    "HASS_OAUTH_CLIENT_SECRET" = var.oauth_client_secret
+  }
 }
 
 resource "kubernetes_config_map_v1" "home_assistant_configuration" {
@@ -85,7 +189,10 @@ resource "kubernetes_config_map_v1" "home_assistant_configuration" {
   }
 
   data = {
-    "configuration.yaml" = yamlencode(local.final_configuration)
+    "configuration.yaml" = file("./config/configuration.yaml")
+    "automations.yaml"   = file("./config/automations.yaml")
+    "scenes.yaml"        = file("./config/scenes.yaml")
+    "scripts.yaml"       = file("./config/scripts.yaml")
   }
 }
 
@@ -141,6 +248,9 @@ resource "helm_release" "home_assistant" {
               UV_SYSTEM_PYTHON = "true"
               UV_NO_CACHE      = "true"
             }
+            envFrom = [
+              { secretRef = { name = kubernetes_secret_v1.home_assistant_secrets.metadata[0].name } }
+            ]
             probes = {
               # FIXME(ar3s3ru): find a way to enable these?
               liveness  = { enabled = false }
@@ -203,23 +313,34 @@ resource "helm_release" "home_assistant" {
         hostPath     = "/run/dbus"
         globalMounts = [{ path = "/run/dbus", readOnly = true }]
       }
-      # zigbee-antenna = {
-      #   enabled      = true
-      #   type         = "hostPath"
-      #   hostPath     = "/dev/ttyUSB0"
-      #   globalMounts = [{ path = "/dev/ttyUSB0" }]
-      # }
       config = {
         enabled       = true
         type          = "persistentVolumeClaim"
         existingClaim = kubernetes_persistent_volume_claim_v1.home_assistant_config.metadata[0].name
         globalMounts  = [{ path = "/config" }]
       }
+      media = {
+        enabled       = true
+        type          = "persistentVolumeClaim"
+        existingClaim = kubernetes_persistent_volume_claim_v1.home_assistant_media.metadata[0].name
+        globalMounts  = [{ path = "/media" }]
+      }
+      recordings = {
+        enabled       = true
+        type          = "persistentVolumeClaim"
+        existingClaim = kubernetes_persistent_volume_claim_v1.home_assistant_recordings.metadata[0].name
+        globalMounts  = [{ path = "/mnt/recordings" }]
+      }
       configuration = {
-        enabled      = true
-        type         = "configMap"
-        name         = kubernetes_config_map_v1.home_assistant_configuration.metadata[0].name
-        globalMounts = [{ path = "/config/configuration.yaml", subPath = "configuration.yaml", readOnly = true }]
+        enabled = true
+        type    = "configMap"
+        name    = kubernetes_config_map_v1.home_assistant_configuration.metadata[0].name
+        globalMounts = [
+          { path = "/config/configuration.yaml", subPath = "configuration.yaml", readOnly = true },
+          { path = "/config/automations.yaml", subPath = "automations.yaml", readOnly = true },
+          { path = "/config/scenes.yaml", subPath = "scenes.yaml", readOnly = true },
+          { path = "/config/scripts.yaml", subPath = "scripts.yaml", readOnly = true }
+        ]
       }
       scripts = {
         enabled      = true

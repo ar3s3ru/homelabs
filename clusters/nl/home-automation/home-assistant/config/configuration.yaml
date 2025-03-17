@@ -19,6 +19,8 @@ auth_oidc:
   discovery_url: "https://auth.nl.ar3s3ru.dev/application/o/home-assistant/.well-known/openid-configuration"
   display_name: "Log in with Authentik"
   id_token_signing_alg: "RS256"
+  client_id: !env_var HASS_OAUTH_CLIENT_ID
+  client_secret: !env_var HASS_OAUTH_CLIENT_SECRET
   features:
     automatic_user_linking: true
     automatic_person_creation: true
@@ -30,15 +32,6 @@ auth_oidc:
     admin: home-admin
     user: home-member
 
-script:
-  play_music_in_the_toilet:
-    alias: Play music in the Toilet
-    sequence:
-      - service: media_player.play_media
-        target:
-          entity_id: media_player.toilet_speaker
-        data:
-          media_content_id: '{ "app_name": "youtube", "playlist_id": "PLSlWCUnZ5deDcEWu50m_I-iCgIfm0jqv9", "media_id": "CoHD4weW5NI" }'
-          media_content_type: cast
-    mode: single
-    icon: mdi:youtube
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
