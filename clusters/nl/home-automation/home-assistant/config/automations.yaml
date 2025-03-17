@@ -1,1 +1,28 @@
 ---
+- id: play_music_in_the_toilet
+  alias: Play music in the Toilet
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.toilet_occupancy
+      from: "off"
+      to: "on"
+  actions:
+    - action: music_assistant.play_media
+      target:
+        entity_id: media_player.toilet_speaker_2
+      data:
+        media_type: album
+        media_id: Mozart for the Weekend
+- id: stop_music_in_the_toilet
+  alias: Stop music in the Toilet
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.toilet_occupancy
+      from: "on"
+      to: "off"
+  actions:
+    - action: media_player.media_stop
+      metadata: {}
+      data: {}
+      target:
+        entity_id: media_player.toilet_speaker_2
