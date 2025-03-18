@@ -134,7 +134,7 @@ resource "helm_release" "lidarr" {
           main = {
             image = {
               repository = "ghcr.io/linuxserver/lidarr"
-              tag        = "2.9.6"
+              tag        = "8.1.2135"
             }
             env = {
               TZ    = "Europe/Amsterdam"
