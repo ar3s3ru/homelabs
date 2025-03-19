@@ -4,6 +4,7 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
   dejima = import ./dejima inputs;
   eq14-001 = import ./eq14-001 inputs;
   momonoke = import ./momonoke inputs;
+  r5c-gateway = import ./r5c-gateway inputs;
 
   meta.nixpkgs = import nixpkgs {
     system = "x86_64-linux";
@@ -21,14 +22,13 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
     sops.defaultSopsFile = ./secrets.yaml;
     sops.defaultSopsFormat = "yaml";
 
+    # Use the latest Linux kernel version by default.
+    boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
+
     # Use unstable Nix.
     nix.package = pkgs.nixVersions.latest;
     nix.extraOptions = "experimental-features = nix-command flakes";
     nix.optimise.automatic = true;
-
-    # Enable Bluetooth on hosts.
-    services.blueman.enable = true;
-    hardware.bluetooth.enable = true;
 
     # Enable direnv.
     programs.direnv.enable = true;
@@ -53,10 +53,6 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
       ping = "prettyping --nolegend";
     };
 
-    # Enable firewall.
-    networking.firewall.enable = true;
-    networking.firewall.allowedTCPPorts = [ 22 80 443 ];
-
     # Enable container virtualization with Docker.
     virtualisation.docker.enable = true;
 
@@ -68,22 +64,6 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
     programs.mtr.enable = true;
     programs.gnupg.agent.enable = true;
     programs.gnupg.agent.enableSSHSupport = true;
-
-    # Use the latest Linux kernel version by default.
-    boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
-
-    # Use the systemd-boot EFI boot loader.
-    services.acpid.enable = true;
-    boot.loader.systemd-boot.enable = true;
-    boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
-    boot.loader.systemd-boot.configurationLimit = 3;
-
-    # Enable netboot.xyz for booting images over the network.
-    boot.loader.systemd-boot.netbootxyz.enable = true;
-
-    # Disable NetworkManager wait-online target, which always inevitably fails.
-    systemd.network.wait-online.enable = false;
-    boot.initrd.systemd.network.wait-online.enable = false;
 
     # Enable tmux.
     programs.tmux.enable = true;

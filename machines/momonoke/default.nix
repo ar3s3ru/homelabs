@@ -18,6 +18,7 @@
 
   imports = [
     nixos-hardware.nixosModules.lenovo-thinkpad-x270
+    ../../modules/nix/server.nix
     ./hardware-configuration.nix
     ./disable-docked-sleep.nix
     ./disko.nix

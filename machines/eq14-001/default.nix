@@ -20,6 +20,7 @@
     nixos-hardware.nixosModules.common-pc-ssd
     nixos-hardware.nixosModules.common-cpu-intel
     nixos-hardware.nixosModules.common-gpu-intel
+    ../../modules/nix/server.nix
     ./hardware-configuration.nix
     ./disko.nix
     ./tailscale.nix
