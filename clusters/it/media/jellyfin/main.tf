@@ -53,7 +53,7 @@ resource "helm_release" "jellyfin" {
   repository       = "https://jellyfin.github.io/jellyfin-helm"
   chart            = "jellyfin"
   namespace        = "media"
-  version          = "2.1.0"
+  version          = "2.3.0"
   create_namespace = true
   cleanup_on_fail  = true
 

@@ -134,7 +134,7 @@ resource "helm_release" "sonarr" {
           main = {
             image = {
               repository = "ghcr.io/linuxserver/sonarr"
-              tag        = "4.0.13"
+              tag        = "4.0.14"
             }
             env = {
               TZ    = "Europe/Amsterdam"
