@@ -13,6 +13,12 @@
     // Group all Github Actions updates in a single PR.
     {
       "matchManagers": "github-actions"
+    },
+    {
+      "matchPackageNames": [
+        "ghcr.io/music-assistant/server"
+      ],
+      "versioning": "pep440",
     }
   ],
   "customManagers": [
