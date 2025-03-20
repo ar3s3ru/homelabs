@@ -56,6 +56,10 @@ resource "helm_release" "zigbee2mqtt" {
       tls = [{ hosts = ["nl-z2m"] }]
     }
 
+    service = {
+      type = "ClusterIP"
+    }
+
     statefulset = {
       resources = {
         requests = {
@@ -83,6 +87,16 @@ resource "helm_release" "zigbee2mqtt" {
       serial = {
         port    = "/dev/ttyUSB0"
         adapter = "ezsp" # Sonoff dongle is based on Silicon Labs.
+      }
+
+      availability = {
+        enabled = true
+        # Time after which an active device will be marked as offline in
+        # minutes (default = 10 minutes)
+        active = { timeout = 10 }
+        # Time after which a passive device will be marked as offline in
+        # minutes (default = 1500 minutes aka 25 hours)
+        passive = { timeout = 1500 }
       }
     }
   })]
