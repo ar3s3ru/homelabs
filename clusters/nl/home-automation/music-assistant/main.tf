@@ -134,7 +134,7 @@ resource "helm_release" "music_assistant" {
           main = {
             image = {
               repository = "ghcr.io/music-assistant/server"
-              tag        = "2.5.0b15"
+              tag        = "98775220"
             }
             env = {
               LOG_LEVEL = "info"
