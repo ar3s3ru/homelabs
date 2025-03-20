@@ -1,9 +1,7 @@
 { config, ... }:
 
 {
-  sops.secrets."tailscale/preauthKey" = {
-    sopsFile = ./secrets.yaml;
-  };
+  sops.secrets."tailscale/preauthKey".sopsFile = ./secrets.yaml;
 
   services.tailscale.enable = true;
   services.tailscale.openFirewall = true;
