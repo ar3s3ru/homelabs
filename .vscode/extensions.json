@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "jnoortheen.nix-ide",
+    "hashicorp.hcl",
+    "hashicorp.terraform"
+  ]
+}

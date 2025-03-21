@@ -1,5 +1,10 @@
 {
   "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "files.associations": {
+    "*.hcl": "hcl",
+    "*.json5": "jsonc"
+  },
   "yaml.format.enable": true,
   "[yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -9,7 +14,7 @@
       "strings": true
     },
     "editor.suggest.insertMode": "replace",
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.json-language-features"
   },
   "[markdown]": {
     "editor.defaultFormatter": "yzhang.markdown-all-in-one"
@@ -23,7 +28,9 @@
   "nix.serverSettings": {
     "nil": {
       "formatting": {
-        "command": ["nixpkgs-fmt"]
+        "command": [
+          "nixpkgs-fmt"
+        ]
       }
     }
   }
