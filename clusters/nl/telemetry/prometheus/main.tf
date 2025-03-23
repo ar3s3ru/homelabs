@@ -24,7 +24,7 @@ resource "helm_release" "prometheus" {
   repository       = "https://prometheus-community.github.io/helm-charts"
   chart            = "kube-prometheus-stack"
   namespace        = "telemetry"
-  version          = "70.2.0"
+  version          = "70.2.1"
   create_namespace = true
 
   values = [yamlencode({
