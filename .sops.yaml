@@ -37,6 +37,12 @@ creation_rules:
           - *github-actions
           - *momonoke
           - *momonoke-ts
+  - path_regex: "machines/r5c-gateway/secrets.yaml"
+    key_groups:
+      - pgp:
+          - *ar3s3ru
+        age:
+          - *github-actions
   - path_regex: "clusters/.*"
     key_groups:
       - pgp:

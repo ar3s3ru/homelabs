@@ -3,10 +3,9 @@
 { ... }:
 
 {
-  deployment.targetHost = "192.168.2.46";
-  deployment.targetUser = "nix";
+  deployment.targetHost = "192.168.2.50";
+  deployment.targetUser = "root";
   deployment.tags = [ "type-gateway" "region-nl" ];
-  deployment.buildOnTarget = true;
 
   nixpkgs.system = "aarch64-linux";
 
@@ -18,5 +17,8 @@
   imports = [
     ./hardware-configuration.nix
     ./kernel.nix
+    ./ethernet.nix
+    ./network.nix
+    ./pppoe.nix
   ];
 }

@@ -104,7 +104,8 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
       mscp
       lshw
       inetutils
-      tcpdump
+      ethtool # manage NIC settings (offload, NIC feeatures, ...)
+      tcpdump # view network traffic
       # Fish utilities.
       fzf
       bat
