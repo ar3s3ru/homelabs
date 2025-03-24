@@ -94,6 +94,8 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
       pciutils
       usbutils
       mscp
+      ethtool # manage NIC settings (offload, NIC feeatures, ...)
+      tcpdump # view network traffic
       # Fish utilities.
       fzf
       bat
