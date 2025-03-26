@@ -52,7 +52,7 @@ resource "helm_release" "immich" {
   name       = "immich"
   repository = "https://immich-app.github.io/immich-charts"
   chart      = "immich"
-  version    = "0.9.1"
+  version    = "0.9.2"
   namespace  = kubernetes_namespace.immich.metadata[0].name
   values = [
     file("values.yaml")
