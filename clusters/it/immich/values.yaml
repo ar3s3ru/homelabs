@@ -44,3 +44,15 @@ immich:
     logging:
       enabled: true
       level: log
+    oauth:
+      enabled: true
+      autoLaunch: true
+      autoRegister: true
+      buttonText: "Login with Authentik"
+      issuerUrl: "https://auth.nl.ar3s3ru.dev/application/o/immich/.well-known/openid-configuration"
+      mobileOverrideEnabled: false
+      scope: "openid email profile"
+      signingAlgorithm: "RS256"
+      profileSigningAlgorithm: "none"
+      storageLabelClaim: "preferred_username"
+      storageQuotaClaim: "immich_quota"

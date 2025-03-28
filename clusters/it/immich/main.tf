@@ -49,13 +49,25 @@ resource "kubernetes_persistent_volume_claim" "immich" {
 }
 
 resource "helm_release" "immich" {
-  name       = "immich"
-  repository = "https://immich-app.github.io/immich-charts"
-  chart      = "immich"
-  version    = "0.9.2"
-  namespace  = kubernetes_namespace.immich.metadata[0].name
+  name            = "immich"
+  repository      = "https://immich-app.github.io/immich-charts"
+  chart           = "immich"
+  version         = "0.9.2"
+  namespace       = kubernetes_namespace.immich.metadata[0].name
+  cleanup_on_fail = true
   values = [
-    file("values.yaml")
+    file("values.yaml"),
+    yamlencode({
+      immich = {
+        configuration = {
+          oauth = {
+            clientId     = var.oauth_client_id
+            clientSecret = var.oauth_client_secret
+          }
+        }
+      }
+    })
   ]
+
   depends_on = [kubernetes_persistent_volume_claim.immich]
 }
