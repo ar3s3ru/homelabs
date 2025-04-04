@@ -1,9 +1,11 @@
 ---
 default_config: {}
+
 logger:
   default: info
   logs:
     custom_components.auth_oidc: debug
+
 http:
   cors_allowed_origins:
     - https://nl-hass.tail2ff90.ts.net
@@ -35,3 +37,28 @@ auth_oidc:
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
+
+input_datetime:
+  sleeping_time:
+    name: Sleeping time
+    has_date: false
+    has_time: true
+    icon: mdi:bed-clock
+    initial: "23:00"
+  wakeup_time:
+    name: Wake up time
+    has_date: false
+    has_time: true
+    icon: mdi:sun-clock
+    initial: "07:00"
+
+input_select:
+  home_mode:
+    name: Home Mode
+    options:
+      - Home # Someone is at home, normal working conditions
+      - Away # Nobody is at home (other than Luna perhaps)
+      - Sleeping # Time to sleep and be quiet, no disturbances
+      - Vacation # We are away from home for an extended period of time
+    initial: Home
+    icon: mdi:home-analytics
