@@ -12,7 +12,7 @@ resource "helm_release" "yopass_redis" {
   repository      = "oci://registry-1.docker.io/bitnamicharts"
   chart           = "redis"
   namespace       = "default"
-  version         = "20.11.4"
+  version         = "20.11.5"
   cleanup_on_fail = true
 
   values = [yamlencode({
