@@ -29,7 +29,7 @@ resource "helm_release" "prometheus_stack" {
   name       = "kube-prometheus-stack"
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"
-  version    = "70.4.2"
+  version    = "70.5.0"
   namespace  = kubernetes_namespace.telemetry.metadata[0].name
   values     = [file("values.yaml")]
 }
