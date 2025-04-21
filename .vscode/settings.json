@@ -5,10 +5,13 @@
     "*.hcl": "hcl",
     "*.json5": "jsonc"
   },
-  "yaml.format.enable": true,
   "[yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "yaml.format.enable": true,
+  "yaml.customTags": [
+    "!env_var"
+  ],
   "[json][jsonc]": {
     "editor.quickSuggestions": {
       "strings": true
