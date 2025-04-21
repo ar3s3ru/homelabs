@@ -84,7 +84,7 @@ resource "helm_release" "prowlarr" {
           main = {
             image = {
               repository = "ghcr.io/linuxserver/prowlarr"
-              tag        = "1.33.3"
+              tag        = "1.34.1"
             }
             env = {
               TZ    = "Europe/Amsterdam"
