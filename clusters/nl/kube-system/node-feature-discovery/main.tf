@@ -3,6 +3,6 @@ resource "helm_release" "node_feature_discovery" {
   repository      = "https://kubernetes-sigs.github.io/node-feature-discovery/charts"
   chart           = "node-feature-discovery"
   namespace       = "kube-system"
-  version         = "0.17.2"
+  version         = "0.17.3"
   cleanup_on_fail = true
 }
