@@ -11,7 +11,7 @@ runs:
   using: composite
   steps:
     - name: Install Nix package manager
-      uses: DeterminateSystems/nix-installer-action@v16
+      uses: DeterminateSystems/nix-installer-action@v17
       with:
         extra-conf: |
           experimental-features = nix-command flakes
