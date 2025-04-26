@@ -134,7 +134,7 @@ resource "helm_release" "radarr" {
           main = {
             image = {
               repository = "ghcr.io/linuxserver/radarr"
-              tag        = "5.21.1"
+              tag        = "5.22.4"
             }
             env = {
               TZ    = "Europe/Amsterdam"
