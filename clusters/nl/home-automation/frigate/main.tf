@@ -50,6 +50,10 @@ resource "helm_release" "frigate" {
       privileged = true # Needs this to access the GPU for hwaccel!
     }
 
+    podAnnotations = {
+      "reloader.stakater.com/auto" = "true" # Restarts the Deployment if the configmaps/secrets change.
+    }
+
     # Hardware acceleration for ffmpeg
     resources = {
       requests = {

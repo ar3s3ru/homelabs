@@ -24,6 +24,12 @@ go2rtc:
     e1-zoom-01-sub:
       - rtsp://{FRIGATE_E1_ZOOM_01_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_01_RTSP_PASSWORD}@192.168.2.45/h264Preview_01_sub
       - "ffmpeg:e1-zoom-01-sub#audio=opus"
+    e1-zoom-02:
+      - rtsp://{FRIGATE_E1_ZOOM_02_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_02_RTSP_PASSWORD}@192.168.2.34/h264Preview_01_main
+      - "ffmpeg:e1-zoom-02#audio=opus"
+    e1-zoom-02-sub:
+      - rtsp://{FRIGATE_E1_ZOOM_02_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_02_RTSP_PASSWORD}@192.168.2.34/h264Preview_01_sub
+      - "ffmpeg:e1-zoom-02-sub#audio=opus"
 
 cameras:
   living-room:
@@ -38,6 +44,21 @@ cameras:
           roles:
             - record
         - path: rtsp://127.0.0.1:8554/e1-zoom-01-sub?video&audio
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+  office:
+    live:
+      stream_name: e1-zoom-02-sub
+    ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-copy
+      inputs:
+        - path: rtsp://127.0.0.1:8554/e1-zoom-02?video&audio
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/e1-zoom-02-sub?video&audio
           input_args: preset-rtsp-restream
           roles:
             - detect
