@@ -11,9 +11,19 @@ runs:
   using: composite
   steps:
     - name: Install Nix package manager
-      uses: DeterminateSystems/nix-installer-action@v16
+      uses: nixbuild/nix-quick-install-action@5bb6a3b3abe66fd09bbf250dce8ada94f856a703 # v30
       with:
-        extra-conf: |
-          experimental-features = nix-command flakes
+        nix_conf: |
+          keep-env-derivations = true
+          keep-outputs = true
     - name: Set up Nix cache
-      uses: DeterminateSystems/magic-nix-cache-action@v9
+      uses: nix-community/cache-nix-action@c448f065ba14308da81de769632ca67a3ce67cf5 # v6
+      with:
+        # restore and save a cache using this key
+        primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
+        # if there's no cache hit, restore a cache by this prefix
+        restore-prefixes-first-match: nix-${{ runner.os }}-
+        # collect garbage until the Nix store size (in bytes) is at most this number
+        # before trying to save a new cache
+        # 1G = 1073741824
+        gc-max-store-size-linux: 1G
