@@ -11,9 +11,6 @@ runs:
   using: composite
   steps:
     - name: Install Nix package manager
-      uses: DeterminateSystems/nix-installer-action@v16
-      with:
-        extra-conf: |
-          experimental-features = nix-command flakes
+      uses: nixbuild/nix-quick-install-action@5bb6a3b3abe66fd09bbf250dce8ada94f856a703 # v30
     - name: Set up Nix cache
-      uses: DeterminateSystems/magic-nix-cache-action@v9
+      uses: nix-community/cache-nix-action@c448f065ba14308da81de769632ca67a3ce67cf5 # v6
