@@ -125,7 +125,7 @@ resource "helm_release" "esphome" {
           main = {
             image = {
               repository = "ghcr.io/esphome/esphome"
-              tag        = "2025.4.0"
+              tag        = "2025.4.1"
             }
             securityContext = {
               privileged = true # Required to access the /dev/ttyUSB0 device
