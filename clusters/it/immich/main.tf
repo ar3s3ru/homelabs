@@ -52,7 +52,7 @@ resource "helm_release" "immich" {
   name            = "immich"
   repository      = "https://immich-app.github.io/immich-charts"
   chart           = "immich"
-  version         = "0.9.2"
+  version         = "0.9.3"
   namespace       = kubernetes_namespace.immich.metadata[0].name
   cleanup_on_fail = true
   values = [
