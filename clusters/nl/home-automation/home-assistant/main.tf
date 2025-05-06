@@ -198,7 +198,7 @@ resource "kubernetes_config_map_v1" "home_assistant_configuration" {
 
 resource "helm_release" "home_assistant" {
   name            = "home-assistant"
-  repository      = "https://bjw-s.github.io/helm-charts"
+  repository      = "https://bjw-s-labs.github.io/helm-charts"
   chart           = "app-template"
   namespace       = "home-automation"
   version         = "3.7.3"

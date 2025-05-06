@@ -104,7 +104,7 @@ resource "kubernetes_persistent_volume_claim_v1" "sonarr_config" {
 
 resource "helm_release" "sonarr" {
   name             = "sonarr"
-  repository       = "https://bjw-s.github.io/helm-charts"
+  repository       = "https://bjw-s-labs.github.io/helm-charts"
   chart            = "app-template"
   namespace        = "media"
   version          = "3.7.3"

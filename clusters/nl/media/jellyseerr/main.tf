@@ -57,7 +57,7 @@ resource "kubernetes_persistent_volume_claim_v1" "jellyseerr_config" {
 
 resource "helm_release" "jellyseerr" {
   name            = "jellyseerr"
-  repository      = "https://bjw-s.github.io/helm-charts"
+  repository      = "https://bjw-s-labs.github.io/helm-charts"
   chart           = "app-template"
   namespace       = "media"
   version         = "3.7.3"

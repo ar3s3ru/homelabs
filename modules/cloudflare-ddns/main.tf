@@ -27,7 +27,7 @@ resource "kubernetes_secret_v1" "cloudflare_ddns_secrets" {
 
 resource "helm_release" "cloudflare_ddns" {
   name            = "cloudflare-ddns"
-  repository      = "https://bjw-s.github.io/helm-charts"
+  repository      = "https://bjw-s-labs.github.io/helm-charts"
   chart           = "app-template"
   namespace       = var.kubernetes_namespace
   version         = "3.7.3"

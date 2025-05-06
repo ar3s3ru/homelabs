@@ -31,7 +31,7 @@ resource "kubernetes_secret_v1" "govee_secrets" {
 
 resource "helm_release" "govee2mqtt" {
   name             = "govee2mqtt"
-  repository       = "https://bjw-s.github.io/helm-charts"
+  repository       = "https://bjw-s-labs.github.io/helm-charts"
   chart            = "app-template"
   namespace        = "home-automation"
   version          = "3.7.3"
