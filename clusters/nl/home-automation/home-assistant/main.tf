@@ -229,7 +229,7 @@ resource "helm_release" "home_assistant" {
           main = {
             image = {
               repository = "ghcr.io/home-assistant/home-assistant"
-              tag        = "2025.4.4"
+              tag        = "2025.5.0"
             }
             env = {
               TZ               = "Europe/Amsterdam"
