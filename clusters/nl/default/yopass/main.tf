@@ -25,7 +25,7 @@ resource "helm_release" "yopass" {
   depends_on = [helm_release.yopass_redis]
 
   name            = "yopass"
-  repository      = "https://bjw-s.github.io/helm-charts"
+  repository      = "https://bjw-s-labs.github.io/helm-charts"
   chart           = "app-template"
   namespace       = "default"
   version         = "3.7.3"

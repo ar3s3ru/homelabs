@@ -9,6 +9,7 @@
     "--accept-risk=all"
     "--advertise-routes=192.168.2.0/24"
     "--advertise-exit-node"
+    "--advertise-tags=tag:server"
     "--hostname=eq14-001"
   ];
 }

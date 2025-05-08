@@ -104,7 +104,7 @@ resource "kubernetes_persistent_volume_claim_v1" "esphome_cache" {
 
 resource "helm_release" "esphome" {
   name             = "esphome"
-  repository       = "https://bjw-s.github.io/helm-charts"
+  repository       = "https://bjw-s-labs.github.io/helm-charts"
   chart            = "app-template"
   namespace        = "home-automation"
   version          = "3.7.3"

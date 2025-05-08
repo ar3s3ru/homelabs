@@ -54,7 +54,7 @@ resource "helm_release" "prowlarr" {
   depends_on = [helm_release.flaresolverr]
 
   name             = "prowlarr"
-  repository       = "https://bjw-s.github.io/helm-charts"
+  repository       = "https://bjw-s-labs.github.io/helm-charts"
   chart            = "app-template"
   namespace        = "media"
   version          = "3.7.3"
@@ -148,7 +148,7 @@ resource "helm_release" "prowlarr" {
 
 resource "helm_release" "flaresolverr" {
   name             = "flaresolverr"
-  repository       = "https://bjw-s.github.io/helm-charts"
+  repository       = "https://bjw-s-labs.github.io/helm-charts"
   chart            = "app-template"
   namespace        = "media"
   version          = "3.7.3"
