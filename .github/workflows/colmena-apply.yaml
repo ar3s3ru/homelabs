@@ -36,5 +36,5 @@ jobs:
         with:
           age_keys: ${{ secrets.SOPS_AGE_KEYS }}
       - name: Run colmena apply
-        run: colmena apply --on ${{ inputs.targets }} --impure
+        run: colmena apply --on ${{ inputs.targets }} --no-build-on-target --impure
         shell: nix develop --quiet -c bash -e {0}
