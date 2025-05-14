@@ -32,13 +32,19 @@ creation_rules:
         age:
           - *github-actions
           - *momonoke-ts
-  - path_regex: "it/.*/secrets.yaml"
+  - path_regex: "clusters/it/.*/secrets.yaml"
     key_groups:
       - pgp:
           - *ar3s3ru
         age:
           - *github-actions
-  - path_regex: "nl/.*/secrets.yaml"
+  - path_regex: "clusters/nl/.*/secrets.yaml"
+    key_groups:
+      - pgp:
+          - *ar3s3ru
+        age:
+          - *github-actions
+  - path_regex: "apps/.*/secrets.yaml"
     key_groups:
       - pgp:
           - *ar3s3ru

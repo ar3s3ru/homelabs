@@ -2,8 +2,7 @@
   "editor.formatOnSave": true,
   "editor.tabSize": 2,
   "files.associations": {
-    "*.hcl": "hcl",
-    "*.json5": "jsonc"
+    "*.yaml": "home-assistant"
   },
   "[yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

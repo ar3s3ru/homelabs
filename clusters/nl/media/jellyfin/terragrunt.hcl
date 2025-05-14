@@ -22,7 +22,12 @@ dependency "intel-gpu" { # Necessary for hardware acceleration.
 }
 
 dependency "authentik" { # Necessary for authentication.
-  config_path = "${get_path_to_repo_root()}/clusters/nl/auth/authentik"
+  config_path = "${get_path_to_repo_root()}/apps/authentik"
+
+  mock_outputs = {
+    jellyfin_client_id = "mock-client-id"
+    jellyfin_client_secret = "mock-client-secret"
+  }
 }
 
 dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reloader.

@@ -1,0 +1,40 @@
+---
+name: Colmena Apply
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+    inputs:
+      targets:
+        default: '@type:server'
+        description: 'Targets to deploy through colmena'
+        required: true
+        type: string
+
+jobs:
+  run:
+    name: Run
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      - name: Set up Nix system
+        uses: ./.github/actions/nix-setup
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
+          tags: "tag:ci"
+      - name: Import sops age keys
+        uses: ./.github/actions/import-sops-age-keys
+        with:
+          age_keys: ${{ secrets.SOPS_AGE_KEYS }}
+      - name: Run colmena apply
+        run: colmena apply --on ${{ inputs.targets }} --impure
+        shell: nix develop --quiet -c bash -e {0}

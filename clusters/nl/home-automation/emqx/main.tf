@@ -4,6 +4,7 @@ resource "helm_release" "emqx" {
   chart           = "emqx"
   namespace       = "home-automation"
   version         = "5.8.6"
+  create_namespace = true
   cleanup_on_fail = true
 
   values = [yamlencode({

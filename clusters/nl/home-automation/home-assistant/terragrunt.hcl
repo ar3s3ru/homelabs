@@ -17,7 +17,12 @@ dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reload
 }
 
 dependency "authentik" {
-  config_path = "${get_path_to_repo_root()}/clusters/nl/auth/authentik"
+  config_path = "${get_path_to_repo_root()}/apps/authentik"
+
+  mock_outputs = {
+    home_assistant_client_id = "mock-client-id"
+    home_assistant_client_secret = "mock-client-secret"
+  }
 }
 
 dependency "emqx" {

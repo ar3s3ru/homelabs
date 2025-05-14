@@ -23,14 +23,6 @@
     path = "/etc/rancher/k3s/registries.yaml";
   };
 
-  environment.etc."rancher/k3s/config.yaml".text = ''
-    ---
-    # Source: https://devops.stackexchange.com/questions/16069/k3s-eviction-manager-attempting-to-reclaim-resourcename-ephemeral-storage
-    kubelet-arg:
-      - "eviction-minimum-reclaim=imagefs.available=2%,nodefs.available=2%"
-      - "eviction-hard=memory.available<500Mi,nodefs.available<1Gi"
-  '';
-
   networking.firewall.allowedTCPPorts = [
     2379
     2380 # k3s etcd cluster coordination
@@ -52,7 +44,6 @@
   services.k3s = {
     enable = true;
     role = "server";
-    tokenFile = config.sops.secrets."clusters/nl/token".path;
     clusterInit = true;
   };
 
