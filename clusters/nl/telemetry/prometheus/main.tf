@@ -20,12 +20,12 @@ resource "kubernetes_persistent_volume_v1" "prometheus" {
 }
 
 resource "helm_release" "prometheus" {
-  name             = "kps"
-  repository       = "https://prometheus-community.github.io/helm-charts"
-  chart            = "kube-prometheus-stack"
-  namespace        = "telemetry"
-  version          = "72.1.0"
-  create_namespace = true
+  name            = "kps"
+  repository      = "https://prometheus-community.github.io/helm-charts"
+  chart           = "kube-prometheus-stack"
+  namespace       = "telemetry"
+  version         = "72.1.0"
+  cleanup_on_fail = true
 
   values = [yamlencode({
     prometheus = {

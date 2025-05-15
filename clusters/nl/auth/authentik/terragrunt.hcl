@@ -6,6 +6,11 @@ include "cluster" {
   path = find_in_parent_folders("cluster.hcl")
 }
 
+dependency "auth" { # Creates the namespace.
+  config_path  = "${get_path_to_repo_root()}/clusters/nl/auth"
+  skip_outputs = true
+}
+
 dependency "cert-manager" { # Necessary for TLS certificates.
   config_path  = "${get_path_to_repo_root()}/clusters/nl/networking/cert-manager"
   skip_outputs = true

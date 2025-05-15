@@ -6,6 +6,11 @@ include "cluster" {
   path = find_in_parent_folders("cluster.hcl")
 }
 
+dependency "media" { # Creates the namespace
+  config_path  = "${get_path_to_repo_root()}/clusters/nl/media"
+  skip_outputs = true
+}
+
 dependency "cert-manager" { # Necessary for TLS certificates.
   config_path  = "${get_path_to_repo_root()}/clusters/nl/networking/cert-manager"
   skip_outputs = true
@@ -22,7 +27,7 @@ dependency "intel-gpu" { # Necessary for hardware acceleration.
 }
 
 dependency "authentik" { # Necessary for authentication.
-  config_path = "${get_path_to_repo_root()}/apps/authentik"
+  config_path = "${get_path_to_repo_root()}/clusters/nl/auth/authentik-config"
 
   mock_outputs = {
     jellyfin_client_id = "mock-client-id"

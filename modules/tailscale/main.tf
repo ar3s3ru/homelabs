@@ -40,7 +40,7 @@ resource "helm_release" "tailscale_operator" {
   version          = "1.83.106"
   chart            = "tailscale-operator"
   namespace        = var.kubernetes_namespace
-  create_namespace = true
+  cleanup_on_fail  = true
 
   values = [
     yamlencode({

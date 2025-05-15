@@ -3,7 +3,7 @@ include "root" {
 }
 
 include "cluster" {
-  path = "${get_path_to_repo_root()}/clusters/nl/cluster.hcl"
+  path = find_in_parent_folders("cluster.hcl")
 }
 
 dependency "authentik" {

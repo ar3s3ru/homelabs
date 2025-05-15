@@ -8,7 +8,7 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
 
   meta.nixpkgs = import nixpkgs {
     system = "x86_64-linux";
-    overlays = [ (import ../modules/nix/overlays) ];
+    # overlays = [ (import ../modules/nix/overlays) ];
   };
 
   defaults = { pkgs, lib, ... }: {
@@ -18,6 +18,9 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
     ];
 
     system.stateVersion = "23.11";
+
+    # Build in a dedicated folder on the store partition.
+    systemd.services.nix-daemon.environment.TMPDIR = "/nix/tmp";
 
     # Decrypt common secrets.
     sops.defaultSopsFile = ./secrets.yaml;
@@ -60,6 +63,9 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
     # Enable the OpenSSH daemon.
     services.openssh.enable = true;
     services.openssh.settings.PermitRootLogin = "yes";
+
+    # Better disk mounting.
+    services.udisks2.enable = true;
 
     # Enable GPG.
     programs.mtr.enable = true;

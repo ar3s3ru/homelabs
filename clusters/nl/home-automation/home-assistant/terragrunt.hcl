@@ -6,6 +6,11 @@ include "cluster" {
   path = find_in_parent_folders("cluster.hcl")
 }
 
+dependency "home-automation" { # Creates the namespace.
+  config_path  = "${get_path_to_repo_root()}/clusters/nl/home-automation"
+  skip_outputs = true
+}
+
 dependency "tailscale" { # Necessary for Ingress class name.
   config_path  = "${get_path_to_repo_root()}/clusters/nl/networking/tailscale"
   skip_outputs = true
@@ -17,7 +22,7 @@ dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reload
 }
 
 dependency "authentik" {
-  config_path = "${get_path_to_repo_root()}/apps/authentik"
+  config_path = "${get_path_to_repo_root()}/clusters/nl/auth/authentik-config"
 
   mock_outputs = {
     home_assistant_client_id = "mock-client-id"

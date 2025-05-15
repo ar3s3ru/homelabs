@@ -55,13 +55,12 @@ resource "kubernetes_persistent_volume_claim_v1" "qbittorrent" {
 }
 
 resource "helm_release" "qbittorrent" {
-  name             = "qbittorrent"
-  repository       = "https://bjw-s-labs.github.io/helm-charts"
-  chart            = "app-template"
-  namespace        = "media"
-  version          = "3.7.3"
-  create_namespace = true
-  cleanup_on_fail  = true
+  name            = "qbittorrent"
+  repository      = "https://bjw-s-labs.github.io/helm-charts"
+  chart           = "app-template"
+  namespace       = "media"
+  version         = "3.7.3"
+  cleanup_on_fail = true
 
   values = [yamlencode({
     defaultPodOptions = {

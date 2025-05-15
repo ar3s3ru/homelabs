@@ -103,13 +103,12 @@ resource "kubernetes_persistent_volume_claim_v1" "esphome_cache" {
 }
 
 resource "helm_release" "esphome" {
-  name             = "esphome"
-  repository       = "https://bjw-s-labs.github.io/helm-charts"
-  chart            = "app-template"
-  namespace        = "home-automation"
-  version          = "3.7.3"
-  create_namespace = true
-  cleanup_on_fail  = true
+  name            = "esphome"
+  repository      = "https://bjw-s-labs.github.io/helm-charts"
+  chart           = "app-template"
+  namespace       = "home-automation"
+  version         = "3.7.3"
+  cleanup_on_fail = true
 
   values = [yamlencode({
     controllers = {

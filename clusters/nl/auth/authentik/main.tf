@@ -25,12 +25,11 @@ variable "smtp_password" {
 }
 
 resource "helm_release" "authentik" {
-  name             = "authentik"
-  repository       = "https://charts.goauthentik.io"
-  chart            = "authentik"
-  version          = "2025.4.0"
-  namespace        = "auth"
-  create_namespace = true
+  name       = "authentik"
+  repository = "https://charts.goauthentik.io"
+  chart      = "authentik"
+  version    = "2025.4.0"
+  namespace  = "auth"
 
   values = [
     yamlencode({

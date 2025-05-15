@@ -5,3 +5,8 @@ include "root" {
 include "cluster" {
   path = find_in_parent_folders("cluster.hcl")
 }
+
+dependency "networking" { # Creates the namespace
+  config_path  = "${get_path_to_repo_root()}/clusters/nl/networking"
+  skip_outputs = true
+}

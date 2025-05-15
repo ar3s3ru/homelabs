@@ -9,7 +9,6 @@ resource "helm_release" "cert_manager" {
   chart            = "cert-manager"
   namespace        = var.kubernetes_namespace
   version          = "v1.17.2"
-  create_namespace = true
   cleanup_on_fail  = true
 
   values = [yamlencode({

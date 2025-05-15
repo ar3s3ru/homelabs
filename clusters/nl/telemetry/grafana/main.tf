@@ -1,10 +1,10 @@
 resource "helm_release" "grafana" {
-  name             = "grafana"
-  repository       = "https://grafana.github.io/helm-charts"
-  chart            = "grafana"
-  version          = "8.15.0"
-  namespace        = "telemetry"
-  create_namespace = true
+  name            = "grafana"
+  repository      = "https://grafana.github.io/helm-charts"
+  chart           = "grafana"
+  version         = "8.15.0"
+  namespace       = "telemetry"
+  cleanup_on_fail = true
 
   values = [yamlencode({
     ingress = {

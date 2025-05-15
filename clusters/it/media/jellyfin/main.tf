@@ -54,7 +54,6 @@ resource "helm_release" "jellyfin" {
   chart            = "jellyfin"
   namespace        = "media"
   version          = "2.3.0"
-  create_namespace = true
   cleanup_on_fail  = true
 
   values = [yamlencode({

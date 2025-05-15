@@ -53,13 +53,12 @@ resource "kubernetes_persistent_volume_claim_v1" "prowlarr_config" {
 resource "helm_release" "prowlarr" {
   depends_on = [helm_release.flaresolverr]
 
-  name             = "prowlarr"
-  repository       = "https://bjw-s-labs.github.io/helm-charts"
-  chart            = "app-template"
-  namespace        = "media"
-  version          = "3.7.3"
-  create_namespace = true
-  cleanup_on_fail  = true
+  name            = "prowlarr"
+  repository      = "https://bjw-s-labs.github.io/helm-charts"
+  chart           = "app-template"
+  namespace       = "media"
+  version         = "3.7.3"
+  cleanup_on_fail = true
 
   values = [yamlencode({
     defaultPodOptions = {
@@ -147,13 +146,12 @@ resource "helm_release" "prowlarr" {
 }
 
 resource "helm_release" "flaresolverr" {
-  name             = "flaresolverr"
-  repository       = "https://bjw-s-labs.github.io/helm-charts"
-  chart            = "app-template"
-  namespace        = "media"
-  version          = "3.7.3"
-  create_namespace = true
-  cleanup_on_fail  = true
+  name            = "flaresolverr"
+  repository      = "https://bjw-s-labs.github.io/helm-charts"
+  chart           = "app-template"
+  namespace       = "media"
+  version         = "3.7.3"
+  cleanup_on_fail = true
 
   values = [yamlencode({
     defaultPodOptions = {

@@ -30,13 +30,12 @@ resource "kubernetes_secret_v1" "govee_secrets" {
 }
 
 resource "helm_release" "govee2mqtt" {
-  name             = "govee2mqtt"
-  repository       = "https://bjw-s-labs.github.io/helm-charts"
-  chart            = "app-template"
-  namespace        = "home-automation"
-  version          = "3.7.3"
-  create_namespace = true
-  cleanup_on_fail  = true
+  name            = "govee2mqtt"
+  repository      = "https://bjw-s-labs.github.io/helm-charts"
+  chart           = "app-template"
+  namespace       = "home-automation"
+  version         = "3.7.3"
+  cleanup_on_fail = true
 
   values = [yamlencode({
     defaultPodOptions = {

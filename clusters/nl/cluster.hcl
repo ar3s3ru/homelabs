@@ -6,7 +6,7 @@ terraform {
   backend "kubernetes" {
     secret_suffix  = "${basename(get_working_dir())}"
     config_path    = "${get_path_to_repo_root()}/clusters/kubeconfig.yaml"
-    config_context = "nl-private-admin-init"
+    config_context = "nl"
   }
 }
 EOF
@@ -18,7 +18,7 @@ locals {
 }
 
 inputs = {
-  kubernetes_context      = "nl-private-admin-init"
+  kubernetes_context      = "nl"
   tailscale_domain        = local.tailscale_domain
   authentik_host          = "auth.nl.ar3s3ru.dev"
   home_assistant_hostname = local.home_assistant_hostname

@@ -44,9 +44,3 @@ creation_rules:
           - *ar3s3ru
         age:
           - *github-actions
-  - path_regex: "apps/.*/secrets.yaml"
-    key_groups:
-      - pgp:
-          - *ar3s3ru
-        age:
-          - *github-actions
