@@ -24,8 +24,6 @@
   };
 
   # Kubernetes through K3S.
-  services.k3s = {
-    enable = true;
-    role = "server";
-  };
+  services.k3s.enable = true;
+  services.k3s.role = "server";
 }

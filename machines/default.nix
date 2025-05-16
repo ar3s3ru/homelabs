@@ -8,7 +8,7 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
 
   meta.nixpkgs = import nixpkgs {
     system = "x86_64-linux";
-    # overlays = [ (import ../modules/nix/overlays) ];
+    overlays = [ (import ../modules/nix/overlays) ];
   };
 
   defaults = { pkgs, lib, ... }: {
@@ -90,6 +90,7 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
 
     # Packages
     environment.systemPackages = with pkgs; [
+      util-linuxMinimal
       wget
       lm_sensors
       ripgrep

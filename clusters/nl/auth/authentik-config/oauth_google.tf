@@ -15,6 +15,7 @@ resource "authentik_source_oauth" "name" {
   slug                = "google"
   authentication_flow = data.authentik_flow.default_source_authentication.id
   enrollment_flow     = data.authentik_flow.default_source_enrollment.id
+  user_matching_mode  = "email_link"
 
   access_token_url  = "https://oauth2.googleapis.com/token"
   authorization_url = "https://accounts.google.com/o/oauth2/v2/auth"

@@ -33,10 +33,8 @@
   sops.secrets."clusters/nl/token" = { };
 
   # Kubernetes through K3S.
-  services.k3s = {
-    enable = true;
-    role = "agent";
-    tokenFile = config.sops.secrets."clusters/nl/token".path;
-    serverAddr = "https://192.168.2.109:6443";
-  };
+  services.k3s.enable = true;
+  services.k3s.role = "agent";
+  services.k3s.tokenFile = config.sops.secrets."clusters/nl/token".path;
+  services.k3s.serverAddr = "https://192.168.2.109:6443";
 }
