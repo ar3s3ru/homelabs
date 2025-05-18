@@ -63,3 +63,14 @@ input_select:
       - Vacation # We are away from home for an extended period of time
     initial: Home
     icon: mdi:home-analytics
+
+camera:
+  - platform: xiaomi_cloud_map_extractor
+    host: !secret xiaomi_vacuum_host
+    token: !secret xiaomi_vacuum_token
+    username: !secret xiaomi_cloud_username
+    password: !secret xiaomi_cloud_password
+    country: de
+    draw: ["all"]
+    attributes:
+      - calibration_points

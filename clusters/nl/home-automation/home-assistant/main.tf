@@ -1,157 +1,15 @@
-resource "kubernetes_persistent_volume_v1" "home_assistant_config" {
-  metadata {
-    name = "home-assistant-config"
+module "volumes" {
+  source = "../../../../modules/local-persistent-mount"
+
+  for_each = {
+    "home-assistant-config" = "/home/k3s/home-automation/home-assistant/config"
+    "home-assistant-media"  = "/home/k3s/home-automation/home-assistant/media"
   }
 
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-
-    capacity = {
-      storage = "10G"
-    }
-
-    persistent_volume_source {
-      host_path {
-        path = "/home/k3s/home-automation/home-assistant/config"
-      }
-    }
-
-    node_affinity {
-      required {
-        node_selector_term {
-          match_expressions {
-            key      = "kubernetes.io/hostname"
-            operator = "In"
-            values   = ["momonoke"]
-          }
-        }
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim_v1" "home_assistant_config" {
-  metadata {
-    name      = "home-assistant-config"
-    namespace = "home-automation"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-    volume_name        = kubernetes_persistent_volume_v1.home_assistant_config.metadata[0].name
-
-    resources {
-      requests = {
-        storage = "10G"
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_v1" "home_assistant_media" {
-  metadata {
-    name = "home-assistant-media"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-
-    capacity = {
-      storage = "10G"
-    }
-
-    persistent_volume_source {
-      host_path {
-        path = "/home/k3s/home-automation/home-assistant/media"
-      }
-    }
-
-    node_affinity {
-      required {
-        node_selector_term {
-          match_expressions {
-            key      = "kubernetes.io/hostname"
-            operator = "In"
-            values   = ["momonoke"]
-          }
-        }
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim_v1" "home_assistant_media" {
-  metadata {
-    name      = "home-assistant-media"
-    namespace = "home-automation"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-    volume_name        = kubernetes_persistent_volume_v1.home_assistant_media.metadata[0].name
-
-    resources {
-      requests = {
-        storage = "10G"
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_v1" "home_assistant_recordings" {
-  metadata {
-    name = "home-assistant-recordings"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-
-    capacity = {
-      storage = "10G"
-    }
-
-    persistent_volume_source {
-      host_path {
-        path = "/home/k3s/home-automation/home-assistant/recordings"
-      }
-    }
-
-    node_affinity {
-      required {
-        node_selector_term {
-          match_expressions {
-            key      = "kubernetes.io/hostname"
-            operator = "In"
-            values   = ["momonoke"]
-          }
-        }
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim_v1" "home_assistant_recordings" {
-  metadata {
-    name      = "home-assistant-recordings"
-    namespace = "home-automation"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-    volume_name        = kubernetes_persistent_volume_v1.home_assistant_recordings.metadata[0].name
-
-    resources {
-      requests = {
-        storage = "10G"
-      }
-    }
-  }
+  volume_name          = each.key
+  kubernetes_namespace = "home-automation"
+  kubernetes_node      = "momonoke"
+  host_path            = each.value
 }
 
 variable "oauth_client_id" {
@@ -170,9 +28,9 @@ variable "home_assistant_hostname" {
   description = "Ingress hostname for Home Assistant on Tailscale"
 }
 
-resource "kubernetes_secret_v1" "home_assistant_secrets" {
+resource "kubernetes_secret_v1" "home_assistant_oauth_secrets" {
   metadata {
-    name      = "home-assistant-secrets"
+    name      = "home-assistant-oauth-secrets"
     namespace = "home-automation"
   }
 
@@ -193,6 +51,23 @@ resource "kubernetes_config_map_v1" "home_assistant_configuration" {
     "automations.yaml"   = file("./config/automations.yaml")
     "scenes.yaml"        = file("./config/scenes.yaml")
     "scripts.yaml"       = file("./config/scripts.yaml")
+  }
+}
+
+variable "config_secrets_yaml" {
+  type        = string
+  description = "Content of secrets.yaml file for Home Assistant"
+  sensitive   = true
+}
+
+resource "kubernetes_secret_v1" "home_assistant_secrets" {
+  metadata {
+    name      = "home-assistant-secrets"
+    namespace = "home-automation"
+  }
+
+  data = {
+    "secrets.yaml" = var.config_secrets_yaml
   }
 }
 
@@ -238,7 +113,7 @@ resource "helm_release" "home_assistant" {
               UV_NO_CACHE      = "true"
             }
             envFrom = [
-              { secretRef = { name = kubernetes_secret_v1.home_assistant_secrets.metadata[0].name } }
+              { secretRef = { name = kubernetes_secret_v1.home_assistant_oauth_secrets.metadata[0].name } }
             ]
             probes = {
               # FIXME(ar3s3ru): find a way to enable these?
@@ -305,20 +180,22 @@ resource "helm_release" "home_assistant" {
       config = {
         enabled       = true
         type          = "persistentVolumeClaim"
-        existingClaim = kubernetes_persistent_volume_claim_v1.home_assistant_config.metadata[0].name
+        existingClaim = "home-assistant-config"
         globalMounts  = [{ path = "/config" }]
       }
       media = {
         enabled       = true
         type          = "persistentVolumeClaim"
-        existingClaim = kubernetes_persistent_volume_claim_v1.home_assistant_media.metadata[0].name
+        existingClaim = "home-assistant-media"
         globalMounts  = [{ path = "/media" }]
       }
-      recordings = {
-        enabled       = true
-        type          = "persistentVolumeClaim"
-        existingClaim = kubernetes_persistent_volume_claim_v1.home_assistant_recordings.metadata[0].name
-        globalMounts  = [{ path = "/mnt/recordings" }]
+      secrets = {
+        enabled = true
+        type    = "secret"
+        name    = kubernetes_secret_v1.home_assistant_secrets.metadata[0].name
+        globalMounts = [
+          { path = "/config/secrets.yaml", subPath = "secrets.yaml", readOnly = true }
+        ]
       }
       configuration = {
         enabled = true

@@ -53,4 +53,5 @@ dependency "music-assistant" {
 inputs = {
   oauth_client_id     = dependency.authentik.outputs.home_assistant_client_id
   oauth_client_secret = dependency.authentik.outputs.home_assistant_client_secret
+  config_secrets_yaml = sops_decrypt_file("./config/secrets.yaml")
 }
