@@ -4,12 +4,12 @@ variable "kubernetes_namespace" {
 }
 
 resource "helm_release" "cert_manager" {
-  name             = "cert-manager"
-  repository       = "https://charts.jetstack.io"
-  chart            = "cert-manager"
-  namespace        = var.kubernetes_namespace
-  version          = "v1.17.2"
-  cleanup_on_fail  = true
+  name            = "cert-manager"
+  repository      = "https://charts.jetstack.io"
+  chart           = "cert-manager"
+  namespace       = var.kubernetes_namespace
+  version         = "v1.17.2"
+  cleanup_on_fail = true
 
   values = [yamlencode({
     crds = { enabled = true }

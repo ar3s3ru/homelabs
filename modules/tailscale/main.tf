@@ -36,11 +36,11 @@ resource "kubernetes_cluster_role_binding" "ar3s3ru_cluster_admin" {
 resource "helm_release" "tailscale_operator" {
   name = "tailscale-operator"
   # NOTE: switched to the "unstable" Helm chart to fix https://github.com/tailscale/tailscale/issues/15081
-  repository       = "https://pkgs.tailscale.com/unstable/helmcharts"
-  version          = "1.83.106"
-  chart            = "tailscale-operator"
-  namespace        = var.kubernetes_namespace
-  cleanup_on_fail  = true
+  repository      = "https://pkgs.tailscale.com/unstable/helmcharts"
+  version         = "1.83.106"
+  chart           = "tailscale-operator"
+  namespace       = var.kubernetes_namespace
+  cleanup_on_fail = true
 
   values = [
     yamlencode({

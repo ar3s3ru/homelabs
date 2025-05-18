@@ -1,0 +1,74 @@
+# yaml-language-server: $schema=https://www.authelia.com/schemas/v4.39/json-schema/configuration.json
+---
+theme: "dark"
+
+log:
+  level: info
+  format: json
+
+telemetry:
+  metrics:
+    enabled: true
+
+default_2fa_method: totp
+
+authentication_backend:
+  refresh_interval: 1m
+  ldap:
+    enabled: true
+    implementation: lldap
+    address: ldap://lldap.auth.svc.cluster.local:3890
+    base_dn: dc=ar3s3ru,dc=dev
+    user: uid=authelia,ou=people,dc=ar3s3ru,dc=dev
+    password: { secret_name: "authelia-secrets" }
+    users_filter: "(&(|({username_attribute}={input})({mail_attribute}={input}))(objectClass=person))"
+
+password_policy:
+  standard:
+    enabled: true
+    min_length: 8
+    require_uppercase: true
+    require_lowercase: true
+    require_number: true
+    require_special: true
+
+session:
+  cookies:
+    - domain: ar3s3ru.dev
+      subdomain: auth
+
+  redis:
+    enabled: true
+    deploy: true
+    host: "authelia-redis-headless.auth.svc.cluster.local"
+
+storage:
+  postgres:
+    enabled: true
+    address: "tcp://aws-0-eu-central-1.pooler.supabase.com:5432"
+    database: "postgres"
+    username: "postgres.akdwzhfsjzmlsfeenlfe"
+    password: { secret_name: "authelia-secrets" }
+
+notifier:
+  smtp:
+    enabled: true
+    enabledSecret: true
+    subject: "{title}"
+    address: "submission://smtp.gmail.com:587"
+    username: "nl.homelab.ar3s3ru@gmail.com"
+    password: { secret_name: "authelia-secrets" }
+
+identity_providers:
+  oidc:
+    enabled: false
+    cors:
+      allowed_origins_from_client_redirect_uris: true
+      endpoints: [userinfo, authorization, token, revocation, introspection]
+    claims_policies:
+      # https://www.authelia.com/integration/openid-connect/openid-connect-1.0-claims/#restore-functionality-prior-to-claims-parameter
+      default:
+        id_token: [email, email_verified, alt_emails, name, preferred_username, groups]
+      username_email:
+        id_token: [email, email_verified, alt_emails, name, preferred_username]
+    clients: []

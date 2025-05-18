@@ -9,7 +9,8 @@
   },
   "yaml.format.enable": true,
   "yaml.customTags": [
-    "!env_var"
+    "!env_var",
+    "!secret"
   ],
   "[json][jsonc]": {
     "editor.quickSuggestions": {
