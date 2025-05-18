@@ -16,12 +16,22 @@ authentication_backend:
   refresh_interval: 1m
   ldap:
     enabled: true
-    implementation: lldap
+    implementation: custom
     address: ldap://lldap.auth.svc.cluster.local:3890
-    base_dn: dc=ar3s3ru,dc=dev
-    user: uid=authelia,ou=people,dc=ar3s3ru,dc=dev
+    start_tls: false
+    user: uid=admin,ou=people,dc=ar3s3ru,dc=dev
     password: { secret_name: "authelia-secrets" }
+    base_dn: dc=ar3s3ru,dc=dev
+    additional_users_dn: ou=people
+    additional_groups_dn: ou=groups
     users_filter: "(&(|({username_attribute}={input})({mail_attribute}={input}))(objectClass=person))"
+    groups_filter: "(&(member=uid={input},ou=people,dc=ar3s3ru,dc=dev)(objectClass=groupOfNames))"
+    attributes:
+      distinguished_name: "distinguishedName"
+      username: "uid"
+      mail: "mail"
+      member_of: "memberOf"
+      group_name: "cn"
 
 password_policy:
   standard:
