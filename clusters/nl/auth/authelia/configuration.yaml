@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://www.authelia.com/schemas/v4.39/json-schema/configuration.json
+# yaml-language-server: $schema=https://www.authelia.com/schemas/v4.39.1/json-schema/configuration.json
 ---
 theme: "dark"
 

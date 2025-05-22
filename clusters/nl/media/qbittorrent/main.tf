@@ -2,56 +2,18 @@ locals {
   webui_port = 8080
 }
 
-resource "kubernetes_persistent_volume_v1" "qbittorrent" {
-  metadata {
-    name = "qbittorrent-pv"
+module "volumes" {
+  source = "../../../../modules/local-persistent-mount"
+
+  for_each = {
+    "qbittorrent-config" = "/media/config/qbittorrent"
+    "qbittorrent-media"  = "/media"
   }
 
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-
-    capacity = {
-      storage = "263.7G" # NOTE: this is the size of the partition.
-    }
-
-    persistent_volume_source {
-      host_path {
-        path = "/media"
-      }
-    }
-
-    node_affinity {
-      required {
-        node_selector_term {
-          match_expressions {
-            key      = "kubernetes.io/hostname"
-            operator = "In"
-            values   = ["eq14-001"]
-          }
-        }
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim_v1" "qbittorrent" {
-  metadata {
-    name      = "qbittorrent-pvc"
-    namespace = "media"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-    volume_name        = kubernetes_persistent_volume_v1.qbittorrent.metadata[0].name
-
-    resources {
-      requests = {
-        storage = "263.7G" # NOTE: this is the size of the partition.
-      }
-    }
-  }
+  volume_name          = each.key
+  kubernetes_namespace = "media"
+  kubernetes_node      = "eq14-001"
+  host_path            = each.value
 }
 
 resource "helm_release" "qbittorrent" {
@@ -143,14 +105,13 @@ resource "helm_release" "qbittorrent" {
       config = {
         enabled      = true
         type         = "persistentVolumeClaim"
-        accessMode   = "ReadWriteOnce"
-        size         = "50M"
+        existingClaim = "qbittorrent-config"
         globalMounts = [{ path = "/config" }]
       }
       downloads = {
         enabled       = true
         type          = "persistentVolumeClaim"
-        existingClaim = kubernetes_persistent_volume_claim_v1.qbittorrent.metadata[0].name
+        existingClaim = "qbittorrent-media"
         globalMounts  = [{ path = "/media" }]
       }
     }

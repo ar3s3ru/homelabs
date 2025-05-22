@@ -64,6 +64,11 @@ input_select:
     initial: Home
     icon: mdi:home-analytics
 
+xiaomi_miot:
+  username: !secret xiaomi_cloud_username
+  password: !secret xiaomi_cloud_password
+  server_country: de
+
 camera:
   - platform: xiaomi_cloud_map_extractor
     host: !secret xiaomi_vacuum_host
