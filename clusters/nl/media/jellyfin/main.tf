@@ -1,110 +1,20 @@
-resource "kubernetes_persistent_volume_v1" "jellyfin_media" {
-  metadata {
-    name = "jellyfin-media-pv"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-
-    capacity = {
-      storage = "263.7G" # NOTE: this is the size of the partition.
-    }
-
-    persistent_volume_source {
-      host_path {
-        path = "/media/jellyfin"
-      }
-    }
-
-    node_affinity {
-      required {
-        node_selector_term {
-          match_expressions {
-            key      = "kubernetes.io/hostname"
-            operator = "In"
-            values   = ["eq14-001"]
-          }
-        }
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim_v1" "jellyfin_media" {
-  metadata {
-    name      = "jellyfin-media-pvc"
-    namespace = "media"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-    volume_name        = kubernetes_persistent_volume_v1.jellyfin_media.metadata[0].name
-
-    resources {
-      requests = {
-        storage = "263.7G"
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_v1" "jellyfin_config" {
-  metadata {
-    name = "jellyfin-config-pv"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-
-    capacity = {
-      storage = "5G" # NOTE: this is the size of the partition.
-    }
-
-    persistent_volume_source {
-      host_path {
-        path = "/media/config/jellyfin"
-      }
-    }
-
-    node_affinity {
-      required {
-        node_selector_term {
-          match_expressions {
-            key      = "kubernetes.io/hostname"
-            operator = "In"
-            values   = ["eq14-001"]
-          }
-        }
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim_v1" "jellyfin_config" {
-  metadata {
-    name      = "jellyfin-config-pvc"
-    namespace = "media"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-    volume_name        = kubernetes_persistent_volume_v1.jellyfin_config.metadata[0].name
-
-    resources {
-      requests = {
-        storage = "5G"
-      }
-    }
-  }
-}
-
 variable "jellyfin_host" {
   type        = string
   description = "Jellyfin public hostname"
+}
+
+module "volumes" {
+  source = "../../../../modules/local-persistent-mount"
+
+  for_each = {
+    "jellyfin-config" = "/media/config/jellyfin"
+    "jellyfin-media"  = "/media/jellyfin"
+  }
+
+  volume_name          = each.key
+  kubernetes_namespace = "media"
+  kubernetes_node      = "eq14-001"
+  host_path            = each.value
 }
 
 # NOTE(ar3s3ru): the following steps are done manually
@@ -184,11 +94,11 @@ resource "helm_release" "jellyfin" {
     persistence = {
       config = {
         enabled       = true
-        existingClaim = kubernetes_persistent_volume_claim_v1.jellyfin_config.metadata[0].name
+        existingClaim = "jellyfin-config"
       }
       media = {
         enabled       = true
-        existingClaim = kubernetes_persistent_volume_claim_v1.jellyfin_media.metadata[0].name
+        existingClaim = "jellyfin-media"
       }
     }
   })]
