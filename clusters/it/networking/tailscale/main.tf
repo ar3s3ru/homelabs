@@ -13,6 +13,7 @@ variable "oauth_client_secret" {
 module "tailscale" {
   source               = "../../../../modules/tailscale"
   kubernetes_namespace = "networking"
+  operator_hostname    = "it-tailscale-operator"
   oauth_client_id      = var.oauth_client_id
   oauth_client_secret  = var.oauth_client_secret
 }

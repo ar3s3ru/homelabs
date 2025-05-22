@@ -103,10 +103,10 @@ resource "helm_release" "qbittorrent" {
 
     persistence = {
       config = {
-        enabled      = true
-        type         = "persistentVolumeClaim"
+        enabled       = true
+        type          = "persistentVolumeClaim"
         existingClaim = "qbittorrent-config"
-        globalMounts = [{ path = "/config" }]
+        globalMounts  = [{ path = "/config" }]
       }
       downloads = {
         enabled       = true

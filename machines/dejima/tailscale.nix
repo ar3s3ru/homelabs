@@ -10,10 +10,11 @@
   services.tailscale.extraUpFlags = [
     "--ssh"
     "--accept-dns"
+    "--accept-routes"
     "--accept-risk=all"
     "--advertise-exit-node"
-    "--advertise-routes=192.168.178.0/24" # To access the local router.
-    "--advertise-tags=tag:server"
-    "--hostname=dejima.ar3s3ru.dev"
+    "--advertise-routes=192.168.178.0/24"
+    "--advertise-tags=tag:server,tag:region-it"
+    "--hostname=dejima"
   ];
 }

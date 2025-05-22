@@ -4,48 +4,30 @@ resource "kubernetes_namespace" "immich" {
   }
 }
 
-resource "kubernetes_persistent_volume" "immich" {
-  metadata {
-    name = "immich-pv"
+module "volumes" {
+  source = "../../../modules/local-persistent-mount"
+
+  for_each = {
+    "immich-library"  = "/files/immich"
+    "immich-postgres" = "/home/k3s/immich/postgres"
+    "immich-redis"    = "/home/k3s/immich/redis"
   }
 
-  spec {
-    storage_class_name = ""
-    access_modes       = ["ReadWriteOnce"]
-
-    capacity = {
-      storage = "1Ti"
-    }
-
-    claim_ref {
-      name      = "immich-pvc"
-      namespace = kubernetes_namespace.immich.metadata[0].name
-    }
-
-    persistent_volume_source {
-      host_path {
-        path = "/files/immich"
-      }
-    }
-  }
+  volume_name          = each.key
+  kubernetes_namespace = kubernetes_namespace.immich.metadata[0].name
+  kubernetes_node      = "dejima"
+  host_path            = each.value
 }
 
-resource "kubernetes_persistent_volume_claim" "immich" {
-  metadata {
-    name      = kubernetes_persistent_volume.immich.spec[0].claim_ref[0].name
-    namespace = kubernetes_persistent_volume.immich.spec[0].claim_ref[0].namespace
-  }
+variable "oauth_client_id" {
+  type        = string
+  description = "OAuth client id for Immich provider"
+}
 
-  spec {
-    storage_class_name = ""
-    access_modes       = ["ReadWriteOnce"]
-
-    resources {
-      requests = {
-        storage = "1Ti"
-      }
-    }
-  }
+variable "oauth_client_secret" {
+  type        = string
+  description = "OAuth client secret for Immich provider"
+  sensitive   = true
 }
 
 resource "helm_release" "immich" {
@@ -68,6 +50,4 @@ resource "helm_release" "immich" {
       }
     })
   ]
-
-  depends_on = [kubernetes_persistent_volume_claim.immich]
 }

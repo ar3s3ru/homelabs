@@ -30,14 +30,21 @@ postgresql:
         memory: 512Mi
       limits:
         memory: 1024Mi
+    persistence:
+      enabled: true
+      existingClaim: immich-postgres
 
 redis:
   enabled: true
+  master:
+    persistence:
+      enabled: true
+      existingClaim: immich-redis
 
 immich:
   persistence:
     library:
-      existingClaim: immich-pvc
+      existingClaim: immich-library
   metrics:
     enabled: true
   configuration:

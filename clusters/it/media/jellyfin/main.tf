@@ -1,46 +1,20 @@
-resource "kubernetes_persistent_volume_v1" "jellyfin_media" {
-  metadata {
-    name = "jellyfin-media-pv"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-
-    capacity = {
-      storage = "700G"
-    }
-
-    persistent_volume_source {
-      host_path {
-        path = "/media"
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim_v1" "jellyfin_media" {
-  metadata {
-    name      = "jellyfin-media-pvc"
-    namespace = "media"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-    volume_name        = kubernetes_persistent_volume_v1.jellyfin_media.metadata[0].name
-
-    resources {
-      requests = {
-        storage = "700G"
-      }
-    }
-  }
-}
-
 variable "jellyfin_host" {
   type        = string
   description = "Jellyfin public hostname"
+}
+
+module "volumes" {
+  source = "../../../../modules/local-persistent-mount"
+
+  for_each = {
+    "jellyfin-config" = "/home/k3s/media/jellyfin"
+    "jellyfin-media"  = "/media"
+  }
+
+  volume_name          = each.key
+  kubernetes_namespace = "media"
+  kubernetes_node      = "dejima"
+  host_path            = each.value
 }
 
 # NOTE(ar3s3ru): the following steps are done manually
@@ -109,13 +83,12 @@ resource "helm_release" "jellyfin" {
 
     persistence = {
       config = {
-        enabled    = true
-        accessMode = "ReadWriteOnce"
-        size       = "1G"
+        enabled       = true
+        existingClaim = "jellyfin-config"
       }
       media = {
         enabled       = true
-        existingClaim = kubernetes_persistent_volume_claim_v1.jellyfin_media.metadata[0].name
+        existingClaim = "jellyfin-media"
       }
     }
   })]

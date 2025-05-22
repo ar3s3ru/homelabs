@@ -15,6 +15,11 @@ variable "oauth_client_secret" {
   sensitive   = true
 }
 
+variable "operator_hostname" {
+  type        = string
+  description = "Tailscale Operator hostname to use in the Tailnet"
+}
+
 resource "kubernetes_cluster_role_binding" "ar3s3ru_cluster_admin" {
   metadata {
     name = "ar3s3ru-cluster-admin"
@@ -44,6 +49,10 @@ resource "helm_release" "tailscale_operator" {
 
   values = [
     yamlencode({
+      operatorConfig = {
+        hostname = var.operator_hostname
+      }
+
       apiServerProxyConfig = {
         mode = "true"
       }
