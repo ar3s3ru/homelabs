@@ -92,7 +92,7 @@ identity_providers:
     clients:
       - client_id: 'immich'
         client_name: 'Immich'
-        client_secret: { path: "/secrets/authelia-oidc-secrets/IMMICH_CLIENT_SECRET" }
+        client_secret: { path: "/secrets/authelia-oidc-secrets/immich.client_secret.key" }
         public: false
         consent_mode: implicit
         authorization_policy: 'one_factor'

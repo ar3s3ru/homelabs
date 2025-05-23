@@ -9,17 +9,15 @@ server:
   ingress:
     main:
       enabled: true
-      ingressClassName: tailscale
       annotations:
-        # Exposes the service to the internet through Tailscale Funnel
-        tailscale.com/funnel: "true"
+        cert-manager.io/cluster-issuer: "acme"
       hosts:
-        - host: immich
+        - host: photos.ar3s3ru.dev
           paths:
             - path: "/"
       tls:
-        - hosts:
-            - immich
+        - hosts: [photos.ar3s3ru.dev]
+          secretName: immich-tls
 
 postgresql:
   enabled: true
@@ -30,6 +28,9 @@ postgresql:
         memory: 512Mi
       limits:
         memory: 1024Mi
+    service:
+      annotations:
+        tailscale.com/expose: "true"
     persistence:
       enabled: true
       existingClaim: immich-postgres

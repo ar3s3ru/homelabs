@@ -29,7 +29,7 @@ resource "kubernetes_secret_v1" "authelia_oidc_secrets" {
 }
 
 output "immich_client_secret" {
-  value     = var.oidc_client_secrets.IMMICH_CLIENT_SECRET
+  value     = var.oidc_client_secrets["immich.client_secret.key"]
   sensitive = true
 }
 

@@ -9,6 +9,7 @@ module "cloudflare_ddns" {
   kubernetes_namespace = "networking"
   api_token            = var.cloudflare_api_token
   domains = [
-    "jellyfin.it.ar3s3ru.dev"
+    "jellyfin.it.ar3s3ru.dev",
+    "photos.ar3s3ru.dev"
   ]
 }

@@ -7,9 +7,9 @@ resource "helm_release" "nvidia_device_plugin" {
   cleanup_on_fail = true
 
   values = [yamlencode({
-    allowDefaultNamespace  = true
+    allowDefaultNamespace   = true
     deviceDiscoveryStrategy = "nvml"
-    gfd                    = { enabled = true }
-    nfd                    = { enabled = true }
+    gfd                     = { enabled = true }
+    nfd                     = { enabled = true }
   })]
 }
