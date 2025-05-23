@@ -42,6 +42,15 @@ output "home_assistant_client_secret" {
   sensitive = true
 }
 
+output "jellyfin_client_id" {
+  value = "jellyfin"
+}
+
+output "jellyfin_client_secret" {
+  value     = var.oidc_client_secrets["jellyfin.client_secret.key"]
+  sensitive = true
+}
+
 resource "helm_release" "authelia" {
   name            = "authelia"
   repository      = "https://charts.authelia.com"

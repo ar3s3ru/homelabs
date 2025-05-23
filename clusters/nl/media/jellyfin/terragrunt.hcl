@@ -26,8 +26,8 @@ dependency "intel-gpu" { # Necessary for hardware acceleration.
   skip_outputs = true
 }
 
-dependency "authentik" { # Necessary for authentication.
-  config_path = "${get_path_to_repo_root()}/clusters/nl/auth/authentik-config"
+dependency "authelia" { # Necessary for authentication.
+  config_path = "${get_path_to_repo_root()}/clusters/nl/auth/authelia"
 
   mock_outputs = {
     jellyfin_client_id = "mock-client-id"
@@ -41,6 +41,6 @@ dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reload
 }
 
 inputs = {
-  oauth_client_id     = dependency.authentik.outputs.jellyfin_client_id
-  oauth_client_secret = dependency.authentik.outputs.jellyfin_client_secret
+  oauth_client_id     = dependency.authelia.outputs.jellyfin_client_id
+  oauth_client_secret = dependency.authelia.outputs.jellyfin_client_secret
 }

@@ -124,3 +124,17 @@ identity_providers:
           - 'groups'
         id_token_signed_response_alg: 'RS256'
         token_endpoint_auth_method: 'client_secret_post'
+      - client_id: 'jellyfin'
+        client_name: 'Jellyfin'
+        client_secret: { path: "/secrets/authelia-oidc-secrets/jellyfin.client_secret.key" }
+        public: false
+        consent_mode: implicit
+        authorization_policy: one_factor
+        redirect_uris:
+          - https://jellyfin.it.ar3s3ru.dev/sso/OID/redirect/authelia
+          - https://jellyfin.nl.ar3s3ru.dev/sso/OID/redirect/authelia
+        scopes:
+          - 'openid'
+          - 'profile'
+          - 'groups'
+        token_endpoint_auth_method: client_secret_post

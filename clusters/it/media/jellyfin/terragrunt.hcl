@@ -22,6 +22,15 @@ dependency "cloudflare-ddns" { # Necessary to ensure DNS records are set.
 }
 
 dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reloader.
-  config_path  = "${get_path_to_repo_root()}/clusters/nl/kube-system/reloader"
+  config_path  = "${get_path_to_repo_root()}/clusters/it/kube-system/reloader"
   skip_outputs = true
+}
+
+dependency "authelia" { # Necessary for authentication.
+  config_path = "${get_path_to_repo_root()}/clusters/nl/auth/authelia"
+
+  mock_outputs = {
+    jellyfin_client_id = "mock-client-id"
+    jellyfin_client_secret = "mock-client-secret"
+  }
 }
