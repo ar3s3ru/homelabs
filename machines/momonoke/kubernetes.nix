@@ -10,6 +10,7 @@
     kubernetes-helm
     runc
     lsof # To inspect the number of open files.
+    sqlite
   ];
 
   environment.variables = {

@@ -3,7 +3,7 @@
 { ... }:
 
 {
-  deployment.targetHost = "momonoke-ar3s3ru-dev.tail2ff90.ts.net";
+  deployment.targetHost = "momonoke.tail2ff90.ts.net";
   deployment.targetUser = "root";
   deployment.tags = [ "type:server" "k8s:server" "region:nl" ];
 
