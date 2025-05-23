@@ -23,4 +23,5 @@ dependency "cloudflare-ddns" { # Necessary to ensure DNS records are set.
 
 inputs = {
   secrets = yamldecode(sops_decrypt_file("secrets.yaml"))
+  oidc_client_secrets = yamldecode(sops_decrypt_file("oidc-client-secrets.yaml"))
 }

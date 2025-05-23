@@ -1,6 +1,6 @@
 ---
 image:
-  tag: v1.122.2
+  tag: v1.133.0
 
 # TODO: move postgres out of this.
 useDeprecatedPostgresChart: true
@@ -55,8 +55,9 @@ immich:
       enabled: true
       autoLaunch: true
       autoRegister: true
-      buttonText: "Login with Authentik"
-      issuerUrl: "https://auth.nl.ar3s3ru.dev/application/o/immich/.well-known/openid-configuration"
+      buttonText: "Login with Authelia"
+      clientId: immich
+      issuerUrl: "https://auth.ar3s3ru.dev/.well-known/openid-configuration"
       mobileOverrideEnabled: false
       scope: "openid email profile"
       signingAlgorithm: "RS256"

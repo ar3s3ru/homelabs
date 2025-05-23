@@ -11,11 +11,10 @@ dependency "tailscale" { # Necessary for Ingress class name.
   skip_outputs = true
 }
 
-dependency "authentik" { # Necessary for authentication.
-  config_path = "${get_path_to_repo_root()}/clusters/nl/auth/authentik-config"
+dependency "authelia" { # Necessary for authentication.
+  config_path = "${get_path_to_repo_root()}/clusters/nl/auth/authelia"
 }
 
 inputs = {
-  oauth_client_id     = dependency.authentik.outputs.immich_client_id
-  oauth_client_secret = dependency.authentik.outputs.immich_client_secret
+  oauth_client_secret = dependency.authelia.outputs.immich_client_secret
 }

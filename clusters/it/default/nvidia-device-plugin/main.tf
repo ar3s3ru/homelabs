@@ -8,8 +8,8 @@ resource "helm_release" "nvidia_device_plugin" {
 
   values = [yamlencode({
     allowDefaultNamespace  = true
-    deviceDiscoverStrategy = "nvml"
+    deviceDiscoveryStrategy = "nvml"
     gfd                    = { enabled = true }
-    nfs                    = { enabled = true }
+    nfd                    = { enabled = true }
   })]
 }

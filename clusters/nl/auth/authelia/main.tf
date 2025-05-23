@@ -13,6 +13,26 @@ resource "kubernetes_secret_v1" "authelia_secrets" {
   data = var.secrets
 }
 
+variable "oidc_client_secrets" {
+  type        = map(string)
+  description = "OIDC client secrets for the Authelia deployment"
+  sensitive   = true
+}
+
+resource "kubernetes_secret_v1" "authelia_oidc_secrets" {
+  metadata {
+    name      = "authelia-oidc-secrets"
+    namespace = "auth"
+  }
+
+  data = var.oidc_client_secrets
+}
+
+output "immich_client_secret" {
+  value     = var.oidc_client_secrets.IMMICH_CLIENT_SECRET
+  sensitive = true
+}
+
 resource "helm_release" "authelia" {
   name            = "authelia"
   repository      = "https://charts.authelia.com"
@@ -51,16 +71,10 @@ resource "helm_release" "authelia" {
     secret = {
       additionalSecrets = {
         "${kubernetes_secret_v1.authelia_secrets.metadata[0].name}" = {
-          items = [{
-            key  = "notifier.smtp.password.txt"
-            path = "notifier.smtp.password.txt"
-            }, {
-            key  = "storage.postgres.password.txt"
-            path = "storage.postgres.password.txt"
-            }, {
-            key  = "authentication.ldap.password.txt"
-            path = "authentication.ldap.password.txt"
-          }]
+          items = [for k, v in var.secrets : { key : k, path : k }]
+        },
+        "${kubernetes_secret_v1.authelia_oidc_secrets.metadata[0].name}" = {
+          items = [for k, v in var.oidc_client_secrets : { key : k, path : k }]
         }
       }
     }

@@ -102,6 +102,7 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
       pciutils
       usbutils
       mscp
+      lshw
       # Fish utilities.
       fzf
       bat

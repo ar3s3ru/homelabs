@@ -19,11 +19,6 @@ module "volumes" {
   host_path            = each.value
 }
 
-variable "oauth_client_id" {
-  type        = string
-  description = "OAuth client id for Immich provider"
-}
-
 variable "oauth_client_secret" {
   type        = string
   description = "OAuth client secret for Immich provider"
@@ -43,7 +38,6 @@ resource "helm_release" "immich" {
       immich = {
         configuration = {
           oauth = {
-            clientId     = var.oauth_client_id
             clientSecret = var.oauth_client_secret
           }
         }

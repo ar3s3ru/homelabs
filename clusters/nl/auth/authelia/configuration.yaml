@@ -71,14 +71,40 @@ notifier:
 
 identity_providers:
   oidc:
-    enabled: false
+    enabled: true
     cors:
       allowed_origins_from_client_redirect_uris: true
       endpoints: [userinfo, authorization, token, revocation, introspection]
+
     claims_policies:
       # https://www.authelia.com/integration/openid-connect/openid-connect-1.0-claims/#restore-functionality-prior-to-claims-parameter
       default:
         id_token: [email, email_verified, alt_emails, name, preferred_username, groups]
       username_email:
         id_token: [email, email_verified, alt_emails, name, preferred_username]
-    clients: []
+
+    jwks:
+      - algorithm: RS256
+        use: sig
+        key:
+          path: '/secrets/authelia-secrets/oidc.jwk.RS256.pem'
+
+    clients:
+      - client_id: 'immich'
+        client_name: 'Immich'
+        client_secret: { path: "/secrets/authelia-oidc-secrets/IMMICH_CLIENT_SECRET" }
+        public: false
+        consent_mode: implicit
+        authorization_policy: 'one_factor'
+        redirect_uris:
+          - 'https://immich.tail2ff90.ts.net/auth/login'
+          - 'https://immich.tail2ff90.ts.net/user-settings'
+          - 'https://photos.ar3s3ru.dev/auth/login'
+          - 'https://photos.ar3s3ru.dev/user-settings'
+          - 'app.immich:///oauth-callback'
+        scopes:
+          - 'openid'
+          - 'profile'
+          - 'email'
+        userinfo_signed_response_alg: 'none'
+        token_endpoint_auth_method: 'client_secret_post'

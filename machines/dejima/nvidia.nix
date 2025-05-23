@@ -33,6 +33,8 @@
 
   # Pass the GPU to Docker and Kubernetes.
   hardware.nvidia-container-toolkit.enable = true;
+  hardware.nvidia-container-toolkit.mount-nvidia-executables = true;
+  hardware.nvidia-container-toolkit.mount-nvidia-docker-1-directories = true;
 
   environment.systemPackages = with pkgs; [
     libva-utils
