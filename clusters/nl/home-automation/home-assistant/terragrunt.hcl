@@ -21,8 +21,8 @@ dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reload
   skip_outputs = true
 }
 
-dependency "authentik" {
-  config_path = "${get_path_to_repo_root()}/clusters/nl/auth/authentik-config"
+dependency "authelia" { # Necessary for OIDC authentication.
+  config_path = "${get_path_to_repo_root()}/clusters/nl/auth/authelia"
 
   mock_outputs = {
     home_assistant_client_id = "mock-client-id"
@@ -51,7 +51,7 @@ dependency "music-assistant" {
 }
 
 inputs = {
-  oauth_client_id     = dependency.authentik.outputs.home_assistant_client_id
-  oauth_client_secret = dependency.authentik.outputs.home_assistant_client_secret
+  oauth_client_id     = dependency.authelia.outputs.home_assistant_client_id
+  oauth_client_secret = dependency.authelia.outputs.home_assistant_client_secret
   config_secrets_yaml = sops_decrypt_file("./config/secrets.yaml")
 }

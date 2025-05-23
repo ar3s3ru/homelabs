@@ -19,17 +19,17 @@ http:
     - "100.0.0.0/8" # Tailnet
 
 auth_oidc:
-  discovery_url: "https://auth.nl.ar3s3ru.dev/application/o/home-assistant/.well-known/openid-configuration"
-  display_name: "Log in with Authentik"
-  id_token_signing_alg: "RS256"
+  display_name: "Authelia"
   client_id: !env_var HASS_OAUTH_CLIENT_ID
   client_secret: !env_var HASS_OAUTH_CLIENT_SECRET
+  discovery_url: "https://auth.ar3s3ru.dev/.well-known/openid-configuration"
+  id_token_signing_alg: "RS256"
   features:
     automatic_user_linking: true
     automatic_person_creation: true
   claims:
     display_name: name
-    username: email
+    username: preferred_username
     groups: groups
   roles:
     admin: home-admin

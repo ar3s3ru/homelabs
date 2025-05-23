@@ -33,6 +33,15 @@ output "immich_client_secret" {
   sensitive = true
 }
 
+output "home_assistant_client_id" {
+  value = "home-assistant"
+}
+
+output "home_assistant_client_secret" {
+  value     = var.oidc_client_secrets["hass.client_secret.key"]
+  sensitive = true
+}
+
 resource "helm_release" "authelia" {
   name            = "authelia"
   repository      = "https://charts.authelia.com"
