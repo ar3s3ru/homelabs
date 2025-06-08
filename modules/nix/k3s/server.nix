@@ -21,6 +21,7 @@
     2379
     2380 # k3s etcd cluster coordination
     6443 # k8s apiserver
+    6881 # qbittorrent
     8056 # govee2mqtt
     8095 # music-assistant webserver
     8097 # music-assistant streams
@@ -37,16 +38,6 @@
   services.k3s.role = "server";
   services.k3s.clusterInit = true;
 
-  sops.secrets."tailscale/oauth-client-id".sopsFile = ./secrets.yaml;
-  sops.secrets."tailscale/oauth-client-secret".sopsFile = ./secrets.yaml;
-
-  # services.k3s.manifests = {
-  #   "00-namespace-networking".source = ./manifests/00-namespace-networking.yaml;
-  #   "00-cluster-admin-serviceaccount".source = ./manifests/00-cluster-admin-serviceaccount.yaml;
-  #   "01-clusterrolebinding-cluster-admin".source = ./manifests/01-clusterrolebinding-cluster-admin.yaml;
-  #   "02-cluster-admin-token".source = "";
-  # };
-
   services.k3s.manifests =
     let
       dir = ./manifests;
@@ -58,6 +49,9 @@
         value = { enable = true; source = ./. + "/manifests/${filename}"; };
       })
       files);
+
+  sops.secrets."tailscale/oauth-client-id".sopsFile = ./secrets.yaml;
+  sops.secrets."tailscale/oauth-client-secret".sopsFile = ./secrets.yaml;
 
   sops.templates.tailscale-operator-oauth = {
     path = "/var/lib/rancher/k3s/server/manifests/01-tailscale-operator-oauth.json";
@@ -75,18 +69,16 @@
     };
   };
 
-  services.k3s.autoDeployCharts = {
-    tailscale-operator = {
-      # NOTE: switched to the "unstable" Helm chart to fix https://github.com/tailscale/tailscale/issues/15081
-      name = "tailscale-operator";
-      repo = "https://pkgs.tailscale.com/unstable/helmcharts";
-      hash = "sha256-oPAV1s2Yn+oeT6xzYQEDhhf0dy/kMacmbvewQiWsMSw=";
-      version = "1.85.21";
-      targetNamespace = "networking";
-      values = {
-        operatorConfig.hostname = "nl-k8s";
-        apiServerProxyConfig.mode = "true";
-      };
+  services.k3s.autoDeployCharts.tailscale-operator = {
+    # NOTE: switched to the "unstable" Helm chart to fix https://github.com/tailscale/tailscale/issues/15081
+    name = "tailscale-operator";
+    repo = "https://pkgs.tailscale.com/unstable/helmcharts";
+    version = "1.85.21";
+    hash = "sha256-oPAV1s2Yn+oeT6xzYQEDhhf0dy/kMacmbvewQiWsMSw=";
+    targetNamespace = "networking";
+    values = {
+      operatorConfig.hostname = "nl-k8s";
+      apiServerProxyConfig.mode = "true";
     };
   };
 

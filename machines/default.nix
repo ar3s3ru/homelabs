@@ -103,6 +103,8 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
       usbutils
       mscp
       lshw
+      inetutils
+      tcpdump
       # Fish utilities.
       fzf
       bat

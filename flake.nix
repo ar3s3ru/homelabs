@@ -39,6 +39,7 @@
               tfk8s
               colmena
               sops
+              inetutils
             ];
 
             shellHook = ''

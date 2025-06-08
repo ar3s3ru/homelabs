@@ -29,7 +29,7 @@ spec:
   )
 }
 
-resource "kubernetes_manifest" "bgp_advertisement" {
+resource "kubernetes_manifest" "l2_advertisement" {
   depends_on = [kubernetes_manifest.ip_address_pool]
 
   manifest = yamldecode(<<EOF

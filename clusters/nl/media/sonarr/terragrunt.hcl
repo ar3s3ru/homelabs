@@ -11,11 +11,6 @@ dependency "media" { # Creates the namespace
   skip_outputs = true
 }
 
-dependency "tailscale" { # Necessary for Ingress class name.
-  config_path  = "${get_path_to_repo_root()}/clusters/nl/networking/tailscale"
-  skip_outputs = true
-}
-
 dependency "qbittorrent" { # Ensure the torrent dependency is up.
   config_path  = "${get_path_to_repo_root()}/clusters/nl/media/qbittorrent"
   skip_outputs = true

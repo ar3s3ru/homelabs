@@ -12,6 +12,8 @@
   networking.hostName = "momonoke";
   networking.domain = "ar3s3ru.dev";
   networking.networkmanager.enable = true;
+  networking.firewall.allowPing = true;
+  networking.firewall.trustedInterfaces = [ "enp0s31f6" ];
 
   time.timeZone = "Europe/Amsterdam";
 
