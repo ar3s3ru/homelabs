@@ -18,11 +18,11 @@
   imports = [
     nixos-hardware.nixosModules.lenovo-thinkpad-x270
     ../../modules/nix/server.nix
-    ./hardware-configuration.nix
+    ../../modules/nix/k3s/agent.nix
     ./disable-docked-sleep.nix
     ./disko.nix
+    ./hardware-configuration.nix
     ./intel-gpu-hw-acceleration.nix
-    ./kubernetes.nix
     ./power-management.nix
     ./tailscale.nix
   ];
