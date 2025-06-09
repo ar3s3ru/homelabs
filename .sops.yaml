@@ -18,16 +18,6 @@ creation_rules:
           - *eq14-001-ts
           - *momonoke-ts
           - *dejima-ts
-  - path_regex: "modules/nix/.*/secrets.yaml"
-    key_groups:
-      - pgp:
-          - *ar3s3ru
-        age:
-          - *github-actions
-          - *eq14-001
-          - *eq14-001-ts
-          - *momonoke-ts
-          - *dejima-ts
   - path_regex: "machines/dejima/secrets.yaml"
     key_groups:
       - pgp:
@@ -48,3 +38,13 @@ creation_rules:
           - *ar3s3ru
         age:
           - *github-actions
+  - path_regex: "modules/.*/secrets.yaml"
+    key_groups:
+      - pgp:
+          - *ar3s3ru
+        age:
+          - *github-actions
+          - *eq14-001
+          - *eq14-001-ts
+          - *momonoke-ts
+          - *dejima-ts

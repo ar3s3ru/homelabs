@@ -90,7 +90,7 @@ resource "helm_release" "authelia" {
       additionalSecrets = {
         "${kubernetes_secret_v1.authelia_secrets.metadata[0].name}" = {
           items = [for k, v in var.secrets : { key : k, path : k }]
-        },
+        }
         "${kubernetes_secret_v1.authelia_oidc_secrets.metadata[0].name}" = {
           items = [for k, v in var.oidc_client_secrets : { key : k, path : k }]
         }

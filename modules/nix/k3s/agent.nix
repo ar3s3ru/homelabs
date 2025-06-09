@@ -1,6 +1,9 @@
 { pkgs, config, ... }:
 
 {
+  # For Rook/Ceph support.
+  boot.kernelModules = [ "rbd" ];
+
   # Add the necessary packages for the Kubernetes experience.
   environment.systemPackages = with pkgs; [
     k3s

@@ -40,6 +40,7 @@
               colmena
               sops
               inetutils
+              authelia # For management purposes.
             ];
 
             shellHook = ''

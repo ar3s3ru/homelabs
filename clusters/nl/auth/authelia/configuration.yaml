@@ -46,13 +46,15 @@ session:
   cookies:
     - domain: ar3s3ru.dev
       subdomain: auth
-
+  encryption_key: { secret_name: "authelia-secrets" }
   redis:
     enabled: true
     deploy: true
     host: "authelia-redis-headless.auth.svc.cluster.local"
+    password: { secret_name: "authelia-secrets" }
 
 storage:
+  encryption_key: { secret_name: "authelia-secrets" }
   postgres:
     enabled: true
     address: "tcp://aws-0-eu-central-1.pooler.supabase.com:5432"
@@ -69,9 +71,15 @@ notifier:
     username: "nl.homelab.ar3s3ru@gmail.com"
     password: { secret_name: "authelia-secrets" }
 
+identity_validation:
+  reset_password:
+    jwt_lifespan: "1 day"
+    secret: { secret_name: "authelia-secrets" }
+
 identity_providers:
   oidc:
     enabled: true
+    hmac_secret: { secret_name: "authelia-secrets" }
     cors:
       allowed_origins_from_client_redirect_uris: true
       endpoints: [userinfo, authorization, token, revocation, introspection]
