@@ -113,6 +113,7 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
       prettyping
       htop
       grc
+      gptfdisk
       # Fish plugins
       # fishPlugins.fzf-fish
       fishPlugins.forgit
