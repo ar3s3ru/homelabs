@@ -50,3 +50,10 @@ resource "kubernetes_manifest" "longhorn_add_nixos_path" {
 
   manifest = yamldecode(file("./longhorn-add-nixos-path.yaml"))
 }
+
+resource "kubernetes_manifest" "longhorn_storage_classes" {
+  depends_on = [helm_release.longhorn]
+
+  for_each = fileset("./storageClasses", "*.yaml")
+  manifest = yamldecode(file("./storageClasses/${each.key}"))
+}

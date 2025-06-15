@@ -1,0 +1,16 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn-ssd
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+parameters:
+  numberOfReplicas: "1" # FIXME(ar3s3ru): move to 2
+  fromBackup: ""
+  diskSelector: "ssd"
+  dataEngine: "v2"
+  fsType: "ext4"
+  dataLocality: "best-effort"

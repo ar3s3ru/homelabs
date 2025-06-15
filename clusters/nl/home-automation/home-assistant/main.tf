@@ -1,17 +1,3 @@
-module "volumes" {
-  source = "../../../../modules/local-persistent-mount"
-
-  for_each = {
-    "home-assistant-config" = "/home/k3s/home-automation/home-assistant/config"
-    "home-assistant-media"  = "/home/k3s/home-automation/home-assistant/media"
-  }
-
-  volume_name          = each.key
-  kubernetes_namespace = "home-automation"
-  kubernetes_node      = "momonoke"
-  host_path            = each.value
-}
-
 variable "oauth_client_id" {
   type        = string
   description = "OAuth client ID to use for Home Assistant authentication"
@@ -68,6 +54,25 @@ resource "kubernetes_secret_v1" "home_assistant_secrets" {
 
   data = {
     "secrets.yaml" = var.config_secrets_yaml
+  }
+}
+
+resource "kubernetes_persistent_volume_claim_v1" "home_assistant_config" {
+  metadata {
+    name      = "home-assistant-config"
+    namespace = "home-automation"
+  }
+
+  spec {
+    storage_class_name = "longhorn-nvme"
+    access_modes       = ["ReadWriteOnce"]
+    volume_mode        = "Filesystem"
+
+    resources {
+      requests = {
+        storage = "20G"
+      }
+    }
   }
 }
 
@@ -182,12 +187,6 @@ resource "helm_release" "home_assistant" {
         type          = "persistentVolumeClaim"
         existingClaim = "home-assistant-config"
         globalMounts  = [{ path = "/config" }]
-      }
-      media = {
-        enabled       = true
-        type          = "persistentVolumeClaim"
-        existingClaim = "home-assistant-media"
-        globalMounts  = [{ path = "/media" }]
       }
       secrets = {
         enabled = true

@@ -1,17 +1,3 @@
-module "volumes" {
-  source = "../../../../modules/local-persistent-mount"
-
-  for_each = {
-    "frigate-config" = "/home/k3s/home-automation/frigate/config"
-    "frigate-media"  = "/home/k3s/home-automation/frigate/media"
-  }
-
-  volume_name          = each.key
-  kubernetes_namespace = "home-automation"
-  kubernetes_node      = "momonoke"
-  host_path            = each.value
-}
-
 variable "secrets" {
   type        = map(string)
   description = "Environment variables to mount on the pod as secrets"
@@ -25,6 +11,30 @@ resource "kubernetes_secret_v1" "frigate_secrets" {
   }
 
   data = var.secrets
+}
+
+resource "kubernetes_persistent_volume_claim_v1" "persistence" {
+  for_each = {
+    "frigate-config" = "100Mi"
+    "frigate-media"  = "60Gi"
+  }
+
+  metadata {
+    name      = each.key
+    namespace = "home-automation"
+  }
+
+  spec {
+    storage_class_name = "longhorn-nvme"
+    access_modes       = ["ReadWriteOnce"]
+    volume_mode        = "Filesystem"
+
+    resources {
+      requests = {
+        storage = each.value
+      }
+    }
+  }
 }
 
 resource "helm_release" "frigate" {
