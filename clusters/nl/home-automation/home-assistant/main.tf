@@ -98,7 +98,7 @@ resource "helm_release" "home_assistant" {
 
     controllers = {
       main = {
-        type     = "statefulset"
+        type     = "deployment"
         replicas = 1
 
         annotations = {

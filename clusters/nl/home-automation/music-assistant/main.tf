@@ -1,102 +1,22 @@
-resource "kubernetes_persistent_volume_v1" "music_assistant_data" {
-  metadata {
-    name = "music-assistant-data"
+resource "kubernetes_persistent_volume_claim_v1" "persistence" {
+  for_each = {
+    "music-assistant-data" = "1Gi"
+    "music-assistant-media" = "10G"
   }
 
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-
-    capacity = {
-      storage = "10G"
-    }
-
-    persistent_volume_source {
-      host_path {
-        path = "/home/k3s/home-automation/music-assistant/data"
-      }
-    }
-
-    node_affinity {
-      required {
-        node_selector_term {
-          match_expressions {
-            key      = "kubernetes.io/hostname"
-            operator = "In"
-            values   = ["momonoke"]
-          }
-        }
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim_v1" "music_assistant_data" {
   metadata {
-    name      = "music-assistant-data"
+    name      = each.key
     namespace = "home-automation"
   }
 
   spec {
-    storage_class_name = "local-path"
+    storage_class_name = "longhorn-nvme"
     access_modes       = ["ReadWriteOnce"]
-    volume_name        = kubernetes_persistent_volume_v1.music_assistant_data.metadata[0].name
+    volume_mode        = "Filesystem"
 
     resources {
       requests = {
-        storage = "10G"
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_v1" "music_assistant_media" {
-  metadata {
-    name = "music-assistant-media"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-
-    capacity = {
-      storage = "10G"
-    }
-
-    persistent_volume_source {
-      host_path {
-        path = "/home/k3s/home-automation/music-assistant/media"
-      }
-    }
-
-    node_affinity {
-      required {
-        node_selector_term {
-          match_expressions {
-            key      = "kubernetes.io/hostname"
-            operator = "In"
-            values   = ["momonoke"]
-          }
-        }
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim_v1" "music_assistant_media" {
-  metadata {
-    name      = "music-assistant-media"
-    namespace = "home-automation"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-    volume_name        = kubernetes_persistent_volume_v1.music_assistant_media.metadata[0].name
-
-    resources {
-      requests = {
-        storage = "10G"
+        storage = each.value
       }
     }
   }
@@ -117,7 +37,7 @@ resource "helm_release" "music_assistant" {
 
     controllers = {
       main = {
-        type     = "statefulset"
+        type     = "deployment"
         replicas = 1
 
         annotations = {
@@ -186,13 +106,13 @@ resource "helm_release" "music_assistant" {
       data = {
         enabled       = true
         type          = "persistentVolumeClaim"
-        existingClaim = kubernetes_persistent_volume_claim_v1.music_assistant_data.metadata[0].name
+        existingClaim = "music-assistant-data"
         globalMounts  = [{ path = "/data" }]
       }
       media = {
         enabled       = true
         type          = "persistentVolumeClaim"
-        existingClaim = kubernetes_persistent_volume_claim_v1.music_assistant_media.metadata[0].name
+        existingClaim = "music-assistant-media"
         globalMounts  = [{ path = "/media" }]
       }
     }

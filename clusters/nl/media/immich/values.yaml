@@ -18,6 +18,12 @@ server:
       tls:
         - hosts: [photos2.ar3s3ru.dev]
           secretName: immich-tls
+  # Needed for hardware acceleration.
+  resources:
+    requests:
+      "gpu.intel.com/i915": "1"
+    limits:
+      "gpu.intel.com/i915": "1"
 
 postgresql:
   enabled: true

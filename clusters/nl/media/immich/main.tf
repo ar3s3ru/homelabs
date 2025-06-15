@@ -19,6 +19,31 @@ resource "kubernetes_namespace" "immich" {
 #   host_path            = each.value
 # }
 
+resource "kubernetes_persistent_volume_claim_v1" "persistence" {
+  for_each = {
+    "immich-library"  = "1Ti"
+    "immich-postgres" = "2Gi"
+    "immich-redis"    = "200Mi"
+  }
+
+  metadata {
+    name      = each.key
+    namespace = "media"
+  }
+
+  spec {
+    storage_class_name = "longhorn-nvme"
+    access_modes       = ["ReadWriteOnce"]
+    volume_mode        = "Filesystem"
+
+    resources {
+      requests = {
+        storage = each.value
+      }
+    }
+  }
+}
+
 variable "oauth_client_secret" {
   type        = string
   description = "OAuth client secret for Immich provider"

@@ -45,6 +45,11 @@ dependency "music-assistant" {
   skip_outputs = true
 }
 
+dependency "longhorn" { # Necessary for PVC provisioning.
+  config_path = "${get_path_to_repo_root()}/clusters/nl/longhorn-system/longhorn"
+  skip_outputs = true
+}
+
 inputs = {
   oauth_client_id     = dependency.authelia.outputs.home_assistant_client_id
   oauth_client_secret = dependency.authelia.outputs.home_assistant_client_secret

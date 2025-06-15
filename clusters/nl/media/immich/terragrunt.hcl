@@ -8,6 +8,7 @@ include "cluster" {
 
 dependency "media" { # Creates the namespace.
   config_path = "${get_path_to_repo_root()}/clusters/nl/media"
+  skip_outputs = true
 }
 
 dependency "authelia" { # Necessary for authentication.
@@ -24,8 +25,8 @@ dependency "cloudflare-ddns" { # Necessary for DNS entry.
   skip_outputs = true
 }
 
-dependency "rook-ceph-cluster" { # Necessary for rook-ceph storage provisioning.
-  config_path = "${get_path_to_repo_root()}/clusters/nl/rook-ceph/rook-ceph-cluster"
+dependency "longhorn" { # Necessary for PVC provisioning.
+  config_path = "${get_path_to_repo_root()}/clusters/nl/longhorn-system/longhorn"
   skip_outputs = true
 }
 

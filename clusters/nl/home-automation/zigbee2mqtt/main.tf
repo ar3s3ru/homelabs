@@ -2,39 +2,6 @@ resource "kubernetes_manifest" "akri_sonoff_zigbee_antenna" {
   manifest = yamldecode(file("./sonoff-antenna.yaml"))
 }
 
-resource "kubernetes_persistent_volume_v1" "zigbee2mqtt" {
-  metadata {
-    name = "zigbee2mqtt-pv"
-  }
-
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-
-    capacity = {
-      storage = "1Gi"
-    }
-
-    persistent_volume_source {
-      host_path {
-        path = "/home/k3s/home-automation/zigbee2mqtt"
-      }
-    }
-
-    node_affinity {
-      required {
-        node_selector_term {
-          match_expressions {
-            key      = "kubernetes.io/hostname"
-            operator = "In"
-            values   = ["momonoke"]
-          }
-        }
-      }
-    }
-  }
-}
-
 resource "helm_release" "zigbee2mqtt" {
   depends_on = [kubernetes_manifest.akri_sonoff_zigbee_antenna]
 
@@ -72,8 +39,8 @@ resource "helm_release" "zigbee2mqtt" {
 
       storage = {
         enabled          = true
-        storageClassName = "local-path"
-        existingVolume   = kubernetes_persistent_volume_v1.zigbee2mqtt.metadata[0].name
+        storageClassName = "longhorn-nvme"
+        size = "1Gi"
       }
     }
 

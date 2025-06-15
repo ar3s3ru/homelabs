@@ -15,7 +15,7 @@ http:
     - "127.0.0.1"
     - "::1"
     - "192.168.2.0/24" # LAN subnet
-    - "10.42.0.0/24" # ClusterIP subnet
+    - "10.42.0.0/16" # ClusterIP subnet
     - "100.0.0.0/8" # Tailnet
 
 auth_oidc:
