@@ -20,7 +20,7 @@
     nixos-hardware.nixosModules.common-cpu-intel
     nixos-hardware.nixosModules.common-gpu-intel
     ../../modules/nix/server.nix
-    ../../modules/nix/k3s/server.nix
+    ../../modules/nix/k3s/server-main.nix
     ./disko.nix
     ./hardware-configuration.nix
     ./tailscale.nix

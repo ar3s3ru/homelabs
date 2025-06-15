@@ -1,8 +1,10 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, config, ... }:
 
 {
-  # For Rook/Ceph support.
-  boot.kernelModules = [ "rbd" ];
+  imports = [
+    ./fix-open-file-limit.nix
+    ./storage-csi.nix
+  ];
 
   # Add the necessary packages for the Kubernetes experience.
   environment.systemPackages = with pkgs; [
@@ -41,10 +43,4 @@
   services.k3s.role = "agent";
   services.k3s.tokenFile = config.sops.secrets."clusters/nl/token".path;
   services.k3s.serverAddr = "https://192.168.2.38:6443";
-
-  # Disable limits for the number of open files by k3s containers,
-  # or the telemetry stack will complain.
-  systemd.services.k3s.serviceConfig.LimitNOFILE = lib.mkIf config.services.k3s.enable (lib.mkForce null);
-  systemd.services.k3s.serviceConfig.LimitNOFILESoft = lib.mkIf config.services.k3s.enable (lib.mkForce null);
-  systemd.services.containerd.serviceConfig.LimitNOFILE = lib.mkIf config.services.k3s.enable (lib.mkForce null);
 }
