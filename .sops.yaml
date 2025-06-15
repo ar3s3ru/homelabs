@@ -3,9 +3,12 @@ keys:
   - &ar3s3ru C8DAE39DAA00FF97
   - &github-actions age18eehnlpn44hpk4d823zfnkq72vqmf6kqhrh009uwdajneeaqzskqscx589
   - &eq14-001 age1z3t2tgda3cvzuppqqxc992q5npalwq6wzspnma4q6u7jp5wwds9qgv32wm
-  # These are created using `ssh-to-age <tailscale-ssh-addr>`
+  # Generated using `cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age`,
+  # where the SSH host key is obtained from the remote machine.
+  - &momonoke age12g62sqmpz4pztx8zn94n8rxzklj7fj805g78m50kxu44yqy26azs2vph2y
+  # These are created using `ssh-keyscan <tailscale-ssh-addr> | ssh-to-age`
   - &eq14-001-ts age1krvwskkgw5f3ufcwgl6l2jz0emxnkn40wpup2aqhqdulqy2x99js4p5fnq
-  - &momonoke-ts age1q0jcy52yr02vm7jql9z3s4njaxp4ydyujwp37qkajzgkcazzpecsnsfvhv
+  - &momonoke-ts age12g62sqmpz4pztx8zn94n8rxzklj7fj805g78m50kxu44yqy26azs2vph2y
   - &dejima-ts age18tdafrhnvtp9fyja20e9dhq3knq9lyrtnyppr3xu8n0nwce40gxswu5ww9
 creation_rules:
   - path_regex: "machines/secrets.yaml"
@@ -16,6 +19,7 @@ creation_rules:
           - *github-actions
           - *eq14-001
           - *eq14-001-ts
+          - *momonoke
           - *momonoke-ts
           - *dejima-ts
   - path_regex: "machines/dejima/secrets.yaml"
@@ -31,6 +35,7 @@ creation_rules:
           - *ar3s3ru
         age:
           - *github-actions
+          - *momonoke
           - *momonoke-ts
   - path_regex: "clusters/.*"
     key_groups:
@@ -46,5 +51,6 @@ creation_rules:
           - *github-actions
           - *eq14-001
           - *eq14-001-ts
+          - *momonoke
           - *momonoke-ts
           - *dejima-ts

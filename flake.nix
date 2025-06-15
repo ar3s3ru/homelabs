@@ -9,11 +9,17 @@
 
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    colmena.url = "github:zhaofengli/colmena";
+    colmena.inputs.nixpkgs.follows = "nixpkgs";
+    colmena.inputs.flake-utils.follows = "flake-utils";
   };
 
-  outputs = inputs@{ nixpkgs, flake-utils, self, ... }:
+  outputs = inputs@{ nixpkgs, flake-utils, colmena, self, ... }:
     {
       colmena = import ./machines inputs;
+      colmenaHive = colmena.lib.makeHive self.outputs.colmena;
+      nixosConfigurations = self.outputs.colmenaHive.nodes;
     } // flake-utils.lib.eachDefaultSystem
       (system:
         let
@@ -37,7 +43,7 @@
               k9s
               kubernetes-helm
               tfk8s
-              colmena
+              ssh-to-age
               sops
               inetutils
               authelia # For management purposes.
