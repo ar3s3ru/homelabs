@@ -44,8 +44,8 @@ vaultwarden:
   extraEnv:
     SSO_ENABLED: "true"
     SSO_ONLY: "true"
-    SSO_FRONTEND: override
-    SSO_AUTHORITY: https://auth.ar3s3ru.dev/.well-known/openid-configuration
-    SSO_CLIENT_ID: "oidcwarden"
+    SSO_PKCE: "true"
+    SSO_AUTHORITY: https://auth.ar3s3ru.dev
+    SSO_CLIENT_ID: "vaultwarden"
     SSO_CLIENT_SECRET: { secretKeyRef: { name: vaultwarden-secrets, key: sso-client-secret } }
     SSO_SCOPES: "email profile offline_access"
