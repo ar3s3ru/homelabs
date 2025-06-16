@@ -57,7 +57,7 @@ immich:
   configuration:
     logging:
       enabled: true
-      level: log
+      level: debug
     ffmpeg:
       accel: qsv
       accelDecode: true

@@ -5,7 +5,7 @@
 {
   deployment.targetHost = "dejima.tail2ff90.ts.net";
   deployment.targetUser = "root";
-  deployment.tags = [ "type:server" "k8s:server" "region:it" ];
+  deployment.tags = [ "type-server" "k8s-server" "region-it" ];
 
   nixpkgs.system = "x86_64-linux";
   nixpkgs.config.allowUnfree = true; # NVIDIA stuff.

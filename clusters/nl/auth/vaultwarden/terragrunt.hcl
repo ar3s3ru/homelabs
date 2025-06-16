@@ -15,6 +15,11 @@ dependency "authelia" { # Necessary for authentication.
   config_path = "${get_path_to_repo_root()}/clusters/nl/auth/authelia"
 }
 
+dependency "longhorn" { # Necessary for PVC provisioning.
+  config_path = "${get_path_to_repo_root()}/clusters/nl/longhorn-system/longhorn"
+  skip_outputs = true
+}
+
 inputs = {
   secrets = merge(
     yamldecode(sops_decrypt_file("secrets.yaml")),

@@ -26,12 +26,14 @@
     2379
     2380 # k3s etcd cluster coordination
     6443 # k8s apiserver
-    6881 # qbittorrent
+    7946
     8056 # govee2mqtt
     8095 # music-assistant webserver
     8097 # music-assistant streams
     8123 # home-assistant hostNetwork
+    9100 # metallb
     10250 # metrics-server
+    30963 # qbittorrent
   ];
 
   networking.firewall.allowedUDPPorts = [

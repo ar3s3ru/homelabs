@@ -5,7 +5,7 @@
 {
   deployment.targetHost = "192.168.2.46";
   deployment.targetUser = "nix";
-  deployment.tags = [ "type:gateway" "k8s:agent" "region:nl" ];
+  deployment.tags = [ "type-gateway" "region-nl" ];
   deployment.buildOnTarget = true;
 
   nixpkgs.system = "aarch64-linux";

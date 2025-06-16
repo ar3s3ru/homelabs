@@ -47,6 +47,7 @@
               sops
               inetutils
               authelia # For management purposes.
+              immich-cli # For bulk imports.
             ];
 
             shellHook = ''

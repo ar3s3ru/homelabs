@@ -5,7 +5,7 @@
 {
   deployment.targetHost = "eq14-001.tail2ff90.ts.net";
   deployment.targetUser = "root";
-  deployment.tags = [ "type:server" "k8s:agent" "region:nl" ];
+  deployment.tags = [ "type-server" "k8s-server" "region-nl" ];
 
   nixpkgs.system = "x86_64-linux";
 

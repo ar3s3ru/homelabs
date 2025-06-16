@@ -5,7 +5,7 @@
 {
   deployment.targetHost = "momonoke.tail2ff90.ts.net";
   deployment.targetUser = "root";
-  deployment.tags = [ "type:server" "k8s:server" "region:nl" ];
+  deployment.tags = [ "type-server" "k8s-agent" "region-nl" ];
 
   nixpkgs.system = "x86_64-linux";
 
