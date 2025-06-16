@@ -1,6 +1,6 @@
 ---
 image:
-  tag: v1.133.0
+  tag: v1.134.0
 
 # TODO: move postgres out of this.
 useDeprecatedPostgresChart: true
@@ -58,6 +58,12 @@ immich:
     logging:
       enabled: true
       level: log
+    ffmpeg:
+      accel: qsv
+      accelDecode: true
+      preset: slow
+      targetResolution: original
+      transcode: required
     oauth:
       enabled: true
       autoLaunch: true

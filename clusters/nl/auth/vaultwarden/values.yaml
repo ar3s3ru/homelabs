@@ -1,0 +1,51 @@
+---
+image:
+  repository: ghcr.io/timshel/oidcwarden
+  tag: v2025.5.1-5
+  pullPolicy: IfNotPresent
+
+database:
+  type: sqlite
+  wal: true
+
+service:
+  type: ClusterIP
+  httpPort: 80
+  externalTrafficPolicy: Cluster
+
+ingress:
+  enabled: true
+  className: tailscale
+  host: "nl-pwd"
+  tls: [ hosts: [ "nl-pwd" ] ]
+
+persistence:
+  enabled: true
+  size: 1Gi
+  accessMode: ReadWriteOnce
+  storageClass: longhorn-nvme
+
+vaultwarden:
+  domain: https://nl-pwd.tail2ff90.ts.net
+  allowInvitation: false
+  showPasswordHint: false
+  enableWebVault: true
+
+  admin:
+    enabled: true
+
+  smtp:
+    enabled: true
+    host: smtp.gmail.com
+    from: "nl.homelab.ar3s3ru@gmail.com"
+    port: 587
+    existingSecret: vaultwarden-secrets
+
+  extraEnv:
+    SSO_ENABLED: "true"
+    SSO_ONLY: "true"
+    SSO_FRONTEND: override
+    SSO_AUTHORITY: https://auth.ar3s3ru.dev/.well-known/openid-configuration
+    SSO_CLIENT_ID: "oidcwarden"
+    SSO_CLIENT_SECRET: { secretKeyRef: { name: vaultwarden-secrets, key: sso-client-secret } }
+    SSO_SCOPES: "email profile offline_access"

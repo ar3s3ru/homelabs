@@ -51,6 +51,11 @@ output "jellyfin_client_secret" {
   sensitive = true
 }
 
+output "vaultwarden_client_secret" {
+  value     = var.oidc_client_secrets["vaultwarden.client_secret.key"]
+  sensitive = true
+}
+
 resource "helm_release" "authelia" {
   name            = "authelia"
   repository      = "https://charts.authelia.com"

@@ -4,21 +4,6 @@ resource "kubernetes_namespace" "immich" {
   }
 }
 
-# module "volumes" {
-#   source = "../../../modules/local-persistent-mount"
-
-#   for_each = {
-#     "immich-library"  = "/files/immich"
-#     "immich-postgres" = "/home/k3s/immich/postgres"
-#     "immich-redis"    = "/home/k3s/immich/redis"
-#   }
-
-#   volume_name          = each.key
-#   kubernetes_namespace = kubernetes_namespace.immich.metadata[0].name
-#   kubernetes_node      = "dejima"
-#   host_path            = each.value
-# }
-
 resource "kubernetes_persistent_volume_claim_v1" "persistence" {
   for_each = {
     "immich-library"  = "1Ti"
