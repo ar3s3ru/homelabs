@@ -1,9 +1,10 @@
 {
   imports = [
-    ./server.nix
+    ./k3s.nix
     ./tailscale.nix
   ];
 
+  services.k3s.role = "server";
   services.k3s.clusterInit = true;
   services.k3s.manifests =
     let
