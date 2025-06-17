@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/app-template-3.7.3/charts/other/app-template/values.schema.json
+---
+defaultPodOptions:
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+    fsGroupChangePolicy: "OnRootMismatch"
+
+service:
+  main:
+    type: ClusterIP
+    controller: main
+    ports:
+      http:
+        port: 8191
+
+controllers:
+  main:
+    type: deployment
+    replicas: 1
+    annotations:
+      "reloader.stakater.com/auto": "true"
+    containers:
+      main:
+        env:
+          LOG_LEVEL: info
+        image:
+          repository: ghcr.io/flaresolverr/flaresolverr
+          tag: v3.3.21
+        probes:
+          liveness: { enabled: false }
+          readiness: { enabled: false }
+          startup: { enabled: true }

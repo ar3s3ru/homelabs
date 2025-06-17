@@ -1,6 +1,6 @@
 resource "kubernetes_persistent_volume_claim_v1" "persistence" {
   for_each = {
-    "sonarr-config" = "50M"
+    "sonarr-config" = "100M"
   }
 
   metadata {

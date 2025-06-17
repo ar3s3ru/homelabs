@@ -13,14 +13,14 @@ service:
     controller: main
     ports:
       http:
-        port: 8989
+        port: 7878
 
 ingress:
   tailscale:
     className: tailscale
     enabled: true
     hosts:
-      - host: nl-sonarr
+      - host: nl-radarr
         paths:
           - path: "/"
             pathType: Prefix
@@ -28,7 +28,7 @@ ingress:
               identifier: main
               port: http
     tls:
-      - hosts: [nl-sonarr]
+      - hosts: [nl-radarr]
 
 controllers:
   main:
@@ -43,8 +43,8 @@ controllers:
           PGUID: 1000
           TZ: Europe/Amsterdam
         image:
-          repository: ghcr.io/linuxserver/sonarr
-          tag: 4.0.14
+          repository: ghcr.io/linuxserver/radarr
+          tag: 5.22.4
         probes:
           liveness: { enabled: false }
           readiness: { enabled: false }
@@ -53,7 +53,7 @@ controllers:
 persistence:
   config:
     enabled: true
-    existingClaim: sonarr-config
+    existingClaim: radarr-config
     globalMounts: [{ path: /config }]
     type: persistentVolumeClaim
   media:

@@ -1,0 +1,65 @@
+---
+securityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+  runAsGroup: 1000
+  runAsUser: 1000
+  supplementalGroups:
+    - 26
+    - 303
+
+podAnnotations:
+  reloader.stakater.com/auto: "true"
+
+podSecurityContext:
+  fsGroup: 1000
+  privileged: true # Necessary for hw acceleration.
+  supplementalGroups:
+    - 26
+    - 303
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      # These machines have better performances for transcoding.
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - eq14-001
+
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: acme
+  hosts:
+    - host: jellyfin.nl.ar3s3ru.dev
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts: [jellyfin.nl.ar3s3ru.dev]
+      secretName: jellyfin-tls
+
+resources:
+  limits:
+    gpu.intel.com/i915: "1"
+  requests:
+    gpu.intel.com/i915: "1"
+
+volumes:
+  - name: media-data
+    persistentVolumeClaim:
+      claimName: media-data
+
+volumeMounts:
+  - name: media-data
+    mountPath: /data
+
+persistence:
+  config:
+    enabled: true
+    existingClaim: jellyfin-config
+  media:
+    enabled: false # Managed separately and manually.

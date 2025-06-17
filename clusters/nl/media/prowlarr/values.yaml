@@ -2,10 +2,10 @@
 ---
 defaultPodOptions:
   securityContext:
-    fsGroup: 1000
-    fsGroupChangePolicy: OnRootMismatch
-    runAsGroup: 1000
     runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+    fsGroupChangePolicy: "OnRootMismatch"
 
 service:
   main:
@@ -13,14 +13,14 @@ service:
     controller: main
     ports:
       http:
-        port: 8989
+        port: 9696
 
 ingress:
   tailscale:
     className: tailscale
     enabled: true
     hosts:
-      - host: nl-sonarr
+      - host: nl-prowlarr
         paths:
           - path: "/"
             pathType: Prefix
@@ -28,7 +28,7 @@ ingress:
               identifier: main
               port: http
     tls:
-      - hosts: [nl-sonarr]
+      - hosts: [nl-prowlarr]
 
 controllers:
   main:
@@ -43,8 +43,8 @@ controllers:
           PGUID: 1000
           TZ: Europe/Amsterdam
         image:
-          repository: ghcr.io/linuxserver/sonarr
-          tag: 4.0.14
+          repository: ghcr.io/linuxserver/prowlarr
+          tag: 1.35.1
         probes:
           liveness: { enabled: false }
           readiness: { enabled: false }
@@ -53,7 +53,7 @@ controllers:
 persistence:
   config:
     enabled: true
-    existingClaim: sonarr-config
+    existingClaim: prowlarr-config
     globalMounts: [{ path: /config }]
     type: persistentVolumeClaim
   media:
