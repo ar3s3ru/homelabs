@@ -6,7 +6,7 @@ resource "kubernetes_persistent_volume_claim_v1" "media_data" {
 
   spec {
     storage_class_name = "longhorn-nvme"
-    access_modes       = ["ReadWriteMany"]
+    access_modes       = ["ReadWriteMany", "ReadWriteOnce"]
     volume_mode        = "Filesystem"
 
     resources {
