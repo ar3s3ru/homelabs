@@ -15,3 +15,8 @@ dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reload
   config_path  = "${get_path_to_repo_root()}/clusters/nl/kube-system/reloader"
   skip_outputs = true
 }
+
+dependency "metallb-system" { # For the LoadBalancer service.
+  config_path  = "${get_path_to_repo_root()}/clusters/nl/metallb-system"
+  skip_outputs = true
+}

@@ -1,0 +1,9 @@
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: ipv4-pool
+  namespace: metallb-system
+spec:
+  addresses:
+    - 192.168.2.200-192.168.2.253

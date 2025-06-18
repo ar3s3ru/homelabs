@@ -6,8 +6,8 @@ include "cluster" {
   path = find_in_parent_folders("cluster.hcl")
 }
 
-dependency "metallb" { # MetalLB gives out an IP address to Traefik, which uses CertManager certificate.
-  config_path  = "${get_path_to_repo_root()}/clusters/nl/networking/metallb"
+dependency "metallb-system" { # MetalLB gives out an IP address to Traefik, which uses CertManager certificate.
+  config_path  = "${get_path_to_repo_root()}/clusters/nl/metallb-system"
   skip_outputs = true
 }
 
