@@ -11,6 +11,8 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
     overlays = [ (import ../modules/nix/overlays) ];
   };
 
+  meta.machinesFile = ./remote-builders;
+
   defaults = { pkgs, lib, ... }: {
     imports = [
       disko.nixosModules.disko

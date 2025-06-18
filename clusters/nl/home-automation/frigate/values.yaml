@@ -11,6 +11,11 @@ securityContext:
 podAnnotations:
   reloader.stakater.com/auto: "true"
 
+image:
+  repository: ghcr.io/blakeblackshear/frigate
+  tag: 0.15.1
+  pullPolicy: IfNotPresent
+
 resources:
   requests:
     gpu.intel.com/i915: "1"
@@ -77,6 +82,20 @@ config: |
     retain:
       days: 1
       mode: all
+
+  # Source: https://docs.frigate.video/configuration/object_detectors/#openvino-detector
+  detectors:
+    ov_0:
+      type: openvino
+      device: GPU
+
+  model:
+    width: 300
+    height: 300
+    input_tensor: nhwc
+    input_pixel_format: bgr
+    path: /openvino-model/ssdlite_mobilenet_v2.xml
+    labelmap_path: /openvino-model/coco_91cl_bkgr.txt
 
   go2rtc:
     streams:

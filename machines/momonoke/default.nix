@@ -26,11 +26,12 @@
   imports = [
     nixos-hardware.nixosModules.lenovo-thinkpad-x270
     ../../modules/nix/server.nix
+    ../../modules/nix/aarch64-cross-compile.nix
+    ../../modules/nix/intel-gpu-hwaccel.nix
     ../../modules/nix/k3s/agent.nix
     ./disable-docked-sleep.nix
     ./disko.nix
     ./hardware-configuration.nix
-    ./intel-gpu-hw-acceleration.nix
     ./power-management.nix
     ./tailscale.nix
   ];

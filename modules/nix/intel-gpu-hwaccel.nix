@@ -14,4 +14,8 @@
     intel-compute-runtime
     vpl-gpu-rt # QSV on 11th gen or newer
   ];
+
+  environment.systemPackages = with pkgs; [
+    libva-utils
+  ];
 }

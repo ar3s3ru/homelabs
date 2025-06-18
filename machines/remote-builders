@@ -1,0 +1,4 @@
+ssh://root@eq14-001.tail2ff90.ts.net aarch64-linux /Users/ar3s3ru/.ssh/id_ed25519
+ssh://root@eq14-001.tail2ff90.ts.net x86_64-linux /Users/ar3s3ru/.ssh/id_ed25519
+ssh://root@momonoke.tail2ff90.ts.net aarch64-linux /Users/ar3s3ru/.ssh/id_ed25519
+ssh://root@momonoke.tail2ff90.ts.net x86_64-linux /Users/ar3s3ru/.ssh/id_ed25519

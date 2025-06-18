@@ -29,6 +29,8 @@
     nixos-hardware.nixosModules.common-cpu-intel
     nixos-hardware.nixosModules.common-gpu-intel
     ../../modules/nix/server.nix
+    ../../modules/nix/aarch64-cross-compile.nix
+    ../../modules/nix/intel-gpu-hwaccel.nix
     ../../modules/nix/k3s/server-main.nix
     ./disko.nix
     ./hardware-configuration.nix

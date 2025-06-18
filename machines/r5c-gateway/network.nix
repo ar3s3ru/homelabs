@@ -23,8 +23,8 @@
   };
 
   networking.useDHCP = false;
-  networking.lan0.useDHCP = false;
-  networking.wan0.useDHCP = false;
+  networking.interfaces.lan0.useDHCP = false;
+  networking.interfaces.wan0.useDHCP = false;
 
   # PPPoE connection on KPN must go through VLAN 6.
   # Source: https://www.kpn.com/zakelijk/service/kpn-een-mkb/internet/eigen-apparatuur-aansluiten
