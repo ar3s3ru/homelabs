@@ -15,18 +15,21 @@ service:
 
 ingress:
   enabled: true
-  className: tailscale
-  host: "nl-pwd"
-  tls: [ hosts: [ "nl-pwd" ] ]
+  annotations:
+    cert-manager.io/cluster-issuer: "acme"
+  host: "vault.ar3s3ru.dev"
+  tls:
+    - hosts: [ "vault.ar3s3ru.dev" ]
+      secretName: vaultwarden-tls
 
 persistence:
   enabled: true
   size: 1Gi
   accessMode: ReadWriteOnce
-  storageClass: longhorn-nvme
+  storageClass: longhorn-encrypted
 
 vaultwarden:
-  domain: https://nl-pwd.tail2ff90.ts.net
+  domain: https://vault.ar3s3ru.dev
   allowInvitation: false
   showPasswordHint: false
   enableWebVault: true

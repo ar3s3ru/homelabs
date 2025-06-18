@@ -12,6 +12,7 @@ module "cloudflare_ddns" {
     "auth.ar3s3ru.dev",
     "auth.nl.ar3s3ru.dev",
     "photos2.ar3s3ru.dev",
+    "vault.ar3s3ru.dev",
     "jellyfin.nl.ar3s3ru.dev",
     "jellyseerr.nl.ar3s3ru.dev"
   ]

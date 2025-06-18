@@ -20,6 +20,16 @@ dependency "longhorn" { # Necessary for PVC provisioning.
   skip_outputs = true
 }
 
+dependency "cert-manager" {
+  config_path = "${get_path_to_repo_root()}/clusters/nl/networking/cert-manager"
+  skip_outputs = true
+}
+
+dependency "cloudflare-ddns" {
+  config_path = "${get_path_to_repo_root()}/clusters/nl/networking/cloudflare-ddns"
+  skip_outputs = true
+}
+
 inputs = {
   secrets = merge(
     yamldecode(sops_decrypt_file("secrets.yaml")),

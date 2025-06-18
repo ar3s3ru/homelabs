@@ -29,6 +29,21 @@ resource "helm_release" "longhorn" {
   })]
 }
 
+variable "longhorn_crypto" {
+  type = map(string)
+  description = "Encryption at rest parameters for Longhorn volumes"
+  sensitive = true
+}
+
+resource "kubernetes_secret_v1" "longhorn_crypto" {
+  metadata {
+    name = "longhorn-crypto"
+    namespace = "longhorn-system"
+  }
+
+  data = var.longhorn_crypto
+}
+
 resource "kubernetes_config_map_v1" "longhorn_nixos_path" {
   depends_on = [helm_release.longhorn]
 
