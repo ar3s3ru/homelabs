@@ -19,6 +19,10 @@
     40000 # NOTE: not sure where this is coming from... It was the router (192.168.2.254)
   ];
 
+  services.k3s.extraFlags = [
+    "--node-label media.transcoding.gpu=medium"
+  ];
+
   imports = [
     nixos-hardware.nixosModules.lenovo-thinkpad-x270
     ../../modules/nix/server.nix

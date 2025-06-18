@@ -17,6 +17,7 @@
 
 
   services.k3s.extraFlags = [
+    "--node-label media.transcoding.gpu=fast"
     # Add the tailnet address for the main node, so that
     # nodes outside the home network (e.g. hetzner cloud machines)
     # can still connect to this main node.

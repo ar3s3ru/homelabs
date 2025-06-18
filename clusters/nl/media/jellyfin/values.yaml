@@ -21,13 +21,12 @@ podSecurityContext:
 affinity:
   nodeAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
-      # These machines have better performances for transcoding.
       nodeSelectorTerms:
         - matchExpressions:
-            - key: kubernetes.io/hostname
+            - key: media.transcoding.gpu
               operator: In
               values:
-                - eq14-001
+                - fast
 
 ingress:
   enabled: true

@@ -1,6 +1,10 @@
 { lib, ... }:
 
 {
+  imports = [
+    ./luks.nix
+  ];
+
   # Enable firewall.
   networking.firewall.enable = true;
   networking.firewall.allowedTCPPorts = [ 22 80 443 ];
