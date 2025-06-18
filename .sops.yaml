@@ -6,6 +6,7 @@ keys:
   # Generated using `cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age`,
   # where the SSH host key is obtained from the remote machine.
   - &momonoke age12g62sqmpz4pztx8zn94n8rxzklj7fj805g78m50kxu44yqy26azs2vph2y
+  - &r5c-gateway age1ew2akntc7tttpjjgx3v7pequ9y4f6j76guam6n3mpnypuljx7u9q2vhwrl
   # These are created using `ssh-keyscan <tailscale-ssh-addr> | ssh-to-age`
   - &eq14-001-ts age1krvwskkgw5f3ufcwgl6l2jz0emxnkn40wpup2aqhqdulqy2x99js4p5fnq
   - &momonoke-ts age12g62sqmpz4pztx8zn94n8rxzklj7fj805g78m50kxu44yqy26azs2vph2y
@@ -43,6 +44,7 @@ creation_rules:
           - *ar3s3ru
         age:
           - *github-actions
+          - *r5c-gateway
   - path_regex: "clusters/.*"
     key_groups:
       - pgp:
