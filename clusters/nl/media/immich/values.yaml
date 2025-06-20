@@ -1,11 +1,54 @@
 ---
 image:
-  tag: v1.134.0
+  tag: v1.135.1
 
 # TODO: move postgres out of this.
 useDeprecatedPostgresChart: true
 
+x-require-gpu: &require-gpu
+  resources:
+    requests:
+      "gpu.intel.com/i915": "1"
+    limits:
+      "gpu.intel.com/i915": "1"
+
+x-prefer-transcoding-nodes: &prefer-transcoding-nodes
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: media.transcoding.gpu
+                operator: In
+                values:
+                  - fast
+        - weight: 50
+          preference:
+            matchExpressions:
+              - key: media.transcoding.gpu
+                operator: In
+                values:
+                  - medium
+
+x-only-fast-transcoding-nodes: &only-fast-transcoding-nodes
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: media.transcoding.gpu
+              operator: In
+              values:
+                - fast
+
 server:
+  <<: *require-gpu
+  <<: *prefer-transcoding-nodes
+  enabled: true
+  service:
+    main:
+      type: LoadBalancer # Exposed to bypass the Ingress during heavy uploads.
   ingress:
     main:
       enabled: true
@@ -18,22 +61,29 @@ server:
       tls:
         - hosts: [photos2.ar3s3ru.dev]
           secretName: immich-tls
-  # Needed for hardware acceleration.
-  resources:
+
+machine-learning:
+  <<: *require-gpu
+  <<: *only-fast-transcoding-nodes
+  enabled: true
+  image:
+    tag: v1.135.1-openvino
+  resources: # Needed for hardware acceleration.
     requests:
       "gpu.intel.com/i915": "1"
     limits:
       "gpu.intel.com/i915": "1"
+  env:
+    TRANSFORMERS_CACHE: /cache
+  persistence:
+    cache: # To avoid downloading the ML models every start
+      enabled: true
+      type: pvc
+      existingClaim: immich-ml-cache
 
 postgresql:
   enabled: true
   primary:
-    # NOTE: after updating to v1.122.2 the pg node keeps crashing with OOMKilled.
-    resources:
-      requests:
-        memory: 512Mi
-      limits:
-        memory: 1024Mi
     service:
       annotations:
         tailscale.com/expose: "true"

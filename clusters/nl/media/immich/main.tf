@@ -9,6 +9,7 @@ resource "kubernetes_persistent_volume_claim_v1" "persistence" {
     "immich-library"  = "1Ti"
     "immich-postgres" = "2Gi"
     "immich-redis"    = "200Mi"
+    "immich-ml-cache" = "10Gi"
   }
 
   metadata {

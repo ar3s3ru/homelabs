@@ -1,6 +1,6 @@
 { nixos-hardware, ... }:
 
-{ ... }:
+{ pkgs, ... }:
 
 {
   deployment.targetHost = "momonoke.tail2ff90.ts.net";
@@ -21,6 +21,10 @@
 
   services.k3s.extraFlags = [
     "--node-label media.transcoding.gpu=medium"
+  ];
+
+  environment.systemPackages = with pkgs; [
+    immich-cli
   ];
 
   imports = [

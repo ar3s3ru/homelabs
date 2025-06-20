@@ -17,5 +17,6 @@
 
   environment.systemPackages = with pkgs; [
     libva-utils
+    nvtopPackages.intel
   ];
 }
