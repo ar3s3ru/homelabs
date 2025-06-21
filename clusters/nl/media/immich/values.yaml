@@ -42,10 +42,17 @@ x-only-fast-transcoding-nodes: &only-fast-transcoding-nodes
               values:
                 - fast
 
+# The PVCs are ReadWriteOnce, so we need to recreate the pods on eviction.
+# The little downtime is acceptable, since Immich is used for personal stuff.
+x-strategy-recreate: &strategy-recreate
+  controller:
+    strategy: Recreate
+
 server:
+  enabled: true
   <<: *require-gpu
   <<: *prefer-transcoding-nodes
-  enabled: true
+  <<: *strategy-recreate
   service:
     main:
       type: LoadBalancer # Exposed to bypass the Ingress during heavy uploads.
@@ -63,9 +70,10 @@ server:
           secretName: immich-tls
 
 machine-learning:
+  enabled: true
   <<: *require-gpu
   <<: *only-fast-transcoding-nodes
-  enabled: true
+  <<: *strategy-recreate
   image:
     tag: v1.135.1-openvino
   resources: # Needed for hardware acceleration.
