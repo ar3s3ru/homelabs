@@ -81,7 +81,7 @@ resource "helm_release" "home_assistant" {
   repository      = "https://bjw-s-labs.github.io/helm-charts"
   chart           = "app-template"
   namespace       = "home-automation"
-  version         = "3.7.3"
+  version         = "4.1.1"
   cleanup_on_fail = true
   values          = [file("./values.yaml")]
 }

@@ -28,7 +28,7 @@ resource "helm_release" "prowlarr" {
   repository      = "https://bjw-s-labs.github.io/helm-charts"
   chart           = "app-template"
   namespace       = "media"
-  version         = "3.7.3"
+  version         = "4.1.1"
   cleanup_on_fail = true
   values          = [file("./values.yaml")]
 }
@@ -38,7 +38,7 @@ resource "helm_release" "flaresolverr" {
   repository      = "https://bjw-s-labs.github.io/helm-charts"
   chart           = "app-template"
   namespace       = "media"
-  version         = "3.7.3"
+  version         = "4.1.1"
   cleanup_on_fail = true
   values          = [file("./values-flaresolverr.yaml")]
 }
