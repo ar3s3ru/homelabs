@@ -10,3 +10,8 @@ dependency "telemetry" { # Creates the namespace.
   config_path  = "${get_path_to_repo_root()}/clusters/nl/telemetry"
   skip_outputs = true
 }
+
+dependency "longhorn" { # Necessary for persistent storage.
+  config_path  = "${get_path_to_repo_root()}/clusters/nl/longhorn-system/longhorn"
+  skip_outputs = true
+}

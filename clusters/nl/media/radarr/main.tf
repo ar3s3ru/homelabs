@@ -28,5 +28,5 @@ resource "helm_release" "radarr" {
   namespace       = "media"
   version         = "3.7.3"
   cleanup_on_fail = true
-  values = [file("./values.yaml")]
+  values          = [file("./values.yaml")]
 }

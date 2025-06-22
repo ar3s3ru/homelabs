@@ -1,0 +1,48 @@
+---
+# NOTE: the Grafana deployment is handled in its own chart.
+grafana:
+  enabled: false
+
+prometheus:
+  ingress:
+    enabled: true
+    ingressClassName: tailscale
+    hosts:
+      - &host nl-prometheus
+    tls:
+      - hosts:
+          - *host
+
+  prometheusSpec:
+    # Enables remote write receiver so that Alloy can push metrics to it.
+    enableRemoteWriteReceiver: true
+
+    retention: "7d"
+    retentionSize: "10GB" # Should match the PersistentVolume space request.
+
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: [ReadWriteOnce]
+          # Fast storage class, replicated on more nodes for redundancy,
+          # retained after deletion for data recovery.
+          storageClassName: longhorn-nvme-replicated-retain
+          resources:
+            requests:
+              storage: 15G # Add some extra space just to be safe.
+
+    # Scrape pod/service monitors and rules from all namespaces.
+    podMonitorSelector: {}
+    ruleSelector: {}
+    serviceMonitorSelector: {}
+
+    podMonitorNamespaceSelector:
+      any: true
+    ruleNamespaceSelector:
+      any: true
+    serviceMonitorNamespaceSelector:
+      any: true
+
+    podMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false

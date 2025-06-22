@@ -44,5 +44,5 @@ resource "helm_release" "frigate" {
   namespace       = "home-automation"
   version         = "7.8.0"
   cleanup_on_fail = true
-  values = [file("./values.yaml")]
+  values          = [file("./values.yaml")]
 }

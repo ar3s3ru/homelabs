@@ -1,0 +1,16 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn-nvme-replicated-retain
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+parameters:
+  numberOfReplicas: "2"
+  fromBackup: ""
+  diskSelector: "nvme"
+  dataEngine: "v2"
+  fsType: "ext4"
+  dataLocality: "best-effort"

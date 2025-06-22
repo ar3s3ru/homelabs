@@ -30,7 +30,7 @@ resource "helm_release" "prowlarr" {
   namespace       = "media"
   version         = "3.7.3"
   cleanup_on_fail = true
-  values = [file("./values.yaml")]
+  values          = [file("./values.yaml")]
 }
 
 resource "helm_release" "flaresolverr" {
@@ -40,5 +40,5 @@ resource "helm_release" "flaresolverr" {
   namespace       = "media"
   version         = "3.7.3"
   cleanup_on_fail = true
-  values = [file("./values-flaresolverr.yaml")]
+  values          = [file("./values-flaresolverr.yaml")]
 }

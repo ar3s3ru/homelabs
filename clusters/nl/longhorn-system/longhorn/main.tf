@@ -6,38 +6,18 @@ resource "helm_release" "longhorn" {
   version          = "1.9.0"
   create_namespace = true
   cleanup_on_fail  = true
-
-  values = [yamlencode({
-    defaultSettings = {
-      defaultDataLocality = true
-      defaultReplicaCount = 1
-      defaultStorageClass = true
-      defaultSchedulingPolicy = {
-        allowVolumeExpansion  = true
-        allowVolumeScheduling = true
-      }
-    }
-
-    longhornUI = { replicas = 1 }
-
-    ingress = {
-      enabled          = true
-      ingressClassName = "tailscale"
-      host             = "nl-longhorn"
-      tls              = true
-    }
-  })]
+  values           = [file("./values.yaml")]
 }
 
 variable "longhorn_crypto" {
-  type = map(string)
+  type        = map(string)
   description = "Encryption at rest parameters for Longhorn volumes"
-  sensitive = true
+  sensitive   = true
 }
 
 resource "kubernetes_secret_v1" "longhorn_crypto" {
   metadata {
-    name = "longhorn-crypto"
+    name      = "longhorn-crypto"
     namespace = "longhorn-system"
   }
 

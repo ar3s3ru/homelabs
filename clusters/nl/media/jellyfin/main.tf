@@ -38,5 +38,5 @@ resource "helm_release" "jellyfin" {
   namespace       = "media"
   version         = "2.3.0"
   cleanup_on_fail = true
-  values = [file("./values.yaml")]
+  values          = [file("./values.yaml")]
 }

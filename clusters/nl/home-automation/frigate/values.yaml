@@ -56,7 +56,7 @@ ingress:
           portName: http
   tls:
     - hosts:
-      - *host
+        - *host
 
 persistence:
   config:

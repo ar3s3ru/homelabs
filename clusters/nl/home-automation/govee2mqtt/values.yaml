@@ -1,0 +1,57 @@
+---
+defaultPodOptions:
+  hostNetwork: true
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+    fsGroupChangePolicy: "OnRootMismatch"
+
+controllers:
+  main:
+    type: deployment
+    replicas: 1
+    strategy: Recreate
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main:
+        image:
+          repository: ghcr.io/wez/govee2mqtt
+          tag: 2025.01.04-2c39a50f
+        probes:
+          liveness: { enabled: false }
+          readiness: { enabled: false }
+          startup: { enabled: true }
+        env:
+          TZ: Europe/Amsterdam
+          GOVEE_MQTT_HOST: emqx.home-automation.svc.cluster.local
+          GOVEE_MQTT_PORT: "1883"
+          GOVEE_TEMPERATURE_SCALE: C
+        envFrom:
+          - secretRef:
+              name: govee-secrets
+
+service:
+  main:
+    controller: main
+    type: ClusterIP
+    ports:
+      http:
+        port: 8056
+
+ingress:
+  tailscale:
+    enabled: true
+    className: tailscale
+    hosts:
+      - host: &host nl-g2m
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              identifier: main
+              port: http
+    tls:
+      - hosts:
+          - *host
