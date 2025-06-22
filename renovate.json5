@@ -1,50 +1,41 @@
 {
-  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
-  extends: [
-    ':pinDependencies',
-    'config:best-practices',
-    'group:allNonMajor',
-    'customManagers:githubActionsVersions',
-  ],
-  branchPrefix: 'chore/renovate-',
-  rebaseWhen: 'behind-base-branch',
-  ignorePaths: [
-    '**/provider_override.tf',
-  ],
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [":pinDependencies", "config:best-practices", "group:allNonMajor", "customManagers:githubActionsVersions"],
+  branchPrefix: "chore/renovate-",
+  rebaseWhen: "behind-base-branch",
+  ignorePaths: ["**/provider_override.tf"],
   nix: {
     enabled: true,
   },
   lockFileMaintenance: {
     enabled: true,
-    recreateWhen: 'always',
-    rebaseWhen: 'behind-base-branch',
+    recreateWhen: "always",
+    rebaseWhen: "behind-base-branch",
   },
   packageRules: [
     {
-      matchManagers: 'github-actions',
+      matchManagers: "github-actions",
     },
     {
-      matchPackageNames: [
-        'ghcr.io/music-assistant/server',
-      ],
-      versioning: 'pep440',
+      matchPackageNames: ["ghcr.io/music-assistant/server"],
+      versioning: "pep440",
     },
     {
-      matchManagers: [
-        'nix',
-      ],
+      matchManagers: ["nix"],
     },
   ],
   customManagers: [
     {
-      customType: 'regex',
-      managerFilePatterns: [
-        '/(^|/)*\\.tf$/',
-      ],
-      datasourceTemplate: 'docker',
-      matchStrings: [
-        '\\s+repository\\s+=\\s+"(?<depName>.*?)"\\s+tag\\s+=\\s+"(?<currentValue>[\\w+\\.\\-]*)"',
-      ],
+      customType: "regex",
+      managerFilePatterns: ["/(^|/)*\\.tf$/"],
+      datasourceTemplate: "docker",
+      matchStrings: ['\\s+repository\\s+=\\s+"(?<depName>.*?)"\\s+tag\\s+=\\s+"(?<currentValue>[\\w+\\.\\-]*)"'],
+    },
+    {
+      customType: "regex",
+      managerFilePatterns: ["/(^|/)*\\.yaml$/"],
+      datasourceTemplate: "docker",
+      matchStrings: ['\\s*repository:\\s+"*(?<depName>.*?)"*\\s*tag:\\s+"*(?<currentValue>[\\w+\\.\\-]*)"*'],
     },
   ],
 }
