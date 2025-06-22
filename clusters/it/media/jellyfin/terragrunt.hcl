@@ -21,11 +21,6 @@ dependency "cloudflare-ddns" { # Necessary to ensure DNS records are set.
   skip_outputs = true
 }
 
-dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reloader.
-  config_path  = "${get_path_to_repo_root()}/clusters/it/kube-system/reloader"
-  skip_outputs = true
-}
-
 dependency "authelia" { # Necessary for authentication.
   config_path = "${get_path_to_repo_root()}/clusters/nl/auth/authelia"
 

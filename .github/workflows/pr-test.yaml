@@ -60,5 +60,5 @@ jobs:
         with:
           age_keys: ${{ secrets.SOPS_AGE_KEYS }}
       - name: Run terragrunt plan
-        run: terragrunt --non-interactive run-all plan -lock=false
+        run: terragrunt --non-interactive plan --all -lock=false
         shell: nix develop --quiet -c bash -e {0}
