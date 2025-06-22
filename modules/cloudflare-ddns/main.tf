@@ -30,7 +30,7 @@ resource "helm_release" "cloudflare_ddns" {
   repository      = "https://bjw-s-labs.github.io/helm-charts"
   chart           = "app-template"
   namespace       = var.kubernetes_namespace
-  version         = "3.7.3"
+  version         = "4.1.1"
   cleanup_on_fail = true
 
   values = [yamlencode({
