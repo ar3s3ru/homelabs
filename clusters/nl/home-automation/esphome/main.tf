@@ -1,197 +1,199 @@
-resource "kubernetes_persistent_volume_v1" "esphome_config" {
-  metadata {
-    name = "esphome-config-pv"
-  }
+# FIXME(ar3s3ru): re-enable when the router is fully set up.
 
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
+# resource "kubernetes_persistent_volume_v1" "esphome_config" {
+#   metadata {
+#     name = "esphome-config-pv"
+#   }
 
-    capacity = {
-      storage = "100M" # NOTE: this is the size of the partition.
-    }
+#   spec {
+#     storage_class_name = "local-path"
+#     access_modes       = ["ReadWriteOnce"]
 
-    persistent_volume_source {
-      host_path {
-        path = "/media/config/esphome"
-      }
-    }
+#     capacity = {
+#       storage = "100M" # NOTE: this is the size of the partition.
+#     }
 
-    node_affinity {
-      required {
-        node_selector_term {
-          match_expressions {
-            key      = "kubernetes.io/hostname"
-            operator = "In"
-            values   = ["eq14-001"]
-          }
-        }
-      }
-    }
-  }
-}
+#     persistent_volume_source {
+#       host_path {
+#         path = "/media/config/esphome"
+#       }
+#     }
 
-resource "kubernetes_persistent_volume_claim_v1" "esphome_config" {
-  metadata {
-    name      = "esphome-config-pvc"
-    namespace = "home-automation"
-  }
+#     node_affinity {
+#       required {
+#         node_selector_term {
+#           match_expressions {
+#             key      = "kubernetes.io/hostname"
+#             operator = "In"
+#             values   = ["eq14-001"]
+#           }
+#         }
+#       }
+#     }
+#   }
+# }
 
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-    volume_name        = kubernetes_persistent_volume_v1.esphome_config.metadata[0].name
+# resource "kubernetes_persistent_volume_claim_v1" "esphome_config" {
+#   metadata {
+#     name      = "esphome-config-pvc"
+#     namespace = "home-automation"
+#   }
 
-    resources {
-      requests = {
-        storage = "100M" # NOTE: this is the size of the partition.
-      }
-    }
-  }
-}
+#   spec {
+#     storage_class_name = "local-path"
+#     access_modes       = ["ReadWriteOnce"]
+#     volume_name        = kubernetes_persistent_volume_v1.esphome_config.metadata[0].name
 
-resource "kubernetes_persistent_volume_v1" "esphome_cache" {
-  metadata {
-    name = "esphome-cache-pv"
-  }
+#     resources {
+#       requests = {
+#         storage = "100M" # NOTE: this is the size of the partition.
+#       }
+#     }
+#   }
+# }
 
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
+# resource "kubernetes_persistent_volume_v1" "esphome_cache" {
+#   metadata {
+#     name = "esphome-cache-pv"
+#   }
 
-    capacity = {
-      storage = "10G"
-    }
+#   spec {
+#     storage_class_name = "local-path"
+#     access_modes       = ["ReadWriteOnce"]
 
-    persistent_volume_source {
-      host_path {
-        path = "/media/cache/esphome"
-      }
-    }
+#     capacity = {
+#       storage = "10G"
+#     }
 
-    node_affinity {
-      required {
-        node_selector_term {
-          match_expressions {
-            key      = "kubernetes.io/hostname"
-            operator = "In"
-            values   = ["eq14-001"]
-          }
-        }
-      }
-    }
-  }
-}
+#     persistent_volume_source {
+#       host_path {
+#         path = "/media/cache/esphome"
+#       }
+#     }
 
-resource "kubernetes_persistent_volume_claim_v1" "esphome_cache" {
-  metadata {
-    name      = "esphome-cache-pvc"
-    namespace = "home-automation"
-  }
+#     node_affinity {
+#       required {
+#         node_selector_term {
+#           match_expressions {
+#             key      = "kubernetes.io/hostname"
+#             operator = "In"
+#             values   = ["eq14-001"]
+#           }
+#         }
+#       }
+#     }
+#   }
+# }
 
-  spec {
-    storage_class_name = "local-path"
-    access_modes       = ["ReadWriteOnce"]
-    volume_name        = kubernetes_persistent_volume_v1.esphome_cache.metadata[0].name
+# resource "kubernetes_persistent_volume_claim_v1" "esphome_cache" {
+#   metadata {
+#     name      = "esphome-cache-pvc"
+#     namespace = "home-automation"
+#   }
 
-    resources {
-      requests = {
-        storage = "10G"
-      }
-    }
-  }
-}
+#   spec {
+#     storage_class_name = "local-path"
+#     access_modes       = ["ReadWriteOnce"]
+#     volume_name        = kubernetes_persistent_volume_v1.esphome_cache.metadata[0].name
 
-resource "helm_release" "esphome" {
-  name            = "esphome"
-  repository      = "https://bjw-s-labs.github.io/helm-charts"
-  chart           = "app-template"
-  namespace       = "home-automation"
-  version         = "4.1.1"
-  cleanup_on_fail = true
+#     resources {
+#       requests = {
+#         storage = "10G"
+#       }
+#     }
+#   }
+# }
 
-  values = [yamlencode({
-    controllers = {
-      main = {
-        type     = "statefulset"
-        replicas = 1
+# resource "helm_release" "esphome" {
+#   name            = "esphome"
+#   repository      = "https://bjw-s-labs.github.io/helm-charts"
+#   chart           = "app-template"
+#   namespace       = "home-automation"
+#   version         = "4.1.1"
+#   cleanup_on_fail = true
 
-        annotations = {
-          "reloader.stakater.com/auto" = "true"
-        }
+#   values = [yamlencode({
+#     controllers = {
+#       main = {
+#         type     = "statefulset"
+#         replicas = 1
 
-        containers = {
-          main = {
-            image = {
-              repository = "ghcr.io/esphome/esphome"
-              tag        = "2025.4.1"
-            }
-            securityContext = {
-              privileged = true # Required to access the /dev/ttyUSB0 device
-            }
-            probes = {
-              # FIXME(ar3s3ru): find a way to enable these?
-              liveness  = { enabled = false }
-              readiness = { enabled = false }
-              startup   = { enabled = true }
-            }
-          }
-        }
-      }
-    }
+#         annotations = {
+#           "reloader.stakater.com/auto" = "true"
+#         }
 
-    service = {
-      main = {
-        controller = "main"
-        type       = "ClusterIP"
-        ports = {
-          http = {
-            port = 6052
-          }
-        }
-      }
-    }
+#         containers = {
+#           main = {
+#             image = {
+#               repository = "ghcr.io/esphome/esphome"
+#               tag        = "2025.4.1"
+#             }
+#             securityContext = {
+#               privileged = true # Required to access the /dev/ttyUSB0 device
+#             }
+#             probes = {
+#               # FIXME(ar3s3ru): find a way to enable these?
+#               liveness  = { enabled = false }
+#               readiness = { enabled = false }
+#               startup   = { enabled = true }
+#             }
+#           }
+#         }
+#       }
+#     }
 
-    ingress = {
-      tailscale = {
-        enabled   = true
-        className = "tailscale"
+#     service = {
+#       main = {
+#         controller = "main"
+#         type       = "ClusterIP"
+#         ports = {
+#           http = {
+#             port = 6052
+#           }
+#         }
+#       }
+#     }
 
-        hosts = [{
-          host = "nl-esphome",
-          paths = [{
-            path     = "/",
-            pathType = "Prefix",
-            service = {
-              identifier = "main",
-              port       = "http"
-            }
-          }]
-        }]
+#     ingress = {
+#       tailscale = {
+#         enabled   = true
+#         className = "tailscale"
 
-        tls = [{ hosts = ["nl-esphome"] }]
-      }
-    }
+#         hosts = [{
+#           host = "nl-esphome",
+#           paths = [{
+#             path     = "/",
+#             pathType = "Prefix",
+#             service = {
+#               identifier = "main",
+#               port       = "http"
+#             }
+#           }]
+#         }]
 
-    persistence = {
-      cache = {
-        enabled       = true
-        type          = "persistentVolumeClaim"
-        existingClaim = kubernetes_persistent_volume_claim_v1.esphome_cache.metadata[0].name
-        globalMounts  = [{ path = "/cache" }]
-      }
-      config = {
-        enabled       = true
-        type          = "persistentVolumeClaim"
-        existingClaim = kubernetes_persistent_volume_claim_v1.esphome_config.metadata[0].name
-        globalMounts  = [{ path = "/config" }]
-      }
-      dev-ttyusb0 = {
-        enabled      = true
-        type         = "hostPath"
-        hostPath     = "/dev/ttyUSB0"
-        globalMounts = [{ path = "/dev/ttyUSB0" }]
-      }
-    }
-  })]
-}
+#         tls = [{ hosts = ["nl-esphome"] }]
+#       }
+#     }
+
+#     persistence = {
+#       cache = {
+#         enabled       = true
+#         type          = "persistentVolumeClaim"
+#         existingClaim = kubernetes_persistent_volume_claim_v1.esphome_cache.metadata[0].name
+#         globalMounts  = [{ path = "/cache" }]
+#       }
+#       config = {
+#         enabled       = true
+#         type          = "persistentVolumeClaim"
+#         existingClaim = kubernetes_persistent_volume_claim_v1.esphome_config.metadata[0].name
+#         globalMounts  = [{ path = "/config" }]
+#       }
+#       dev-ttyusb0 = {
+#         enabled      = true
+#         type         = "hostPath"
+#         hostPath     = "/dev/ttyUSB0"
+#         globalMounts = [{ path = "/dev/ttyUSB0" }]
+#       }
+#     }
+#   })]
+# }
