@@ -4,7 +4,7 @@
     path = "/etc/pppd/chap-secrets";
   };
 
-  services.pppd.enable = true;
+  services.pppd.enable = false;
   services.pppd.peers."kpn".autostart = true;
   services.pppd.peers."kpn".enable = true;
   services.pppd.peers."kpn".config = ''

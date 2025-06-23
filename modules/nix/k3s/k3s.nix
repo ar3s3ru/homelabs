@@ -18,7 +18,6 @@
     kubernetes-helm
     docker
     runc
-    lsof # To inspect the number of open files.
   ];
 
   environment.variables = {

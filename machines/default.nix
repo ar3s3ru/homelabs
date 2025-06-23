@@ -5,6 +5,7 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
   eq14-001 = import ./eq14-001 inputs;
   momonoke = import ./momonoke inputs;
   r5c-gateway = import ./r5c-gateway inputs;
+  utm-vm = import ./utm-vm inputs;
 
   meta.nixpkgs = import nixpkgs {
     system = "x86_64-linux";
@@ -108,6 +109,8 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
       inetutils
       ethtool # manage NIC settings (offload, NIC feeatures, ...)
       tcpdump # view network traffic
+      lsof # To inspect the number of open files.
+      iperf
       # Fish utilities.
       fzf
       bat
