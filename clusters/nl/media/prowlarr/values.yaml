@@ -44,7 +44,7 @@ controllers:
           TZ: Europe/Amsterdam
         image:
           repository: ghcr.io/linuxserver/prowlarr
-          tag: 1.35.1
+          tag: 1.37.0
         probes:
           liveness: { enabled: false }
           readiness: { enabled: false }
