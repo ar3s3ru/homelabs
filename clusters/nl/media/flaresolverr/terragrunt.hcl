@@ -20,8 +20,3 @@ dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reload
   config_path  = "${get_path_to_repo_root()}/clusters/nl/kube-system/reloader"
   skip_outputs = true
 }
-
-dependency "flaresolverr" { # Necessary for solving Cloudflare challenges.
-  config_path  = "${get_path_to_repo_root()}/clusters/nl/media/flaresolverr"
-  skip_outputs = true
-}
