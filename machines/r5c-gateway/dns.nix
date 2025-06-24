@@ -14,6 +14,7 @@
         "192.168.0.0/16 allow"
         "::0/0 refuse"
         "::1 allow"
+        "fd00::/64 allow"
       ];
       private-domain = config.networking.domain;
     };
