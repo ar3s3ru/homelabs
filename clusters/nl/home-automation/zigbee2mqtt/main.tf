@@ -3,8 +3,6 @@ resource "kubernetes_manifest" "akri_sonoff_zigbee_antenna" {
 }
 
 resource "helm_release" "zigbee2mqtt" {
-  depends_on = [kubernetes_manifest.akri_sonoff_zigbee_antenna]
-
   name            = "zigbee2mqtt"
   repository      = "https://charts.zigbee2mqtt.io/"
   chart           = "zigbee2mqtt"

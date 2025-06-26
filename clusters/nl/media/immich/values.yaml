@@ -109,7 +109,7 @@ redis:
 immich:
   persistence:
     library:
-      existingClaim: immich-library
+      existingClaim: immich-library-v2
   metrics:
     enabled: true
   configuration:

@@ -6,7 +6,6 @@ resource "kubernetes_namespace" "immich" {
 
 resource "kubernetes_persistent_volume_claim_v1" "persistence" {
   for_each = {
-    "immich-library"  = "1Ti"
     "immich-postgres" = "2Gi"
     "immich-redis"    = "200Mi"
     "immich-ml-cache" = "10Gi"
@@ -20,6 +19,29 @@ resource "kubernetes_persistent_volume_claim_v1" "persistence" {
   spec {
     storage_class_name = "longhorn-nvme"
     access_modes       = ["ReadWriteOnce"]
+    volume_mode        = "Filesystem"
+
+    resources {
+      requests = {
+        storage = each.value
+      }
+    }
+  }
+}
+
+resource "kubernetes_persistent_volume_claim_v1" "persistence_v2" {
+  for_each = {
+    "immich-library-v2" = "1Ti"
+  }
+
+  metadata {
+    name      = each.key
+    namespace = "media"
+  }
+
+  spec {
+    storage_class_name = "longhorn-hdd-single-replica"
+    access_modes       = ["ReadWriteOnce", "ReadWriteMany"] # NOTE: required for RollingUpdate strategy.
     volume_mode        = "Filesystem"
 
     resources {
