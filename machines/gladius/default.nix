@@ -3,13 +3,13 @@
 { ... }:
 
 {
-  deployment.targetHost = "eq14-001.tail2ff90.ts.net";
+  deployment.targetHost = "gladius.tail2ff90.ts.net";
   deployment.targetUser = "root";
   deployment.tags = [ "type-server" "k8s-server" "region-nl" ];
 
   nixpkgs.system = "x86_64-linux";
 
-  networking.hostName = "eq14-001";
+  networking.hostName = "gladius";
   networking.domain = "ar3s3ru.dev";
   networking.networkmanager.enable = true;
 
@@ -18,7 +18,6 @@
 
   services.k3s.extraFlags = [
     "--node-label media.transcoding.gpu=fast"
-    "--tls-san=eq14-1.home"
   ];
 
   imports = [
@@ -28,7 +27,7 @@
     ../../modules/nix/server.nix
     ../../modules/nix/aarch64-cross-compile.nix
     ../../modules/nix/intel-gpu-hwaccel.nix
-    ../../modules/nix/k3s/server-main.nix
+    ../../modules/nix/k3s/server.nix
     ./disko.nix
     ./hardware-configuration.nix
     ./tailscale.nix

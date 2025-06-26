@@ -35,3 +35,8 @@ dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reload
   config_path  = "${get_path_to_repo_root()}/clusters/nl/kube-system/reloader"
   skip_outputs = true
 }
+
+dependency "longhorn" { # Necessary for Persistent Volume Claim storage.
+  config_path  = "${get_path_to_repo_root()}/clusters/nl/longhorn-system/longhorn"
+  skip_outputs = true
+}

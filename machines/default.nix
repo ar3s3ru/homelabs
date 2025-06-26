@@ -4,6 +4,7 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
   dejima = import ./dejima inputs;
   eq14-001 = import ./eq14-001 inputs;
   momonoke = import ./momonoke inputs;
+  gladius = import ./gladius inputs;
   r5c-gateway = import ./r5c-gateway inputs;
   utm-vm = import ./utm-vm inputs;
 
@@ -106,6 +107,7 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
       usbutils
       mscp
       lshw
+      dig
       inetutils
       ethtool # manage NIC settings (offload, NIC feeatures, ...)
       tcpdump # view network traffic

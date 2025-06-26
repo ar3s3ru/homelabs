@@ -5,9 +5,11 @@ keys:
   - &eq14-001 age1z3t2tgda3cvzuppqqxc992q5npalwq6wzspnma4q6u7jp5wwds9qgv32wm
   # Generated using `cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age`,
   # where the SSH host key is obtained from the remote machine.
+  - &gladius age1g96u7w7hcfzc52t5m27e2gwy9h3877rmmmszf8ua586dw4yhu3vq7qz799
   - &momonoke age12g62sqmpz4pztx8zn94n8rxzklj7fj805g78m50kxu44yqy26azs2vph2y
   - &r5c-gateway age1ew2akntc7tttpjjgx3v7pequ9y4f6j76guam6n3mpnypuljx7u9q2vhwrl
   # These are created using `ssh-keyscan <tailscale-ssh-addr> | ssh-to-age`
+  - &gladius-ts age1g96u7w7hcfzc52t5m27e2gwy9h3877rmmmszf8ua586dw4yhu3vq7qz799
   - &eq14-001-ts age1krvwskkgw5f3ufcwgl6l2jz0emxnkn40wpup2aqhqdulqy2x99js4p5fnq
   - &momonoke-ts age12g62sqmpz4pztx8zn94n8rxzklj7fj805g78m50kxu44yqy26azs2vph2y
   - &dejima-ts age18tdafrhnvtp9fyja20e9dhq3knq9lyrtnyppr3xu8n0nwce40gxswu5ww9
@@ -18,6 +20,8 @@ creation_rules:
           - *ar3s3ru
         age:
           - *github-actions
+          - *gladius
+          - *gladius-ts
           - *eq14-001
           - *eq14-001-ts
           - *momonoke
@@ -57,6 +61,8 @@ creation_rules:
           - *ar3s3ru
         age:
           - *github-actions
+          - *gladius
+          - *gladius-ts
           - *eq14-001
           - *eq14-001-ts
           - *momonoke

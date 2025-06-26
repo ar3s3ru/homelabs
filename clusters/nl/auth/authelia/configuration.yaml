@@ -141,6 +141,20 @@ identity_providers:
         consent_mode: implicit
         authorization_policy: one_factor
         redirect_uris:
+          - https://jellyseerr.ar3s3ru.dev/login/oidc/callback/authelia
+        scopes:
+          - "openid"
+          - "email"
+          - "profile"
+          - "groups"
+        token_endpoint_auth_method: client_secret_post
+      - client_id: "jellyseerr"
+        client_name: "Jellyseerr"
+        client_secret: { path: "/secrets/authelia-oidc-secrets/jellyseerr.client_secret.key" }
+        public: false
+        consent_mode: implicit
+        authorization_policy: one_factor
+        redirect_uris:
           - https://jellyfin.it.ar3s3ru.dev/sso/OID/redirect/authelia
           - https://jellyfin.nl.ar3s3ru.dev/sso/OID/redirect/authelia
         scopes:
