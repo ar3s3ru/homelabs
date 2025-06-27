@@ -8,5 +8,5 @@
   # Kubernetes through K3S.
   services.k3s.role = "server";
   services.k3s.tokenFile = config.sops.secrets."clusters/nl/token".path;
-  services.k3s.serverAddr = "https://eq14-1.home:6443";
+  services.k3s.serverAddr = "https://192.168.2.38:6443";
 }

@@ -34,7 +34,7 @@ service:
     controller: main
     type: LoadBalancer
     annotations:
-      metallb.io/loadBalancerIPs: 192.168.2.200
+      metallb.io/loadBalancerIPs: 192.168.2.202
     ports:
       bt-tcp:
         port: &torrent 30963
