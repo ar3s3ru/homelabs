@@ -113,6 +113,7 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
       tcpdump # view network traffic
       lsof # To inspect the number of open files.
       iperf
+      smartmontools
       # Fish utilities.
       fzf
       bat

@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: &name helper-rsync
+  namespace: media
+spec:
+  selector:
+    matchLabels:
+      app: *name
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: *name
+    spec:
+      containers:
+        - name: rsync
+          image: toelke158/docker-rsync
+          volumeMounts:
+            - name: data
+              mountPath: /data
+        - name: busybox
+          image: busybox
+          args: ["ash", "-c", "sleep 3600"]
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: immich-library-v2
