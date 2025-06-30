@@ -48,6 +48,13 @@ datasources:
         access: proxy
         editable: false
         basicAuth: false
+      - name: Loki
+        type: loki
+        uid: loki
+        url: http://loki-read.telemetry.svc.cluster.local:3100
+        access: proxy
+        editable: false
+        basicAuth: false
 
 dashboardProviders:
   dashboardproviders.yaml:
