@@ -9,7 +9,7 @@ resource "kubernetes_persistent_volume_claim_v1" "persistence" {
   }
 
   spec {
-    storage_class_name = "longhorn-nvme"
+    storage_class_name = "longhorn-nvme-replicated"
     access_modes       = ["ReadWriteMany"] # NOTE: required for RollingUpdate strategy.
     volume_mode        = "Filesystem"
 

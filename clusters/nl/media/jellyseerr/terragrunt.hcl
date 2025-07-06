@@ -31,6 +31,16 @@ dependency "sonarr" { # Ensure the TV media fetcher dependency is up.
   skip_outputs = true
 }
 
+dependency "radarr" { # Ensure the Movies media fetcher dependency is up.
+  config_path  = "${get_path_to_repo_root()}/clusters/nl/media/radarr"
+  skip_outputs = true
+}
+
+dependency "jellyfin" {
+  config_path  = "${get_path_to_repo_root()}/clusters/nl/media/jellyfin"
+  skip_outputs = true
+}
+
 dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reloader.
   config_path  = "${get_path_to_repo_root()}/clusters/nl/kube-system/reloader"
   skip_outputs = true

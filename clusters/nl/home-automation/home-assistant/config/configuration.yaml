@@ -64,6 +64,19 @@ input_select:
     initial: Home
     icon: mdi:home-analytics
 
+template:
+  - binary_sensor:
+      - name: Toilet Occupancy
+        # NOTE: using toilet_switch since it is more reliable and faster than the toilet_light.
+        state: >
+          {{ is_state('switch.toilet_switch', 'on') }}
+        icon: >
+          {% if is_state('binary_sensor.toilet_occupancy', 'on') %}
+            mdi:toilet
+          {% else %}
+            mdi:toilet-outline
+          {% endif %}
+
 xiaomi_miot:
   username: !secret xiaomi_cloud_username
   password: !secret xiaomi_cloud_password

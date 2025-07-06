@@ -32,12 +32,14 @@ resource "kubernetes_config_map_v1" "home_assistant_configuration" {
     namespace = "home-automation"
   }
 
-  data = {
-    "configuration.yaml" = file("./config/configuration.yaml")
-    "automations.yaml"   = file("./config/automations.yaml")
-    "scenes.yaml"        = file("./config/scenes.yaml")
-    "scripts.yaml"       = file("./config/scripts.yaml")
-  }
+  # data = {
+  #   "configuration.yaml" = file("./config/configuration.yaml")
+  #   "automations.yaml"   = file("./config/automations.yaml")
+  #   "scenes.yaml"        = file("./config/scenes.yaml")
+  #   "scripts.yaml"       = file("./config/scripts.yaml")
+  # }
+
+  data = { for file in fileset("./config", "*.yaml") : file => file("./config/${file}") }
 }
 
 variable "config_secrets_yaml" {
