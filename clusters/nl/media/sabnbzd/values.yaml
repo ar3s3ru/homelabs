@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/app-template-4.1.1/charts/other/app-template/values.schema.json
+---
+defaultPodOptions:
+  securityContext:
+    fsGroup: 1000
+    fsGroupChangePolicy: OnRootMismatch
+    runAsGroup: 1000
+    runAsUser: 1000
+
+  affinity:
+    podAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        # These machines have better performances for transcoding,
+        # so Jellyfin will likely be scheduled over one of these nodes.
+        #
+        # To avoid performance bottlenecks between downloading node and consuming node,
+        # better to have them placed on the same node.
+        - weight: 80
+          podAffinityTerm:
+            topologyKey: "kubernetes.io/hostname"
+            labelSelector:
+              matchExpressions:
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                    - jellyfin
+
+service:
+  main:
+    type: LoadBalancer
+    controller: main
+    annotations:
+      metallb.io/loadBalancerIPs: 192.168.2.203
+    ports:
+      http:
+        port: 8080
+
+ingress:
+  tailscale:
+    className: tailscale
+    enabled: true
+    hosts:
+      - host: nl-sabnzbd
+        paths:
+          - path: "/"
+            pathType: Prefix
+            service:
+              identifier: main
+              port: http
+    tls:
+      - hosts: [nl-sabnzbd]
+
+controllers:
+  main:
+    type: deployment
+    replicas: 1
+    strategy: Recreate
+    annotations:
+      "reloader.stakater.com/auto": "true"
+    containers:
+      main:
+        env:
+          PGID: 1000
+          PGUID: 1000
+          TZ: Europe/Amsterdam
+        image:
+          repository: ghcr.io/linuxserver/sabnzbd
+          tag: 4.5.1
+        probes:
+          liveness: { enabled: false }
+          readiness: { enabled: false }
+          startup: { enabled: true }
+
+persistence:
+  config:
+    enabled: true
+    existingClaim: sabnzbd-config
+    globalMounts: [{ path: /config }]
+    type: persistentVolumeClaim
+  media:
+    enabled: true
+    existingClaim: media-data
+    globalMounts: [{ path: /data }]
+    type: persistentVolumeClaim

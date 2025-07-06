@@ -1,0 +1,32 @@
+resource "kubernetes_persistent_volume_claim_v1" "persistence" {
+  for_each = {
+    "sabnzbd-config" = "500M"
+  }
+
+  metadata {
+    name      = each.key
+    namespace = "media"
+  }
+
+  spec {
+    storage_class_name = "longhorn-nvme-replicated"
+    access_modes       = ["ReadWriteOnce"]
+    volume_mode        = "Filesystem"
+
+    resources {
+      requests = {
+        storage = each.value
+      }
+    }
+  }
+}
+
+resource "helm_release" "sabnzbd" {
+  name            = "sabnzbd"
+  repository      = "https://bjw-s-labs.github.io/helm-charts"
+  chart           = "app-template"
+  namespace       = "media"
+  version         = "4.1.1"
+  cleanup_on_fail = true
+  values          = [file("./values.yaml")]
+}
