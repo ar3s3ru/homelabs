@@ -7,6 +7,10 @@
   ];
 
   services.k3s.enable = true;
+  services.k3s.extraFlags = [
+    "--disable=traefik" # Using ingress-nginx instead.
+  ];
+
   sops.secrets."clusters/nl/token" = { };
 
   # Add the necessary packages for the Kubernetes experience.
@@ -31,6 +35,7 @@
     7946
     8056 # govee2mqtt
     8123 # home-assistant hostNetwork
+    8443 # ingress-nginx admission controller
     9100 # metallb
     10250 # metrics-server
     30963 # qbittorrent
