@@ -14,7 +14,7 @@ resource "helm_release" "loki" {
   name            = "loki"
   repository      = "https://grafana.github.io/helm-charts"
   chart           = "loki"
-  version         = "6.30.1"
+  version         = "6.31.0"
   namespace       = "telemetry"
   cleanup_on_fail = true
   values          = [file("./values.yaml")]
