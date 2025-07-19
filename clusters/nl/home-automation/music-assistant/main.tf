@@ -27,7 +27,7 @@ resource "helm_release" "music_assistant" {
   repository      = "https://bjw-s-labs.github.io/helm-charts"
   chart           = "app-template"
   namespace       = "home-automation"
-  version         = "4.1.1"
+  version         = "4.1.2"
   cleanup_on_fail = true
   values          = [file("./values.yaml")]
 }
