@@ -5,7 +5,7 @@ resource "helm_release" "minio_tenant" {
   repository      = "https://operator.min.io"
   chart           = "tenant"
   namespace       = "minio-system"
-  version         = "5.0.18"
+  version         = "7.1.1"
   cleanup_on_fail = true
   values          = [file("./values-tenant.yaml")]
 }

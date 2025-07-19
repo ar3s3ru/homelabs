@@ -10,10 +10,10 @@ tenant:
   name: minio-tenant
   pools:
     - name: pool-0
-      servers: 4
+      servers: 6
       volumesPerServer: 2
-      size: 6Gi
-      storageClassName: longhorn-nvme-replicated
+      size: 10Gi
+      storageClassName: longhorn-nvme-1-replicas
   certificate:
     requestAutoCert: false
   metrics:

@@ -60,12 +60,12 @@ persistence:
   config:
     enabled: true
     type: persistentVolumeClaim
-    existingClaim: qbittorrent-config
+    existingClaim: qbittorrent-config-v2
     globalMounts: [{ path: "/config" }]
   data:
     enabled: true
     type: persistentVolumeClaim
-    existingClaim: media-data
+    existingClaim: media-data-v2
     globalMounts: [{ path: "/data" }]
 
 controllers:

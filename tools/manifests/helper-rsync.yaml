@@ -16,17 +16,17 @@ spec:
     spec:
       containers:
         - name: rsync
-          image: toelke158/docker-rsync
-          volumeMounts:
-            - name: data
-              mountPath: /data
-        - name: busybox
-          image: busybox
+          image: alpine:3.10.2
           args: ["ash", "-c", "sleep 3600"]
           volumeMounts:
             - name: data
               mountPath: /data
+            - name: data-v2
+              mountPath: /data-v2
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: immich-library-v2
+            claimName: media-data
+        - name: data-v2
+          persistentVolumeClaim:
+            claimName: media-data-v2

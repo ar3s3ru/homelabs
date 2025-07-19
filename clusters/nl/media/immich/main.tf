@@ -8,7 +8,6 @@ resource "kubernetes_persistent_volume_claim_v1" "persistence" {
   for_each = {
     "immich-postgres" = "2Gi"
     "immich-redis"    = "200Mi"
-    "immich-ml-cache" = "10Gi"
   }
 
   metadata {
@@ -42,6 +41,29 @@ resource "kubernetes_persistent_volume_claim_v1" "persistence_v2" {
   spec {
     storage_class_name = "longhorn-hdd-single-replica"
     access_modes       = ["ReadWriteOnce", "ReadWriteMany"] # NOTE: required for RollingUpdate strategy.
+    volume_mode        = "Filesystem"
+
+    resources {
+      requests = {
+        storage = each.value
+      }
+    }
+  }
+}
+
+resource "kubernetes_persistent_volume_claim_v1" "persistence_v3" {
+  for_each = {
+    "immich-ml-cache-v2" = "10Gi"
+  }
+
+  metadata {
+    name      = each.key
+    namespace = "media"
+  }
+
+  spec {
+    storage_class_name = "longhorn-nvme-replicated"
+    access_modes       = ["ReadWriteOnce"]
     volume_mode        = "Filesystem"
 
     resources {

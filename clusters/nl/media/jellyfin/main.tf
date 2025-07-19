@@ -3,9 +3,9 @@ variable "jellyfin_host" {
   description = "Jellyfin public hostname"
 }
 
-resource "kubernetes_persistent_volume_claim_v1" "persistence" {
+resource "kubernetes_persistent_volume_claim_v1" "persistence_v2" {
   for_each = {
-    "jellyfin-config" = "2Gi"
+    "jellyfin-config-v2" = "2Gi"
   }
 
   metadata {
@@ -14,7 +14,7 @@ resource "kubernetes_persistent_volume_claim_v1" "persistence" {
   }
 
   spec {
-    storage_class_name = "longhorn-nvme"
+    storage_class_name = "longhorn-nvme-3-replicas"
     access_modes       = ["ReadWriteOnce"]
     volume_mode        = "Filesystem"
 

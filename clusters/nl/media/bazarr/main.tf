@@ -1,6 +1,6 @@
-resource "kubernetes_persistent_volume_claim_v1" "persistence_v2" {
+resource "kubernetes_persistent_volume_claim_v1" "persistence" {
   for_each = {
-    "prowlarr-config-v2" = "300M"
+    "bazarr-config" = "300M"
   }
 
   metadata {
@@ -21,8 +21,8 @@ resource "kubernetes_persistent_volume_claim_v1" "persistence_v2" {
   }
 }
 
-resource "helm_release" "prowlarr" {
-  name            = "prowlarr"
+resource "helm_release" "bazarr" {
+  name            = "bazarr"
   repository      = "https://bjw-s-labs.github.io/helm-charts"
   chart           = "app-template"
   namespace       = "media"

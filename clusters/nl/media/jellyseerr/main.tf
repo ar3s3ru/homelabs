@@ -1,6 +1,6 @@
-resource "kubernetes_persistent_volume_claim_v1" "persistence" {
+resource "kubernetes_persistent_volume_claim_v1" "persistence_v2" {
   for_each = {
-    "jellyseerr-config" = "100M"
+    "jellyseerr-config-v2" = "150M"
   }
 
   metadata {
@@ -9,8 +9,8 @@ resource "kubernetes_persistent_volume_claim_v1" "persistence" {
   }
 
   spec {
-    storage_class_name = "longhorn-nvme-replicated"
-    access_modes       = ["ReadWriteMany"] # NOTE: required for RollingUpdate strategy.
+    storage_class_name = "longhorn-nvme-3-replicas"
+    access_modes       = ["ReadWriteMany"]
     volume_mode        = "Filesystem"
 
     resources {

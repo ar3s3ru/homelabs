@@ -1,6 +1,6 @@
-resource "kubernetes_persistent_volume_claim_v1" "persistence" {
+resource "kubernetes_persistent_volume_claim_v1" "persistence_v2" {
   for_each = {
-    "sabnzbd-config" = "500M"
+    "sabnzbd-config-v2" = "500M"
   }
 
   metadata {
@@ -9,7 +9,7 @@ resource "kubernetes_persistent_volume_claim_v1" "persistence" {
   }
 
   spec {
-    storage_class_name = "longhorn-nvme-replicated"
+    storage_class_name = "longhorn-nvme-3-replicas"
     access_modes       = ["ReadWriteOnce"]
     volume_mode        = "Filesystem"
 
