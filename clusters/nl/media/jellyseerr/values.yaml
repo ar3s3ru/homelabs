@@ -60,5 +60,5 @@ persistence:
   config:
     enabled: true
     type: persistentVolumeClaim
-    existingClaim: jellyseerr-config
+    existingClaim: jellyseerr-config-v2
     globalMounts: [{ path: /app/config }]

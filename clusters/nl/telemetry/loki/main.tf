@@ -10,22 +10,24 @@ variable "minio_secret_key" {
   sensitive   = true
 }
 
-resource "helm_release" "loki" {
-  name            = "loki"
-  repository      = "https://grafana.github.io/helm-charts"
-  chart           = "loki"
-  version         = "6.30.1"
-  namespace       = "telemetry"
-  cleanup_on_fail = true
-  values          = [file("./values.yaml")]
+# FIXME: disabled for now, while investigating the 'too many open files' issue
+#
+# resource "helm_release" "loki" {
+#   name            = "loki"
+#   repository      = "https://grafana.github.io/helm-charts"
+#   chart           = "loki"
+#   version         = "6.30.1"
+#   namespace       = "telemetry"
+#   cleanup_on_fail = true
+#   values          = [file("./values.yaml")]
 
-  set_sensitive {
-    name  = "loki.storage.s3.accessKeyId"
-    value = var.minio_access_key
-  }
+#   set_sensitive {
+#     name  = "loki.storage.s3.accessKeyId"
+#     value = var.minio_access_key
+#   }
 
-  set_sensitive {
-    name  = "loki.storage.s3.secretAccessKey"
-    value = var.minio_secret_key
-  }
-}
+#   set_sensitive {
+#     name  = "loki.storage.s3.secretAccessKey"
+#     value = var.minio_secret_key
+#   }
+# }

@@ -50,7 +50,7 @@ resources:
 volumes:
   - name: media-data
     persistentVolumeClaim:
-      claimName: media-data
+      claimName: media-data-v2
 
 volumeMounts:
   - name: media-data
@@ -59,6 +59,6 @@ volumeMounts:
 persistence:
   config:
     enabled: true
-    existingClaim: jellyfin-config
+    existingClaim: jellyfin-config-v2
   media:
     enabled: false # Managed separately and manually.

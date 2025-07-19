@@ -53,11 +53,11 @@ controllers:
 persistence:
   config:
     enabled: true
-    existingClaim: lidarr-config
+    existingClaim: lidarr-config-v2
     globalMounts: [{ path: /config }]
     type: persistentVolumeClaim
   media:
     enabled: true
-    existingClaim: media-data
+    existingClaim: media-data-v2
     globalMounts: [{ path: /data }]
     type: persistentVolumeClaim

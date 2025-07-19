@@ -1,7 +1,7 @@
 ---
 image:
-  repository: ghcr.io/timshel/oidcwarden
-  tag: v2025.5.1-5
+  repository: ghcr.io/dani-garcia/vaultwarden
+  tag: 1.34.1
   pullPolicy: IfNotPresent
 
 database:
@@ -15,24 +15,27 @@ service:
 
 ingress:
   enabled: true
+  className: nginx
   annotations:
     cert-manager.io/cluster-issuer: "acme"
   host: "vault.ar3s3ru.dev"
   tls:
-    - hosts: [ "vault.ar3s3ru.dev" ]
+    - hosts: ["vault.ar3s3ru.dev"]
       secretName: vaultwarden-tls
 
 persistence:
   enabled: true
-  size: 1Gi
-  accessMode: ReadWriteOnce
-  storageClass: longhorn-encrypted
+  existingClaim: vaultwarden-v2
 
 vaultwarden:
   domain: https://vault.ar3s3ru.dev
-  allowInvitation: false
-  showPasswordHint: false
+  allowSignups: false
+  requireEmail: true
+  verifySignup: true
+  allowInvitation: true
+  showPasswordHint: true
   enableWebVault: true
+  orgCreationUsers: danilocianfr@gmail.com
 
   admin:
     enabled: true
@@ -43,12 +46,3 @@ vaultwarden:
     from: "nl.homelab.ar3s3ru@gmail.com"
     port: 587
     existingSecret: vaultwarden-secrets
-
-  extraEnv:
-    SSO_ENABLED: "true"
-    SSO_ONLY: "true"
-    SSO_PKCE: "true"
-    SSO_AUTHORITY: https://auth.ar3s3ru.dev
-    SSO_CLIENT_ID: "vaultwarden"
-    SSO_CLIENT_SECRET: { secretKeyRef: { name: vaultwarden-secrets, key: sso-client-secret } }
-    SSO_SCOPES: "email profile offline_access"

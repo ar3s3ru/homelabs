@@ -4,6 +4,7 @@ loki:
   image:
     tag: 3.5.1
   auth_enabled: false
+
   schemaConfig:
     configs:
       - from: 2024-04-01
@@ -13,13 +14,17 @@ loki:
         index:
           prefix: loki_index_
           period: 24h
+
   ingester:
     chunk_encoding: snappy
+
   tracing:
     enabled: true
+
   querier:
     # Default is 4, if you have enough memory and CPU you can increase, reduce if OOMing
     max_concurrent: 4
+
   storage:
     type: s3
     bucketNames:
@@ -32,6 +37,16 @@ loki:
       region: eu-west-1
       s3ForcePathStyle: true
       insecure: true
+
+  limits_config:
+    retention_period: 168h # 1 week
+    max_query_parallelism: 32
+    max_query_lookback: 721h # Should be longer than retention_period
+
+  compactor:
+    retention_enabled: true
+    retention_delete_worker_count: 10
+    delete_request_store: s3
 
 deploymentMode: SimpleScalable
 

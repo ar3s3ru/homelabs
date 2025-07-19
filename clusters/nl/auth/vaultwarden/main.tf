@@ -13,6 +13,25 @@ resource "kubernetes_secret_v1" "vaultwarden_secrets" {
   data = var.secrets
 }
 
+resource "kubernetes_persistent_volume_claim_v1" "vaultwarden_v2" {
+  metadata {
+    name      = "vaultwarden-v2"
+    namespace = "auth"
+  }
+
+  spec {
+    storage_class_name = "longhorn-encrypted-3-replicas"
+    access_modes       = ["ReadWriteOnce"]
+    volume_mode        = "Filesystem"
+
+    resources {
+      requests = {
+        storage = "1Gi"
+      }
+    }
+  }
+}
+
 resource "helm_release" "vaultwarden" {
   name            = "vaultwarden"
   repository      = "https://gissilabs.github.io/charts"
@@ -20,7 +39,5 @@ resource "helm_release" "vaultwarden" {
   version         = "1.2.5"
   namespace       = "auth"
   cleanup_on_fail = true
-  values = [
-    file("values.yaml")
-  ]
+  values          = [file("values.yaml")]
 }

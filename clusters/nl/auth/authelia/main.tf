@@ -71,14 +71,15 @@ resource "helm_release" "authelia" {
 
   values = [yamlencode({
     ingress = {
-      enabled = true
+      enabled   = true
+      className = "nginx"
 
       annotations = {
         "cert-manager.io/cluster-issuer" = "acme"
       }
 
       tls        = { enabled = true }
-      traefikCRD = { enabled = true, disableIngressRoute = true }
+      traefikCRD = { enabled = false, disableIngressRoute = true }
     }
 
     pod = {

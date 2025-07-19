@@ -141,7 +141,7 @@ identity_providers:
         consent_mode: implicit
         authorization_policy: one_factor
         redirect_uris:
-          - https://jellyseerr.ar3s3ru.dev/login/oidc/callback/authelia
+          - https://jellyfin.nl.ar3s3ru.dev/sso/OID/redirect/authelia
         scopes:
           - "openid"
           - "email"

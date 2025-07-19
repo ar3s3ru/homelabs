@@ -7,40 +7,20 @@ defaultPodOptions:
     runAsGroup: 1000
     runAsUser: 1000
 
-  affinity:
-    podAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-        # These machines have better performances for transcoding,
-        # so Jellyfin will likely be scheduled over one of these nodes.
-        #
-        # To avoid performance bottlenecks between downloading node and consuming node,
-        # better to have them placed on the same node.
-        - weight: 80
-          podAffinityTerm:
-            topologyKey: "kubernetes.io/hostname"
-            labelSelector:
-              matchExpressions:
-                - key: app.kubernetes.io/instance
-                  operator: In
-                  values:
-                    - jellyfin
-
 service:
   main:
-    type: LoadBalancer
+    type: ClusterIP
     controller: main
-    annotations:
-      metallb.io/loadBalancerIPs: 192.168.2.203
     ports:
       http:
-        port: 8080
+        port: 6767
 
 ingress:
   tailscale:
     className: tailscale
     enabled: true
     hosts:
-      - host: nl-sabnzbd
+      - host: nl-bazarr
         paths:
           - path: "/"
             pathType: Prefix
@@ -48,15 +28,14 @@ ingress:
               identifier: main
               port: http
     tls:
-      - hosts: [nl-sabnzbd]
+      - hosts: [nl-bazarr]
 
 controllers:
   main:
     type: deployment
     replicas: 1
-    strategy: Recreate
     annotations:
-      "reloader.stakater.com/auto": "true"
+      reloader.stakater.com/auto: "true"
     containers:
       main:
         env:
@@ -64,8 +43,8 @@ controllers:
           PGUID: 1000
           TZ: Europe/Amsterdam
         image:
-          repository: ghcr.io/linuxserver/sabnzbd
-          tag: 4.5.1
+          repository: ghcr.io/linuxserver/bazarr
+          tag: 1.5.2
         probes:
           liveness: { enabled: false }
           readiness: { enabled: false }
@@ -74,7 +53,7 @@ controllers:
 persistence:
   config:
     enabled: true
-    existingClaim: sabnzbd-config-v2
+    existingClaim: bazarr-config
     globalMounts: [{ path: /config }]
     type: persistentVolumeClaim
   media:

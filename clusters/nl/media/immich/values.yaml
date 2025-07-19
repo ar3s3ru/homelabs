@@ -88,7 +88,7 @@ machine-learning:
     cache: # To avoid downloading the ML models every start
       enabled: true
       type: pvc
-      existingClaim: immich-ml-cache
+      existingClaim: immich-ml-cache-v2
 
 postgresql:
   enabled: true
