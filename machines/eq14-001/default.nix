@@ -19,6 +19,7 @@
   services.k3s.extraFlags = [
     "--node-label media.transcoding.gpu=fast"
     "--tls-san=eq14-1.home"
+    "--tls-san=k8s.flugg.app" # Necessary to reach the cluster from flugg tenant.
   ];
 
   imports = [
