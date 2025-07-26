@@ -66,7 +66,7 @@ resource "helm_release" "authelia" {
   repository      = "https://charts.authelia.com"
   chart           = "authelia"
   namespace       = "auth"
-  version         = "0.10.21"
+  version         = "0.10.41"
   cleanup_on_fail = true
 
   values = [yamlencode({
