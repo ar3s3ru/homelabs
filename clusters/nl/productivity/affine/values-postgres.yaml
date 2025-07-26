@@ -1,0 +1,32 @@
+---
+auth:
+  database: main
+  username: affine
+  existingSecret: affine-postgresql-passwords
+
+audit:
+  logHostname: true
+  logConnections: true
+  logDisconnections: true
+
+primary:
+  extendedConfiguration: |
+    wal_level=logical
+
+  service:
+    type: LoadBalancer
+    loadBalancerClass: tailscale
+
+  persistence:
+    enabled: true
+    existingClaim: affine-postgresql
+
+volumePermissions:
+  enabled: true
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+  prometheusRule:
+    enabled: true
