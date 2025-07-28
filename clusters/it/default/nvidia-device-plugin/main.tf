@@ -3,7 +3,7 @@ resource "helm_release" "nvidia_device_plugin" {
   repository      = "https://nvidia.github.io/k8s-device-plugin"
   chart           = "nvidia-device-plugin"
   namespace       = "default"
-  version         = "0.17.2"
+  version         = "0.17.3"
   cleanup_on_fail = true
 
   values = [yamlencode({
