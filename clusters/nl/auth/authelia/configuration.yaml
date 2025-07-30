@@ -1,4 +1,3 @@
-# yaml-language-server: $schema=https://www.authelia.com/schemas/v4.39.1/json-schema/configuration.json
 ---
 theme: "dark"
 
@@ -65,7 +64,6 @@ storage:
 notifier:
   smtp:
     enabled: true
-    enabledSecret: true
     subject: "{title}"
     address: "submission://smtp.gmail.com:587"
     username: "nl.homelab.ar3s3ru@gmail.com"

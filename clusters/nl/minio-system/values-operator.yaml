@@ -1,5 +1,0 @@
----
-operator:
-  env:
-    - name: PROMETHEUS_NAMESPACE
-      value: telemetry
