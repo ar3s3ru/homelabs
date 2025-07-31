@@ -1,5 +1,8 @@
 ---
 controller:
+  service:
+    externalTrafficPolicy: Local # To preserve the original client IP address.
+
   metrics:
     enabled: true
     serviceMonitor: { enabled: true }
