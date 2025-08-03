@@ -23,10 +23,12 @@ affinity:
     requiredDuringSchedulingIgnoredDuringExecution:
       nodeSelectorTerms:
         - matchExpressions:
-            - key: media.transcoding.gpu
+            - key: kubernetes.io/hostname
               operator: In
               values:
-                - fast
+                # FIXME(ar3s3ru): is there a better way? Ideally it should follow the node where
+                # the media-data-v2 PVC is hosted.
+                - gladius
 
 ingress:
   enabled: true
