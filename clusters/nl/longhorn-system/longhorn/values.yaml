@@ -12,6 +12,10 @@ defaultSettings:
 longhornUI:
   replicas: 1
 
+metrics:
+  serviceMonitor:
+    enabled: true
+
 ingress:
   enabled: true
   ingressClassName: tailscale
