@@ -1,3 +1,7 @@
+locals {
+  namespace = "auth"
+}
+
 variable "secrets" {
   type        = map(string)
   description = "Environment variables to mount on the pod as secrets"
@@ -7,7 +11,7 @@ variable "secrets" {
 resource "kubernetes_secret_v1" "lldap_secrets" {
   metadata {
     name      = "lldap-secrets"
-    namespace = "auth"
+    namespace = local.namespace
   }
 
   data = var.secrets
@@ -22,7 +26,7 @@ variable "groups" {
 resource "kubernetes_secret_v1" "lldap_groups" {
   metadata {
     name      = "lldap-groups"
-    namespace = "auth"
+    namespace = local.namespace
   }
 
   data = { for group in var.groups : "${group.name}.json" => jsonencode(group) }
@@ -46,7 +50,7 @@ variable "users" {
 resource "kubernetes_secret_v1" "lldap_users" {
   metadata {
     name      = "lldap-users"
-    namespace = "auth"
+    namespace = local.namespace
   }
 
   data = { for i, user in var.users : "user-${i}.json" => jsonencode(user) }
@@ -56,8 +60,12 @@ resource "helm_release" "lldap" {
   name            = "lldap"
   repository      = "https://bjw-s-labs.github.io/helm-charts"
   chart           = "app-template"
-  namespace       = "auth"
+  namespace       = local.namespace
   version         = "4.1.2"
   cleanup_on_fail = true
-  values          = [file("./values.yaml")]
+  values          = [file("${path.module}/values-lldap.yaml")]
+
+  depends_on = [
+    helm_release.postgresql
+  ]
 }

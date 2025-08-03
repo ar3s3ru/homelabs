@@ -24,6 +24,13 @@ controllers:
           TZ: Europe/Amsterdam
           VERBOSE: "true"
           LLDAP_LDAP_BASE_DN: dc=ar3s3ru,dc=dev
+          LLDAP_DATABASE_URL: postgresql://postgres:$(DATABASE_PASSWORD)@lldap-postgresql.auth.svc.cluster.local:5432/main
+          DATABASE_PASSWORD:
+            valueFrom:
+              secretKeyRef:
+                name: lldap-postgresql-passwords
+                key: postgres-password
+
         envFrom:
           - secretRef: { name: lldap-secrets }
         probes:
