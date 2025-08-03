@@ -1,3 +1,7 @@
+locals {
+  namespace = "auth"
+}
+
 variable "secrets" {
   type        = map(string)
   description = "Secrets for the Authelia deployment"
@@ -7,7 +11,7 @@ variable "secrets" {
 resource "kubernetes_secret_v1" "authelia_secrets" {
   metadata {
     name      = "authelia-secrets"
-    namespace = "auth"
+    namespace = local.namespace
   }
 
   data = var.secrets
@@ -22,7 +26,7 @@ variable "oidc_client_secrets" {
 resource "kubernetes_secret_v1" "authelia_oidc_secrets" {
   metadata {
     name      = "authelia-oidc-secrets"
-    namespace = "auth"
+    namespace = local.namespace
   }
 
   data = var.oidc_client_secrets
@@ -65,47 +69,52 @@ resource "helm_release" "authelia" {
   name            = "authelia"
   repository      = "https://charts.authelia.com"
   chart           = "authelia"
-  namespace       = "auth"
+  namespace       = local.namespace
   version         = "0.10.41"
   cleanup_on_fail = true
 
-  values = [yamlencode({
-    ingress = {
-      enabled   = true
-      className = "nginx"
-
-      annotations = {
-        "cert-manager.io/cluster-issuer" = "acme"
-      }
-
-      tls        = { enabled = true }
-      traefikCRD = { enabled = false, disableIngressRoute = true }
-    }
-
-    pod = {
-      kind = "Deployment" # Only need a single deployment/replica for now.
-
-      annotations = {
-        "reloader.stakater.com/auto" = "true" # Restarts the Deployment if the configmaps/secrets change.
-      }
-
-      env = [{
-        name  = "TZ"
-        value = "Europe/Amsterdam"
-      }]
-    }
-
-    configMap = yamldecode(file("configuration.yaml"))
-
-    secret = {
-      additionalSecrets = {
-        "${kubernetes_secret_v1.authelia_secrets.metadata[0].name}" = {
-          items = [for k, v in var.secrets : { key : k, path : k }]
-        }
-        "${kubernetes_secret_v1.authelia_oidc_secrets.metadata[0].name}" = {
-          items = [for k, v in var.oidc_client_secrets : { key : k, path : k }]
+  values = [
+    file("${path.module}/values-authelia.yaml"),
+    yamlencode({
+      secret = {
+        additionalSecrets = {
+          "${kubernetes_secret_v1.authelia_secrets.metadata[0].name}" = {
+            items = [for k, v in var.secrets : { key : k, path : k }]
+          }
+          "${kubernetes_secret_v1.authelia_oidc_secrets.metadata[0].name}" = {
+            items = [for k, v in var.oidc_client_secrets : { key : k, path : k }]
+          }
         }
       }
-    }
-  })]
+    })
+  ]
 }
+
+# data "helm_template" "authelia" {
+#   name       = "authelia"
+#   repository = "https://charts.authelia.com"
+#   chart      = "authelia"
+#   namespace  = local.namespace
+#   version    = "0.10.41"
+#   values = [
+#     file("${path.module}/values-authelia.yaml"),
+#     yamlencode({
+#       secret = {
+#         additionalSecrets = {
+#           "${kubernetes_secret_v1.authelia_secrets.metadata[0].name}" = {
+#             items = [for k, v in var.secrets : { key : k, path : k }]
+#           }
+#           "${kubernetes_secret_v1.authelia_oidc_secrets.metadata[0].name}" = {
+#             items = [for k, v in var.oidc_client_secrets : { key : k, path : k }]
+#           }
+#         }
+#       }
+#     })
+#   ]
+# }
+
+# resource "local_file" "authelia_manifests" {
+#   for_each = data.helm_template.authelia.manifests
+#   content  = each.value
+#   filename = "${path.module}/${each.key}"
+# }

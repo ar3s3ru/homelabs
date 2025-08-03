@@ -1,0 +1,30 @@
+---
+auth:
+  database: main
+  username: authelia
+  existingSecret: authelia-postgresql-passwords
+
+audit:
+  logHostname: true
+  logConnections: true
+  logDisconnections: true
+
+primary:
+  service:
+    type: LoadBalancer
+    loadBalancerClass: tailscale
+
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClass: longhorn-nvme-3-replicas
+
+volumePermissions:
+  enabled: true
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+  prometheusRule:
+    enabled: true
