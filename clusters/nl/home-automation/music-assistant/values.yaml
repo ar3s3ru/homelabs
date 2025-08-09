@@ -52,10 +52,5 @@ persistence:
   data:
     enabled: true
     type: persistentVolumeClaim
-    existingClaim: music-assistant-data
+    existingClaim: music-assistant-data-v2
     globalMounts: [{ path: /data }]
-  media:
-    enabled: true
-    type: persistentVolumeClaim
-    existingClaim: music-assistant-media
-    globalMounts: [{ path: /media }]

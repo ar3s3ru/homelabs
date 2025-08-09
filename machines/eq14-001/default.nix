@@ -1,6 +1,6 @@
 { nixos-hardware, ... }:
 
-{ ... }:
+{ pkgs, ... }:
 
 {
   deployment.targetHost = "eq14-001.tail2ff90.ts.net";

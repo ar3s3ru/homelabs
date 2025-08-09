@@ -114,7 +114,6 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
       lsof # To inspect the number of open files.
       iperf
       smartmontools
-      toybox # For ulimit and other utilities.
       # Fish utilities.
       fzf
       bat

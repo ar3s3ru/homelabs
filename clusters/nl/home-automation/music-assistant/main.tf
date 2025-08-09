@@ -1,16 +1,19 @@
-resource "kubernetes_persistent_volume_claim_v1" "persistence" {
+locals {
+  namespace = "home-automation"
+}
+
+resource "kubernetes_persistent_volume_claim_v1" "persistence_v2" {
   for_each = {
-    "music-assistant-data"  = "1Gi"
-    "music-assistant-media" = "10G"
+    "music-assistant-data-v2" = "1Gi"
   }
 
   metadata {
     name      = each.key
-    namespace = "home-automation"
+    namespace = local.namespace
   }
 
   spec {
-    storage_class_name = "longhorn-nvme"
+    storage_class_name = "longhorn-nvme-3-replicas"
     access_modes       = ["ReadWriteOnce"]
     volume_mode        = "Filesystem"
 
@@ -26,7 +29,7 @@ resource "helm_release" "music_assistant" {
   name            = "music-assistant"
   repository      = "https://bjw-s-labs.github.io/helm-charts"
   chart           = "app-template"
-  namespace       = "home-automation"
+  namespace       = local.namespace
   version         = "4.1.2"
   cleanup_on_fail = true
   values          = [file("./values.yaml")]

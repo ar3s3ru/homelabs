@@ -47,7 +47,7 @@ ingress:
     enabled: true
     className: tailscale
     hosts:
-      - host: &host nl-hass
+      - host: &host nl-home
         paths:
           - path: /
             pathType: Prefix
@@ -80,7 +80,7 @@ persistence:
   config:
     enabled: true
     type: persistentVolumeClaim
-    existingClaim: home-assistant-config
+    existingClaim: home-assistant-config-v2
     globalMounts:
       - path: /config
   secrets:
