@@ -34,6 +34,7 @@
     6443 # k8s apiserver
     7946
     8056 # govee2mqtt
+    8095 # music-assistant hostNetwork
     8097 # chromecast
     8123 # home-assistant hostNetwork
     8443 # ingress-nginx admission controller
