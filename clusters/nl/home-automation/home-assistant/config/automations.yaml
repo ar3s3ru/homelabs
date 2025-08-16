@@ -85,3 +85,33 @@
         entity_id: input_select.home_mode
       data:
         option: Home
+
+- id: vacuum_around_litter_robot_after_use
+  alias: Vacuum around Litter Robot after use
+  triggers:
+    # All the status codes are available here:
+    # https://github.com/home-assistant/core/blob/a71ae4db3749ec653abc7ecfbceb9f9c678e4368/homeassistant/components/litterrobot/strings.json#L91-L119
+    - alias: Cat has left from the Litter Robot
+      trigger: state
+      entity_id: sensor.litter_robot_4_status_code
+      from: "cd" # Cat detected
+      to: "cst" # Cat sensor timing
+  conditions:
+    - alias: Check if Home Mode is NOT set to 'Sleeping'
+      condition: not
+      conditions:
+        - alias: Check if Home Mode is set to 'Sleeping'
+          condition: state
+          entity_id: input_select.home_mode
+          state: Sleeping
+  actions:
+    - alias: Start vacuuming around the Litter Robot
+      action: dreame_vacuum.vacuum_clean_zone
+      target:
+        entity_id: vacuum.xiaomi_robot_vacuum_x20
+      data:
+        # Coordinates from the Vacuum Map
+        # Source: https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/blob/master/docs/templates/setup.md#getting-coordinates
+        zone: [[-1882, 735, 677, 3927]]
+        repeats: 2
+        suction_level: 3
