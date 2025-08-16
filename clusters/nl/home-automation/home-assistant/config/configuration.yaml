@@ -6,6 +6,7 @@ logger:
   default: info
   logs:
     custom_components.auth_oidc: debug
+    custom_components.xiaomi_cloud_map_extractor: debug
 
 http:
   cors_allowed_origins:
@@ -76,19 +77,3 @@ template:
           {% else %}
             mdi:toilet-outline
           {% endif %}
-
-xiaomi_miot:
-  username: !secret xiaomi_cloud_username
-  password: !secret xiaomi_cloud_password
-  server_country: de
-
-camera:
-  - platform: xiaomi_cloud_map_extractor
-    host: !secret xiaomi_vacuum_host
-    token: !secret xiaomi_vacuum_token
-    username: !secret xiaomi_cloud_username
-    password: !secret xiaomi_cloud_password
-    country: de
-    draw: ["all"]
-    attributes:
-      - calibration_points
