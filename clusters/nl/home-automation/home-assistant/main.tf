@@ -39,6 +39,15 @@ resource "kubernetes_config_map_v1" "home_assistant_configuration" {
   data = { for file in fileset("./config", "*.yaml") : file => file("./config/${file}") }
 }
 
+resource "kubernetes_config_map_v1" "home_assistant_automations" {
+  metadata {
+    name      = "home-assistant-automations"
+    namespace = local.namespace
+  }
+
+  data = { for file in fileset("./automations", "*.yaml") : file => file("./automations/${file}") }
+}
+
 variable "config_secrets_yaml" {
   type        = string
   description = "Content of secrets.yaml file for Home Assistant"

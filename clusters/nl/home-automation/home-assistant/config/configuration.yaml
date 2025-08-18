@@ -36,7 +36,7 @@ auth_oidc:
     admin: home-admin
     user: home-member
 
-automation: !include automations.yaml
+automation: !include automations.yaml # Required for the UI automations to work
 script: !include scripts.yaml
 scene: !include scenes.yaml
 
@@ -77,3 +77,7 @@ template:
           {% else %}
             mdi:toilet-outline
           {% endif %}
+
+automation toilet: !include automations/toilet.yaml
+automation home_mode: !include automations/home.yaml
+automation vacuum: !include automations/vacuum.yaml
