@@ -16,10 +16,10 @@ dependency "prometheus" { # Necessary for data source.
   skip_outputs = true
 }
 
-dependency "loki" { # Necessary for data source.
-  config_path  = "${get_path_to_repo_root()}/clusters/nl/telemetry/loki"
-  skip_outputs = true
-}
+# dependency "loki" { # Necessary for data source.
+#   config_path  = "${get_path_to_repo_root()}/clusters/nl/telemetry/loki"
+#   skip_outputs = true
+# }
 
 dependency "authelia" { # Necessary for authentication.
   config_path = "${get_path_to_repo_root()}/clusters/nl/auth/authelia"
