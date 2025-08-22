@@ -1,0 +1,29 @@
+config:
+  cluster:
+    enabled: true
+    replicas: 3
+
+  jetstream:
+    enabled: true
+    fileStore:
+      pvc:
+        enabled: true
+        size: 10Gi
+        storageClassName: longhorn-nvme-3-replicas
+
+# container:
+#   merge:
+#     - name: nats
+#       resources:
+#         requests:
+#           cpu: 100m
+#           memory: 128Mi
+#         limits:
+#           cpu: 200m
+#           memory: 256Mi
+
+reloader:
+  enabled: false
+
+promExporter:
+  enabled: true

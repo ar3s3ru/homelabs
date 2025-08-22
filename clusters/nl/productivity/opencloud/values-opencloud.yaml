@@ -1,0 +1,74 @@
+---
+global:
+  domain:
+    opencloud: opencloud.ar3s3ru.dev
+
+  oidc:
+    issuer: https://auth.ar3s3ru.dev
+    clientId: opencloud
+
+  tls:
+    enabled: true
+    secretName: opencloud-opencloud-tls
+
+  # Disable Keycloak, use Authelia instead.
+postgres: { enabled: false }
+keycloak: { internal: { enabled: false } }
+
+tika: { enabled: true }
+webExtensions: { enabled: true }
+
+collabora: { enabled: false }
+onlyoffice: { enabled: false, collaboration: { enabled: false } }
+
+opencloud:
+  enabled: true
+  replicas: 3
+  logLevel: &log-level trace
+
+  existingSecret: opencloud-secrets
+  createDemoUsers: false
+
+  # Disable built-in identity services
+  # Source: https://github.com/opencloud-eu/helm/issues/53
+  excludeServices:
+    - idp
+    - idm
+
+  env:
+    - name: STORAGE_USERS_DRIVER
+      value: posix
+    - name: STORAGE_USERS_ID_CACHE_STORE
+      value: nats-js-kv
+    - name: APP_REGISTRY_LOG_LEVEL
+      value: *log-level
+
+  persistence:
+    enabled: true
+    size: 50Gi
+    configSize: 1Gi # TODO(ar3s3ru): is this necessary?
+    storageClass: longhorn-nvme-3-replicas
+    accessMode: ReadWriteMany
+
+  nats:
+    external:
+      enabled: true
+      endpoint: opencloud-nats.productivity.svc.cluster.local:4222
+      cluster: opencloud
+
+  smtp:
+    enabled: true
+    host: smtp.gmail.com
+    sender: OpenCloud notifications <nl.homelab.ar3s3ru+opencloud@gmail.com>
+    existingSecret: opencloud-smtp-secrets
+
+  storage:
+    s3: # Do not use S3 for storage, but a RWX Longhorn volume.
+      internal: { enabled: false, persistence: { enabled: false } }
+      external: { enabled: false }
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: acme
