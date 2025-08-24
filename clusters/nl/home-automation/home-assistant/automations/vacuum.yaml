@@ -24,6 +24,10 @@
           entity_id: sensor.xiaomi_robot_vacuum_x20_task_status
           attribute: value
           state: "0" # Completed
+    - alias: Automatic vacuuming is enabled
+      condition: state
+      entity_id: input_boolean.enable_litter_robot_vacuuming
+      state: "on"
   actions:
     - alias: Start vacuuming around the Litter Robot
       action: dreame_vacuum.vacuum_clean_zone

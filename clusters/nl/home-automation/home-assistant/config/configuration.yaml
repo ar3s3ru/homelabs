@@ -53,6 +53,12 @@ input_datetime:
     has_time: true
     icon: mdi:sun-clock
     initial: "07:00"
+  coffee_machine_turnon_time:
+    name: Coffee Machine turn-on time
+    has_date: false
+    has_time: true
+    icon: mdi:coffee-maker
+    initial: "07:30"
 
 input_select:
   home_mode:
@@ -64,6 +70,16 @@ input_select:
       - Vacation # We are away from home for an extended period of time
     initial: Home
     icon: mdi:home-analytics
+
+input_boolean:
+  enable_litter_robot_vacuuming:
+    name: Enable automatic vacuuming around the Litter Robot
+    icon: mdi:robot-vacuum
+    initial: on
+  turn_on_coffee_machine:
+    name: Turn on the coffee machine in the morning
+    icon: mdi:coffee-maker
+    initial: off
 
 template:
   - binary_sensor:
@@ -81,3 +97,4 @@ template:
 automation toilet: !include automations/toilet.yaml
 automation home_mode: !include automations/home.yaml
 automation vacuum: !include automations/vacuum.yaml
+automation kitchen: !include automations/kitchen.yaml
