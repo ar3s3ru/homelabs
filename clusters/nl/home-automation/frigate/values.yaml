@@ -100,20 +100,20 @@ config: |
   go2rtc:
     streams:
       e1-zoom-01:
-        - rtsp://{FRIGATE_E1_ZOOM_01_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_01_RTSP_PASSWORD}@192.168.2.45/h264Preview_01_main
+        - rtsp://{FRIGATE_E1_ZOOM_01_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_01_RTSP_PASSWORD}@e1-zoom-01.home/h264Preview_01_main
         - "ffmpeg:e1-zoom-01#audio=opus"
       e1-zoom-01-sub:
-        - rtsp://{FRIGATE_E1_ZOOM_01_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_01_RTSP_PASSWORD}@192.168.2.45/h264Preview_01_sub
+        - rtsp://{FRIGATE_E1_ZOOM_01_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_01_RTSP_PASSWORD}@e1-zoom-01.home/h264Preview_01_sub
         - "ffmpeg:e1-zoom-01-sub#audio=opus"
       e1-zoom-02:
-        - rtsp://{FRIGATE_E1_ZOOM_02_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_02_RTSP_PASSWORD}@192.168.2.34/h264Preview_01_main
+        - rtsp://{FRIGATE_E1_ZOOM_02_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_02_RTSP_PASSWORD}@e1-zoom-02.home/h264Preview_01_main
         - "ffmpeg:e1-zoom-02#audio=opus"
       e1-zoom-02-sub:
-        - rtsp://{FRIGATE_E1_ZOOM_02_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_02_RTSP_PASSWORD}@192.168.2.34/h264Preview_01_sub
+        - rtsp://{FRIGATE_E1_ZOOM_02_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_02_RTSP_PASSWORD}@e1-zoom-02.home/h264Preview_01_sub
         - "ffmpeg:e1-zoom-02-sub#audio=opus"
 
   cameras:
-    living-room:
+    e1-zoom-01:
       live:
         stream_name: e1-zoom-01-sub
       ffmpeg:
@@ -128,7 +128,7 @@ config: |
             input_args: preset-rtsp-restream
             roles:
               - detect
-    office:
+    e1-zoom-02:
       live:
         stream_name: e1-zoom-02-sub
       ffmpeg:
