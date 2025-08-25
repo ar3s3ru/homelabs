@@ -31,7 +31,7 @@ controllers:
           LOG_LEVEL: info
         image:
           repository: ghcr.io/flaresolverr/flaresolverr
-          tag: v3.3.25
+          tag: v3.4.0
         probes:
           liveness: { enabled: false }
           readiness: { enabled: false }

@@ -65,7 +65,7 @@ controllers:
           TZ: Europe/Amsterdam
         image:
           repository: ghcr.io/linuxserver/sabnzbd
-          tag: 4.5.2
+          tag: 4.5.3
         probes:
           liveness: { enabled: false }
           readiness: { enabled: false }
