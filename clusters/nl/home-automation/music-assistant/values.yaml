@@ -1,6 +1,10 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/app-template-4.1.1/charts/other/app-template/values.schema.json
 ---
 defaultPodOptions:
+  # DEBT(ar3s3ru): since Home Assistant integration targets the Music Assistant
+  # through its IP rather than an hostname, using hostNetwork means that the
+  # integration will break if Kubernetes schedules the pod on a different node
+  # than previously.
   hostNetwork: true # Required for certain network features.
 
 controllers:
