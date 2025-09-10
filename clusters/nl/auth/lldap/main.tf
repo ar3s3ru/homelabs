@@ -61,7 +61,7 @@ resource "helm_release" "lldap" {
   repository      = "https://bjw-s-labs.github.io/helm-charts"
   chart           = "app-template"
   namespace       = local.namespace
-  version         = "4.1.2"
+  version         = "4.2.0"
   cleanup_on_fail = true
   values          = [file("${path.module}/values-lldap.yaml")]
 
