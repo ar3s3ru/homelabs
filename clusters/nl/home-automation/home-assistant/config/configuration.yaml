@@ -77,7 +77,7 @@ input_boolean:
     icon: mdi:robot-vacuum
     initial: on
   turn_on_coffee_machine:
-    name: Turn on the coffee machine in the morning
+    name: Turn on the Coffee Machine in the morning
     icon: mdi:coffee-maker
     initial: off
 
