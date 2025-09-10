@@ -24,7 +24,7 @@ controllers:
           # FIXME(ar3s3ru): find a way to enable these?
           liveness: { enabled: false }
           readiness: { enabled: false }
-          startup: { enabled: true }
+          startup: { enabled: false }
         env:
           PROXIED: false
         envFrom:
