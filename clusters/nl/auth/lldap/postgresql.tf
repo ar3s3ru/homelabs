@@ -19,7 +19,7 @@ resource "helm_release" "postgresql" {
   name            = "lldap-postgresql"
   repository      = "oci://registry-1.docker.io/bitnamicharts"
   chart           = "postgresql"
-  version         = "16.7.21"
+  version         = "16.7.27"
   namespace       = local.namespace
   cleanup_on_fail = true
   values          = [file("${path.module}/values-postgresql.yaml")]

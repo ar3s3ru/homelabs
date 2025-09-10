@@ -36,7 +36,7 @@ resource "helm_release" "vaultwarden" {
   name            = "vaultwarden"
   repository      = "https://gissilabs.github.io/charts"
   chart           = "vaultwarden"
-  version         = "1.2.5"
+  version         = "1.2.6"
   namespace       = "auth"
   cleanup_on_fail = true
   values          = [file("values.yaml")]

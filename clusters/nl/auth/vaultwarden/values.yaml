@@ -1,7 +1,7 @@
 ---
 image:
   repository: ghcr.io/dani-garcia/vaultwarden
-  tag: 1.34.2
+  tag: 1.34.3
   pullPolicy: IfNotPresent
 
 database:
