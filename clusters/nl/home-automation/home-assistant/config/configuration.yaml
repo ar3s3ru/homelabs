@@ -36,6 +36,18 @@ auth_oidc:
     admin: home-admin
     user: home-member
 
+# Used for sending notifications to relevant devices/people.
+telegram_bot:
+  - platform: polling
+    api_key: !secret telegram_bot_token
+    allowed_chat_ids:
+      - !secret telegram_chat_id
+
+notify:
+  - platform: telegram
+    name: telegram-bot
+    chat_id: !secret telegram_chat_id
+
 automation: !include automations.yaml # Required for the UI automations to work
 script: !include scripts.yaml
 scene: !include scenes.yaml
@@ -81,6 +93,28 @@ input_boolean:
     icon: mdi:coffee-maker
     initial: off
 
+input_number:
+  litter_robot_waste_drawer_level_notify:
+    name: Litter Robot waste drawer fill percentage notification
+    mode: slider
+    icon: mdi:trash-can
+    initial: 20
+    min: 10
+    max: 100
+    step: 5
+    unit_of_measurement: "%"
+  # TODO(ar3s3ru): still need to implement this automation,
+  # it'll likely require a intermediate state update (e.g. next date -> notify -> update next date)
+  litter_robot_days_interval_notify:
+    name: Litter Robot days interval notification
+    mode: slider
+    icon: mdi:calendar-clock
+    initial: 3
+    min: 1
+    max: 7
+    step: 1
+    unit_of_measurement: "days"
+
 template:
   - binary_sensor:
       - name: Toilet Occupancy
@@ -95,6 +129,7 @@ template:
           {% endif %}
 
 automation toilet: !include automations/toilet.yaml
-automation home_mode: !include automations/home.yaml
+automation home-mode: !include automations/home.yaml
 automation vacuum: !include automations/vacuum.yaml
+automation litter-robot: !include automations/litter-robot.yaml
 automation kitchen: !include automations/kitchen.yaml
