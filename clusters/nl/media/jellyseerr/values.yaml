@@ -11,7 +11,7 @@ controllers:
   main:
     type: deployment
     strategy: RollingUpdate
-    replicas: 1
+    replicas: 0 # FIXME(ar3s3ru): set to 1 again when the third node comes back
     annotations:
       reloader.stakater.com/auto: "true"
     containers:

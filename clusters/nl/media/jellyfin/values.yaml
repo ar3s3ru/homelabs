@@ -1,4 +1,6 @@
 ---
+replicaCount: 0 # FIXME(ar3s3ru): set to 1 again when the third node comes back
+
 securityContext:
   fsGroup: 1000
   fsGroupChangePolicy: OnRootMismatch

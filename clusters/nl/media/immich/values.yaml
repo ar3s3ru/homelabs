@@ -8,9 +8,9 @@ useDeprecatedPostgresChart: true
 x-require-gpu: &require-gpu
   resources:
     requests:
-      "gpu.intel.com/i915": "1"
+      gpu.intel.com/i915: "1"
     limits:
-      "gpu.intel.com/i915": "1"
+      gpu.intel.com/i915: "1"
 
 x-prefer-transcoding-nodes: &prefer-transcoding-nodes
   affinity:
