@@ -3,7 +3,7 @@ resource "helm_release" "intel_device_plugins_operator" {
   repository      = "https://intel.github.io/helm-charts/"
   chart           = "intel-device-plugins-operator"
   namespace       = "kube-system"
-  version         = "0.32.1"
+  version         = "0.34.0"
   cleanup_on_fail = true
 }
 
@@ -14,7 +14,7 @@ resource "helm_release" "intel_device_plugins_gpu" {
   repository      = "https://intel.github.io/helm-charts/"
   chart           = "intel-device-plugins-gpu"
   namespace       = "kube-system"
-  version         = "0.32.1"
+  version         = "0.34.0"
   cleanup_on_fail = true
 
   values = [yamlencode({
