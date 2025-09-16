@@ -70,7 +70,7 @@ resource "helm_release" "authelia" {
   repository      = "https://charts.authelia.com"
   chart           = "authelia"
   namespace       = local.namespace
-  version         = "0.10.45"
+  version         = "0.10.46"
   cleanup_on_fail = true
 
   values = [
