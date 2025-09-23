@@ -16,14 +16,10 @@
           condition: time
           after: input_datetime.sleeping_time
           before: input_datetime.wakeup_time
-    - alias: Vacuum is NOT already running
-      condition: not
-      conditions:
-        - alias: Vacuum has completed its previous task
-          condition: state
-          entity_id: sensor.xiaomi_robot_vacuum_x20_task_status
-          attribute: value
-          state: "0" # Completed
+    - alias: Vacuum has completed its previous task
+      condition: state
+      entity_id: sensor.xiaomi_robot_vacuum_x20_task_status
+      state: completed
     - alias: Automatic vacuuming is enabled
       condition: state
       entity_id: input_boolean.enable_litter_robot_vacuuming
@@ -36,6 +32,6 @@
       data:
         # Coordinates from the Vacuum Map
         # Source: https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/blob/master/docs/templates/setup.md#getting-coordinates
-        zone: [[-1874, 2078, -224, 3903]]
+        zone: [[-1854, 2229, 427, 4042]]
         repeats: 2
         suction_level: 1 # Standard
