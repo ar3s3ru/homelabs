@@ -3,7 +3,7 @@ resource "helm_release" "longhorn" {
   repository       = "https://charts.longhorn.io"
   chart            = "longhorn"
   namespace        = "longhorn-system"
-  version          = "1.9.1"
+  version          = "1.10.0"
   create_namespace = true
   cleanup_on_fail  = true
   values           = [file("./values.yaml")]
