@@ -21,6 +21,8 @@ jobs:
     outputs:
       terragrunt: ${{ steps.filter.outputs.terragrunt }}
       nix: ${{ steps.filter.outputs.nix }}
+      cluster-it: ${{ steps.filter.outputs.cluster-it }}
+      cluster-nl: ${{ steps.filter.outputs.cluster-nl }}
     steps:
       - name: Checkout source code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
@@ -29,36 +31,59 @@ jobs:
         with:
           filters: |
             terragrunt:
-              - 'clusters/**'
-              - '**/*.tf'
-              - '**/*.hcl'
+              - 'modules/**'
+              - '!modules/nix/**'
+              - '*.tf'
+              - '*.hcl'
             nix:
               - 'flake.*'
-              - 'nix/**'
+              - 'modules/nix/**'
               - 'machines/**'
+            cluster-it:
+              - 'clusters/it/**'
+            cluster-nl:
+              - 'clusters/nl/**'
 
   terragrunt-plan:
     name: Terragrunt Plan
     runs-on: ubuntu-latest
     needs: changes
-    if: ${{ needs.changes.outputs.terragrunt == 'true' }}
+    if: ${{ needs.changes.outputs.terragrunt == 'true' || needs.changes.outputs.cluster-it == 'true' || needs.changes.outputs.cluster-nl == 'true' }}
+    strategy:
+      fail-fast: false # Jobs can independently fail.
+      matrix:
+        include:
+          - cluster: it
+            condition: ${{ needs.changes.outputs.cluster-it == 'true' || needs.changes.outputs.terragrunt == 'true' }}
+          - cluster: nl
+            condition: ${{ needs.changes.outputs.cluster-nl == 'true' || needs.changes.outputs.terragrunt == 'true' }}
     steps:
+      - name: Skip if no changes
+        if: ${{ matrix.condition == 'false' }}
+        run: echo "Skipping ${{ matrix.cluster }} - no relevant changes detected"
       - name: Checkout source code
+        if: ${{ matrix.condition == 'true' }}
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - name: Set up Nix system
+        if: ${{ matrix.condition == 'true' }}
         uses: ./.github/actions/nix-setup
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Log in to Tailscale
+        if: ${{ matrix.condition == 'true' }}
         uses: tailscale/github-action@v3
         with:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
           tags: "tag:ci"
       - name: Import sops age keys
+        if: ${{ matrix.condition == 'true' }}
         uses: ./.github/actions/import-sops-age-keys
         with:
           age_keys: ${{ secrets.SOPS_AGE_KEYS }}
       - name: Run terragrunt plan
-        run: terragrunt --non-interactive plan --all -lock=false
+        if: ${{ matrix.condition == 'true' }}
+        run: |
+          cd clusters/${{ matrix.cluster }}
+          terragrunt --non-interactive plan --all -lock=false
         shell: nix develop --quiet -c bash -e {0}

@@ -32,6 +32,6 @@
       data:
         # Coordinates from the Vacuum Map
         # Source: https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/blob/master/docs/templates/setup.md#getting-coordinates
-        zone: [[-1854, 2229, 427, 4042]]
+        zone: [[-1940, 2220, -14, 4091]]
         repeats: 2
         suction_level: 1 # Standard

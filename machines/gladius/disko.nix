@@ -2,7 +2,7 @@
   # Main server disk, boot partition and LVM mountpoint.
   disko.devices.disk.main = {
     type = "disk";
-    device = "/dev/disk/by-id/nvme-KINGSTON_OM8PGP41024N-A0_50026B7383A03FF4";
+    device = "/dev/disk/by-id/nvme-KINGSTON_OM8TAP41024K1-A00_50026B7383D8F63B";
     content = {
       type = "gpt";
       partitions = {

@@ -94,22 +94,22 @@ input_boolean:
     initial: off
 
 input_number:
-  litter_robot_waste_drawer_level_notify:
+  litter_robot_waste_drawer_level_notification:
     name: Litter Robot waste drawer fill percentage notification
     mode: slider
     icon: mdi:trash-can
-    initial: 20
+    # initial: 20 # NOTE(ar3s3ru): disabled to avoid value resets at restart
     min: 10
     max: 100
     step: 5
     unit_of_measurement: "%"
   # TODO(ar3s3ru): still need to implement this automation,
   # it'll likely require a intermediate state update (e.g. next date -> notify -> update next date)
-  litter_robot_days_interval_notify:
+  litter_robot_days_notification_interval:
     name: Litter Robot days interval notification
     mode: slider
     icon: mdi:calendar-clock
-    initial: 3
+    # initial: 3 # NOTE(ar3s3ru): disabled to avoid value resets at restart
     min: 1
     max: 7
     step: 1
