@@ -1,4 +1,7 @@
 ---
+image:
+  repository: bitnamilegacy/postgresql # TODO(ar3s3ru): migrate away
+
 auth:
   database: main
   username: authelia
@@ -21,9 +24,13 @@ primary:
 
 volumePermissions:
   enabled: true
+  image:
+    repository: bitnamilegacy/os-shell # TODO(ar3s3ru): migrate away
 
 metrics:
   enabled: true
+  image:
+    repository: bitnamilegacy/postgres-exporter # TODO(ar3s3ru): migrate away
   serviceMonitor:
     enabled: true
   prometheusRule:

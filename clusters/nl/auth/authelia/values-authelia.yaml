@@ -177,15 +177,21 @@ configMap:
           client_name: "Jellyseerr"
           client_secret: { path: "/secrets/authelia-oidc-secrets/jellyseerr.client_secret.key" }
           public: false
+          require_pkce: false
+          pkce_challenge_method: ""
           consent_mode: implicit
           authorization_policy: one_factor
           redirect_uris:
-            - https://jellyseerr.ar3s3ru.dev/login/oidc/callback/authelia
+            - https://jellyseerr.ar3s3ru.dev/login?provider=authelia&callback=true
           scopes:
             - "openid"
             - "email"
             - "profile"
             - "groups"
+          response_types:
+            - "code"
+          grant_types:
+            - "authorization_code"
           token_endpoint_auth_method: client_secret_post
         - client_id: "vaultwarden"
           client_name: "Vaultwarden"
@@ -196,7 +202,6 @@ configMap:
           consent_mode: implicit
           authorization_policy: two_factor
           redirect_uris:
-            - https://nl-pwd.tail2ff90.ts.net/identity/connect/oidc-signin
             - https://vault.ar3s3ru.dev/identity/connect/oidc-signin
           scopes:
             - "openid"
