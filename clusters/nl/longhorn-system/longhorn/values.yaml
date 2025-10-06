@@ -1,14 +1,4 @@
 ---
-# FIXME(ar3s3ru): these defaults were suggested by chatgpt,
-# they are probably not optimal.
-defaultSettings:
-  defaultDataLocality: true
-  defaultStorageClass: true
-  defaultReplicaCount: 1
-  defaultSchedulingPolicy:
-    allowVolumeExpansion: true
-    allowVolumeScheduling: true
-
 longhornUI:
   replicas: 1
 

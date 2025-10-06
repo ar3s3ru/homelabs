@@ -1,11 +1,11 @@
-resource "kubernetes_persistent_volume_claim_v1" "media_data_v2" {
+resource "kubernetes_persistent_volume_claim_v1" "media_data_v3" {
   metadata {
-    name      = "media-data-v2"
-    namespace = "media"
+    name      = "media-data-v3"
+    namespace = kubernetes_namespace.media.metadata[0].name
   }
 
   spec {
-    storage_class_name = "longhorn-hdd-1-replicas"
+    storage_class_name = "zfs-generic-nfs-csi"
     access_modes       = ["ReadWriteMany"]
     volume_mode        = "Filesystem"
 

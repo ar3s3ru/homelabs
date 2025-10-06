@@ -15,7 +15,6 @@
 
   time.timeZone = "Europe/Amsterdam";
 
-
   services.k3s.extraFlags = [
     "--node-label media.transcoding.gpu=fast"
   ];
@@ -31,5 +30,6 @@
     ./disko.nix
     ./hardware-configuration.nix
     ./tailscale.nix
+    ./zfs.nix
   ];
 }

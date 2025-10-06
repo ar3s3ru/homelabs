@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/charts/refs/heads/main/charts/cluster/values.schema.json
+---
+type: postgresql
+version:
+  postgresql: "16"
+
+mode: standalone
+
+cluster:
+  instances: 1
+
+  storage:
+    size: 5Gi
+    storageClass: longhorn-nvme-3-replicas
+
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:16.9-0.4.3
+
+  # Enable superuser access with the secret you created
+  enableSuperuserAccess: true
+  superuserSecret: immich-postgresql-postgres
+
+  # Initialize the database for Immich
+  initdb:
+    database: immich
+    owner: immich
+    secret:
+      name: immich-postgresql-immich
+    # TODO: Use managed extensions (pg 18)
+    postInitApplicationSQL:
+      # Commands based on: https://immich.app/docs/administration/postgres-standalone/#without-superuser-permission
+      - CREATE EXTENSION vchord CASCADE;
+      - CREATE EXTENSION earthdistance CASCADE;
+
+  # PostgreSQL configuration
+  postgresql:
+    # TODO(ar3s3ru): from Claude - check if correct
+    # parameters:
+    #   max_connections: "300"
+    #   shared_buffers: "256MB"
+    #   effective_cache_size: "1GB"
+    #   work_mem: "16MB"
+
+    shared_preload_libraries:
+      - "vchord.so"
+
+  # TODO(ar3s3ru): from Claude - check if correct
+  # resources:
+  #   requests:
+  #     cpu: 500m
+  #     memory: 1Gi
+  #   limits:
+  #     cpu: 2000m
+  #     memory: 2Gi
+
+  # Service configuration
+  services:
+    disabledDefaultServices: ["ro", "r"]
+    additional:
+      - selectorType: rw
+        serviceTemplate:
+          metadata:
+            name: immich-postgresql-cluster
+          spec:
+            type: LoadBalancer
+            loadBalancerClass: tailscale
+
+monitoring:
+  enabled: true
+  podMonitor:
+    enabled: true
+  prometheusRule:
+    enabled: true
+
+# TODO(ar3s3ru): configure backups
+backups:
+  enabled: false

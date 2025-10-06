@@ -1,6 +1,6 @@
 ---
 image:
-  tag: v1.135.3
+  tag: v2.0.1
 
 # TODO: move postgres out of this.
 useDeprecatedPostgresChart: true
@@ -88,29 +88,27 @@ machine-learning:
     cache: # To avoid downloading the ML models every start
       enabled: true
       type: pvc
-      existingClaim: immich-ml-cache-v2
+      existingClaim: immich-ml-cache-v3
 
-postgresql:
-  enabled: true
-  primary:
-    service:
-      annotations:
-        tailscale.com/expose: "true"
-    persistence:
-      enabled: true
-      existingClaim: immich-postgres
-
-redis:
-  enabled: true
-  master:
-    persistence:
-      enabled: true
-      existingClaim: immich-redis
+env:
+  REDIS_HOSTNAME: immich-redis.media.svc.cluster.local
+  DB_HOSTNAME: immich-postgresql-cluster-rw.media.svc.cluster.local
+  DB_DATABASE_NAME: immich
+  DB_USERNAME:
+    valueFrom:
+      secretKeyRef:
+        name: immich-postgresql-postgres
+        key: username
+  DB_PASSWORD:
+    valueFrom:
+      secretKeyRef:
+        name: immich-postgresql-postgres
+        key: password
 
 immich:
   persistence:
     library:
-      existingClaim: immich-library-v2
+      existingClaim: immich-library-v3
   metrics:
     enabled: true
   configuration:

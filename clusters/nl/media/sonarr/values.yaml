@@ -59,6 +59,6 @@ persistence:
     type: persistentVolumeClaim
   media:
     enabled: true
-    existingClaim: media-data-v2
+    existingClaim: media-data-v3
     globalMounts: [{ path: /data }]
     type: persistentVolumeClaim

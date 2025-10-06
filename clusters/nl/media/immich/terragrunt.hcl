@@ -30,6 +30,21 @@ dependency "longhorn" { # Necessary for PVC provisioning.
   skip_outputs = true
 }
 
+dependency "democratic-csi" { # Necessary for library PVC provisioning.
+  config_path = "${get_path_to_repo_root()}/clusters/nl/democratic-csi"
+  skip_outputs = true
+}
+
+dependency "cnpg-system" { # Necessary for PostgreSQL cluster provisioning
+  config_path = "${get_path_to_repo_root()}/clusters/nl/cnpg-system"
+  skip_outputs = true
+}
+
+dependency "redis-system" { # Necessary for Redis cluster provisioning
+  config_path = "${get_path_to_repo_root()}/clusters/nl/redis-system"
+  skip_outputs = true
+}
+
 inputs = {
   oauth_client_secret = dependency.authelia.outputs.immich_client_secret
 }

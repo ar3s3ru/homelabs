@@ -48,6 +48,7 @@
               inetutils
               authelia # For management purposes.
               immich-go # For bulk imports.
+              q-text-as-data # For querying CSV/TSV files.
             ];
 
             shellHook = ''

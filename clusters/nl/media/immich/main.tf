@@ -1,74 +1,59 @@
-resource "kubernetes_namespace" "immich" {
-  metadata {
-    name = "immich"
-  }
+locals {
+  namespace = "media"
 }
 
-resource "kubernetes_persistent_volume_claim_v1" "persistence" {
-  for_each = {
-    "immich-postgres" = "2Gi"
-    "immich-redis"    = "200Mi"
-  }
-
+resource "kubernetes_persistent_volume_claim_v1" "backup" {
   metadata {
-    name      = each.key
-    namespace = "media"
+    name      = "immich-backup"
+    namespace = local.namespace
   }
 
   spec {
-    storage_class_name = "longhorn-nvme"
+    storage_class_name = "longhorn-nvme-1-replicas"
     access_modes       = ["ReadWriteOnce"]
     volume_mode        = "Filesystem"
 
     resources {
       requests = {
-        storage = each.value
+        storage = "480Gi"
       }
     }
   }
 }
 
-resource "kubernetes_persistent_volume_claim_v1" "persistence_v2" {
-  for_each = {
-    "immich-library-v2" = "1Ti"
-  }
-
+resource "kubernetes_persistent_volume_claim_v1" "immich_library_v3" {
   metadata {
-    name      = each.key
-    namespace = "media"
+    name      = "immich-library-v3"
+    namespace = local.namespace
   }
 
   spec {
-    storage_class_name = "longhorn-hdd-single-replica"
-    access_modes       = ["ReadWriteOnce", "ReadWriteMany"] # NOTE: required for RollingUpdate strategy.
+    storage_class_name = "zfs-generic-nfs-csi"
+    access_modes       = ["ReadWriteMany"] # NOTE: required for RollingUpdate strategy.
     volume_mode        = "Filesystem"
 
     resources {
       requests = {
-        storage = each.value
+        storage = "1Ti"
       }
     }
   }
 }
 
-resource "kubernetes_persistent_volume_claim_v1" "persistence_v3" {
-  for_each = {
-    "immich-ml-cache-v2" = "10Gi"
-  }
-
+resource "kubernetes_persistent_volume_claim_v1" "immich-ml-cache-v3" {
   metadata {
-    name      = each.key
-    namespace = "media"
+    name      = "immich-ml-cache-v3"
+    namespace = local.namespace
   }
 
   spec {
-    storage_class_name = "longhorn-nvme-replicated"
+    storage_class_name = "longhorn-nvme-3-replicas"
     access_modes       = ["ReadWriteOnce"]
     volume_mode        = "Filesystem"
 
     resources {
       requests = {
-        storage = each.value
+        storage = "10Gi"
       }
     }
   }
@@ -85,8 +70,9 @@ resource "helm_release" "immich" {
   repository      = "https://immich-app.github.io/immich-charts"
   chart           = "immich"
   version         = "0.9.3"
-  namespace       = "media"
+  namespace       = local.namespace
   cleanup_on_fail = true
+
   values = [
     file("values.yaml"),
     yamlencode({

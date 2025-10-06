@@ -7,22 +7,6 @@ defaultPodOptions:
     fsGroup: 1000
     fsGroupChangePolicy: "OnRootMismatch"
 
-  affinity:
-    podAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        # These machines have better performances for transcoding,
-        # so Jellyfin will likely be scheduled over one of these nodes.
-        #
-        # To avoid performance bottlenecks between downloading node and consuming node,
-        # better to have them placed on the same node.
-        - topologyKey: "kubernetes.io/hostname"
-          labelSelector:
-            matchExpressions:
-              - key: app.kubernetes.io/instance
-                operator: In
-                values:
-                  - jellyfin
-
 service:
   main:
     controller: main
@@ -65,7 +49,7 @@ persistence:
   data:
     enabled: true
     type: persistentVolumeClaim
-    existingClaim: media-data-v2
+    existingClaim: media-data-v3
     globalMounts: [{ path: "/data" }]
 
 controllers:

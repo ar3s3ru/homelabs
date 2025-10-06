@@ -1,0 +1,53 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: immich-go-upload-job
+  namespace: media
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: immich-go-uploader
+          image: alpine:3.20
+          command: ["/bin/sh"]
+          env:
+            - name: IMMICH_SERVER
+              value: "http://immich-server.media.svc.cluster.local:2283"
+            - name: IMMICH_API_KEY
+              value: none
+          args:
+            - -c
+            - |
+              set -e
+              echo "Installing dependencies..."
+              apk add --no-cache wget ca-certificates
+
+              echo "Downloading immich-go v0.28.0..."
+              wget -O /tmp/immich-go.tar.gz https://github.com/simulot/immich-go/releases/download/v0.28.0/immich-go_Linux_x86_64.tar.gz
+
+              echo "Extracting immich-go..."
+              tar -xzf /tmp/immich-go.tar.gz -C /tmp
+              chmod +x /tmp/immich-go
+
+              echo "Starting upload from /backup..."
+              /tmp/immich-go upload from-folder \
+                --server="${IMMICH_SERVER}" \
+                --api-key="${IMMICH_API_KEY}" \
+                --no-ui \
+                --overwrite \
+                --ban-file="*.MOV" \
+                --ban-file="*.MP4" \
+                --log-file=/dev/stderr \
+                /backup/e8a3c275-822c-4660-affa-7adedf9e4f5f
+
+              echo "Upload completed successfully!"
+          volumeMounts:
+            - name: backup-data
+              mountPath: /backup
+              readOnly: true
+      volumes:
+        - name: backup-data
+          persistentVolumeClaim:
+            claimName: immich-backup
