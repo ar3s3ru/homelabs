@@ -2,6 +2,9 @@
 controller:
   service:
     externalTrafficPolicy: Local # To preserve the original client IP address.
+    annotations:
+      # Fixes the IP of the Ingress Controller; we should expose 80 and 443 on this IP.
+      metallb.io/loadBalancerIPs: 192.168.2.200
 
   metrics:
     enabled: true

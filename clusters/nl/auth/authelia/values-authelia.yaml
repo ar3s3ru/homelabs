@@ -73,9 +73,9 @@ configMap:
     encryption_key: { secret_name: "authelia-secrets" }
     redis:
       enabled: true
-      deploy: true
+      deploy: false # Managed externally
       host: "authelia-redis-headless.auth.svc.cluster.local"
-      password: { secret_name: "authelia-secrets" }
+      # password: { secret_name: "authelia-secrets" }
 
   storage:
     encryption_key: { secret_name: "authelia-secrets" }

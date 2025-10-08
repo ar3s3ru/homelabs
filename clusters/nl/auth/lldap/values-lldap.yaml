@@ -22,7 +22,7 @@ controllers:
           tag: latest-alpine-rootless
         env:
           TZ: Europe/Amsterdam
-          VERBOSE: "true"
+          RUST_LOG: debug
           LLDAP_LDAP_BASE_DN: dc=ar3s3ru,dc=dev
           LLDAP_DATABASE_URL: postgresql://postgres:$(DATABASE_PASSWORD)@lldap-postgresql.auth.svc.cluster.local:5432/main
           DATABASE_PASSWORD:
