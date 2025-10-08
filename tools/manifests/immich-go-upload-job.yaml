@@ -17,6 +17,10 @@ spec:
               value: "http://immich-server.media.svc.cluster.local:2283"
             - name: IMMICH_API_KEY
               value: none
+            - name: IMMICH_ADMIN_API_KEY
+              value: none
+            - name: TARGET_FOLDER
+              value: none
           args:
             - -c
             - |
@@ -35,12 +39,10 @@ spec:
               /tmp/immich-go upload from-folder \
                 --server="${IMMICH_SERVER}" \
                 --api-key="${IMMICH_API_KEY}" \
+                --admin-api-key="${IMMICH_ADMIN_API_KEY}" \
                 --no-ui \
-                --overwrite \
-                --ban-file="*.MOV" \
-                --ban-file="*.MP4" \
                 --log-file=/dev/stderr \
-                /backup/e8a3c275-822c-4660-affa-7adedf9e4f5f
+                /backup/{TARGET_FOLDER}
 
               echo "Upload completed successfully!"
           volumeMounts:

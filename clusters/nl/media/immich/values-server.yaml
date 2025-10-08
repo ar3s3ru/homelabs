@@ -1,0 +1,143 @@
+---
+defaultPodOptions:
+  securityContext:
+    fsGroup: 1000
+    fsGroupChangePolicy: OnRootMismatch
+    runAsGroup: 1000
+    runAsUser: 1000
+  # Prefer nodes that have fast GPU transcoding capabilities,
+  # but also allow scheduling on other nodes if needed.
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: media.transcoding.gpu
+                operator: In
+                values:
+                  - fast
+        - weight: 50
+          preference:
+            matchExpressions:
+              - key: media.transcoding.gpu
+                operator: In
+                values:
+                  - medium
+
+service:
+  main:
+    type: ClusterIP
+    controller: main
+    ports:
+      http:
+        port: &http-port 2283
+        primary: true
+      metrics-api:
+        port: 8081
+        primary: false
+      metrics-ms:
+        port: 8082
+        primary: false
+
+ingress:
+  main:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "acme"
+    hosts:
+      - host: &hostname photos2.ar3s3ru.dev
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              identifier: main
+              port: http
+    tls:
+      - hosts: [*hostname]
+        secretName: immich-server-tls
+
+controllers:
+  main:
+    type: deployment
+    replicas: 1
+    strategy: RollingUpdate
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main:
+        image:
+          repository: ghcr.io/immich-app/immich-server
+          tag: v2.0.1
+        env:
+          TZ: Europe/Amsterdam
+          IMMICH_TELEMETRY_INCLUDE: all
+          IMMICH_CONFIG_FILE: &config-file /config/immich-config.yaml
+          IMMICH_MACHINE_LEARNING_URL: http://immich-machine-learning:3003
+          REDIS_HOSTNAME: immich-redis.media.svc.cluster.local
+          DB_HOSTNAME: immich-postgresql-cluster-rw.media.svc.cluster.local
+          DB_DATABASE_NAME: immich
+          DB_USERNAME:
+            valueFrom:
+              secretKeyRef:
+                name: immich-postgresql-postgres
+                key: username
+          DB_PASSWORD:
+            valueFrom:
+              secretKeyRef:
+                name: immich-postgresql-postgres
+                key: password
+        resources:
+          requests:
+            gpu.intel.com/i915: "1"
+          limits:
+            gpu.intel.com/i915: "1"
+        probes:
+          liveness: &liveness-probe
+            enabled: true
+            custom: true
+            spec:
+              httpGet:
+                path: /api/server/ping
+                port: *http-port
+              initialDelaySeconds: 0
+              periodSeconds: 10
+              timeoutSeconds: 1
+              failureThreshold: 3
+          readiness: *liveness-probe
+          startup:
+            enabled: true
+            custom: true
+            spec:
+              httpGet:
+                path: /api/server/ping
+                port: *http-port
+              initialDelaySeconds: 0
+              periodSeconds: 10
+              timeoutSeconds: 1
+              failureThreshold: 30
+
+serviceMonitor:
+  main:
+    enabled: true
+    endpoints:
+      - port: metrics-api
+        scheme: http
+      - port: metrics-ms
+        scheme: http
+
+persistence:
+  config:
+    enabled: true
+    type: configMap
+    name: immich-config
+    globalMounts:
+      - path: *config-file
+        subPath: immich-config.yaml
+        readOnly: true
+  library:
+    enabled: true
+    type: persistentVolumeClaim
+    existingClaim: immich-library-v3
+    globalMounts: [{ path: /usr/src/app/upload }]

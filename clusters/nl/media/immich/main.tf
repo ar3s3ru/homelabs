@@ -1,5 +1,7 @@
 locals {
   namespace = "media"
+  config    = yamldecode(file("${path.module}/config.yaml"))
+  oauth     = local.config["oauth"]
 }
 
 resource "kubernetes_persistent_volume_claim_v1" "backup" {
@@ -65,24 +67,51 @@ variable "oauth_client_secret" {
   sensitive   = true
 }
 
-resource "helm_release" "immich" {
-  name            = "immich"
-  repository      = "https://immich-app.github.io/immich-charts"
-  chart           = "immich"
-  version         = "0.9.3"
-  namespace       = local.namespace
-  cleanup_on_fail = true
+resource "kubernetes_config_map_v1" "immich_config" {
+  metadata {
+    name      = "immich-config"
+    namespace = local.namespace
+  }
 
-  values = [
-    file("values.yaml"),
-    yamlencode({
-      immich = {
-        configuration = {
-          oauth = {
-            clientSecret = var.oauth_client_secret
-          }
-        }
+  data = {
+    # If you're wondering why:
+    # https://github.com/immich-app/immich/discussions/14815
+    "immich-config.yaml" = yamlencode(merge(
+      local.config,
+      {
+        oauth = merge(local.oauth, {
+          clientSecret = var.oauth_client_secret
+        })
       }
-    })
+    ))
+  }
+}
+
+resource "helm_release" "immich_server" {
+  name            = "immich-server"
+  repository      = "https://bjw-s-labs.github.io/helm-charts"
+  chart           = "app-template"
+  namespace       = local.namespace
+  version         = "4.3.0"
+  cleanup_on_fail = true
+  values          = [file("${path.module}/values-server.yaml")]
+
+  depends_on = [
+    kubernetes_config_map_v1.immich_config,
+    kubernetes_persistent_volume_claim_v1.immich_library_v3,
+  ]
+}
+
+resource "helm_release" "immich_machine_learning" {
+  name            = "immich-machine-learning"
+  repository      = "https://bjw-s-labs.github.io/helm-charts"
+  chart           = "app-template"
+  namespace       = local.namespace
+  version         = "4.3.0"
+  cleanup_on_fail = true
+  values          = [file("${path.module}/values-machine-learning.yaml")]
+
+  depends_on = [
+    kubernetes_persistent_volume_claim_v1.immich-ml-cache-v3
   ]
 }
