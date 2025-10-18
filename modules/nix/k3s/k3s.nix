@@ -46,4 +46,12 @@
   networking.firewall.allowedUDPPorts = [
     8472 # k3s flannel
   ];
+
+  # Increase inotify limits for applications that watch many files.
+  # Max impact on memory: ~512MB
+  boot.kernel.sysctl = {
+    "fs.inotify.max_user_instances" = 512;
+    "fs.inotify.max_user_watches" = 524288;
+    "fs.inotify.max_queued_events" = 32768;
+  };
 }
