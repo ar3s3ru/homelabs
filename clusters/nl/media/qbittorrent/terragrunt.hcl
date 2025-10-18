@@ -20,3 +20,8 @@ dependency "metallb-system" { # For the LoadBalancer service.
   config_path  = "${get_path_to_repo_root()}/clusters/nl/metallb-system"
   skip_outputs = true
 }
+
+dependency "longhorn" { # For persistent storage.
+  config_path  = "${get_path_to_repo_root()}/clusters/nl/longhorn-system/longhorn"
+  skip_outputs = true
+}

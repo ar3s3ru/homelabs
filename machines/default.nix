@@ -109,7 +109,7 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
       lshw
       dig
       inetutils
-      ethtool # manage NIC settings (offload, NIC feeatures, ...)
+      ethtool # manage NIC settings (offload, NIC features, ...)
       tcpdump # view network traffic
       lsof # To inspect the number of open files.
       iperf
@@ -124,8 +124,7 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
       grc
       gptfdisk
       # Fish plugins
-      # fishPlugins.fzf-fish
-      fishPlugins.forgit
+      fishPlugins.fzf-fish
       fishPlugins.grc
     ];
   };
