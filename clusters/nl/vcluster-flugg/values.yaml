@@ -1,0 +1,57 @@
+---
+sync:
+  fromHost:
+    storageClasses:
+      enabled: true
+    # ingressClasses:
+    #   enabled: false
+  toHost:
+    storageClasses:
+      enabled: false # Ignore vcluster-local storage classes.
+    ingresses:
+      enabled: true
+
+# # Networking - keep isolated (default)
+# networking:
+#   # Use isolated networking mode (no direct pod-to-pod communication with host)
+#   replicateServices:
+#     toHost: []
+#     fromHost: []
+
+controlPlane:
+  distro:
+    k8s:
+      enabled: true
+
+  backingStore:
+    etcd:
+      deploy:
+        enabled: true
+        statefulSet:
+          highAvailability:
+            replicas: 3
+          persistence:
+            volumeClaim:
+              storageClass: longhorn-nvme-2-replicas
+
+  statefulSet:
+    highAvailability:
+      replicas: 3
+    persistence:
+      volumeClaim:
+        enabled: true
+        size: 5Gi
+        storageClass: longhorn-nvme-2-replicas
+        accessModes: ["ReadWriteOnce"]
+
+  serviceMonitor:
+    enabled: true
+
+  service:
+    enabled: true
+    spec:
+      type: LoadBalancer
+      loadBalancerClass: tailscale
+
+telemetry:
+  enabled: true
