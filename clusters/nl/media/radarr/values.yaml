@@ -45,7 +45,7 @@ controllers:
           TZ: Europe/Amsterdam
         image:
           repository: ghcr.io/linuxserver/radarr
-          tag: 5.27.5
+          tag: 5.28.0
         probes:
           liveness: { enabled: false }
           readiness: { enabled: false }
