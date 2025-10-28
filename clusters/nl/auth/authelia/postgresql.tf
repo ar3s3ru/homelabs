@@ -26,7 +26,7 @@ resource "helm_release" "postgresql" {
   name            = "authelia-postgresql"
   repository      = "oci://registry-1.docker.io/bitnamicharts"
   chart           = "postgresql"
-  version         = "16.7.27"
+  version         = "18.1.3"
   namespace       = local.namespace
   cleanup_on_fail = true
   values          = [file("${path.module}/values-postgresql.yaml")]
