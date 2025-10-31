@@ -66,6 +66,6 @@ resource "helm_release" "lldap" {
   values          = [file("${path.module}/values-lldap.yaml")]
 
   depends_on = [
-    helm_release.postgresql
+    kubernetes_manifest.cnpg_cluster
   ]
 }

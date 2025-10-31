@@ -24,12 +24,11 @@ controllers:
           TZ: Europe/Amsterdam
           RUST_LOG: debug
           LLDAP_LDAP_BASE_DN: dc=ar3s3ru,dc=dev
-          LLDAP_DATABASE_URL: postgresql://postgres:$(DATABASE_PASSWORD)@lldap-postgresql.auth.svc.cluster.local:5432/main
-          DATABASE_PASSWORD:
+          LLDAP_DATABASE_URL:
             valueFrom:
               secretKeyRef:
-                name: lldap-postgresql-passwords
-                key: postgres-password
+                name: lldap-cnpg-cluster-app
+                key: fqdn-uri
 
         envFrom:
           - secretRef: { name: lldap-secrets }

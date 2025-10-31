@@ -4,27 +4,22 @@ resource "random_password" "postgres_password" {
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
-resource "kubernetes_secret_v1" "lldap_postgresql_passwords" {
+resource "kubernetes_secret_v1" "lldap_cnpg_postgres" {
   metadata {
-    name      = "lldap-postgresql-passwords"
+    name      = "lldap-cnpg-postgres"
     namespace = local.namespace
   }
 
   data = {
-    "postgres-password" = random_password.postgres_password.result
+    username = "postgres"
+    password = random_password.postgres_password.result
   }
 }
 
-resource "helm_release" "postgresql" {
-  name            = "lldap-postgresql"
-  repository      = "oci://registry-1.docker.io/bitnamicharts"
-  chart           = "postgresql"
-  version         = "16.7.27"
-  namespace       = local.namespace
-  cleanup_on_fail = true
-  values          = [file("${path.module}/values-postgresql.yaml")]
+resource "kubernetes_manifest" "cnpg_cluster" {
+  manifest = yamldecode(file("${path.module}/values-cnpg.yaml"))
 
   depends_on = [
-    kubernetes_secret_v1.lldap_postgresql_passwords
+    kubernetes_secret_v1.lldap_cnpg_postgres
   ]
 }
