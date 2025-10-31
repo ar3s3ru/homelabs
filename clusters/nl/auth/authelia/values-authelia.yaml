@@ -18,10 +18,10 @@ pod:
 
 secret:
   additionalSecrets:
-    authelia-postgresql-passwords:
+    authelia-cnpg-cluster-app:
       items:
-        - key: postgres-password
-          path: postgres-password
+        - key: password
+          path: password
 
 configMap:
   theme: "dark"
@@ -70,23 +70,24 @@ configMap:
     cookies:
       - domain: ar3s3ru.dev
         subdomain: auth
+      - domain: cianfr.one
+        subdomain: idp
     encryption_key: { secret_name: "authelia-secrets" }
     redis:
       enabled: true
       deploy: false # Managed externally
       host: "authelia-redis-headless.auth.svc.cluster.local"
-      # password: { secret_name: "authelia-secrets" }
 
   storage:
     encryption_key: { secret_name: "authelia-secrets" }
     postgres:
       enabled: true
-      address: tcp://authelia-postgresql.auth.svc.cluster.local:5432
+      address: tcp://authelia-cnpg-cluster-rw.auth.svc.cluster.local:5432
       database: main
-      username: postgres
+      username: authelia
       password:
-        secret_name: authelia-postgresql-passwords
-        path: postgres-password
+        secret_name: authelia-cnpg-cluster-app
+        path: password
 
   notifier:
     smtp:
@@ -167,6 +168,7 @@ configMap:
           authorization_policy: one_factor
           redirect_uris:
             - https://jellyfin.nl.ar3s3ru.dev/sso/OID/redirect/authelia
+            - https://media.cianfr.one/sso/OID/redirect/authelia
           scopes:
             - "openid"
             - "email"
