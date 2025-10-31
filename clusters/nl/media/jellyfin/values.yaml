@@ -1,5 +1,5 @@
 ---
-replicaCount: 0 # FIXME(ar3s3ru): set to 1 again when the third node comes back
+replicaCount: 1
 
 securityContext:
   fsGroup: 1000
@@ -35,7 +35,7 @@ affinity:
 ingress:
   enabled: true
   annotations:
-    cert-manager.io/cluster-issuer: acme
+    cert-manager.io/cluster-issuer: ar3s3ru.dev-acme
   hosts:
     - host: jellyfin.nl.ar3s3ru.dev
       paths:
