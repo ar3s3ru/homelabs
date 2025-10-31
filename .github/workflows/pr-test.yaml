@@ -71,7 +71,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Log in to Tailscale
         if: ${{ matrix.condition == 'true' }}
-        uses: tailscale/github-action@v3
+        uses: tailscale/github-action@a392da0a182bba0e9613b6243ebd69529b1878aa # v4
         with:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
