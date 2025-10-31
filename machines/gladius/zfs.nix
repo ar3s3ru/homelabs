@@ -14,9 +14,21 @@
   # NFS server for democratic-csi
   services.nfs.server.enable = true;
   services.nfs.server.hostName = "gladius.home";
-  # services.nfs.server.exports = ''
-  #   /mnt/zpool-nl-01 *(rw,sync,no_subtree_check,no_root_squash,fsid=0)
-  # '';
+
+  # Backup dataset for Longhorn volumes.
+  # Created manually with:
+  #   zfs create zpool-nl-01/longhorn-backups
+  #   mkfs.ext4 /dev/zvol/zpool-nl-01/longhorn-backups
+  fileSystems."/mnt/zpool-nl-01/longhorn-backups" = {
+    device = "/dev/zvol/zpool-nl-01/longhorn-backups";
+    fsType = "ext4";
+    options = [ "defaults" ];
+  };
+  services.nfs.server.exports = ''
+    /mnt/zpool-nl-01/longhorn-backups 192.168.2.0/24(rw,sync,no_subtree_check,no_root_squash)
+    /mnt/zpool-nl-01/longhorn-backups 10.42.0.0/16(rw,sync,no_subtree_check,no_root_squash)
+    /mnt/zpool-nl-01/longhorn-backups 10.43.0.0/16(rw,sync,no_subtree_check,no_root_squash)
+  '';
 
   # Source: https://wiki.nixos.org/wiki/NFS#Firewall
   networking.firewall.allowedTCPPorts = [ 111 2049 20048 ];
