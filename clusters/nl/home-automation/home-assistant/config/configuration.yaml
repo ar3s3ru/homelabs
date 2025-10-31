@@ -10,20 +10,21 @@ logger:
 
 http:
   cors_allowed_origins:
-    - https://nl-hass.tail2ff90.ts.net
+    - https://nl-home.tail2ff90.ts.net
   use_x_forwarded_for: true
   trusted_proxies:
     - "127.0.0.1"
     - "::1"
     - "192.168.2.0/24" # LAN subnet
-    - "10.42.0.0/16" # ClusterIP subnet
+    - "10.42.0.0/16" # Cluster Pods subnet
+    - "10.43.0.0/16" # Cluster Services subnet
     - "100.0.0.0/8" # Tailnet
 
 auth_oidc:
   display_name: "Authelia"
   client_id: !env_var HASS_OAUTH_CLIENT_ID
   client_secret: !env_var HASS_OAUTH_CLIENT_SECRET
-  discovery_url: "https://auth.ar3s3ru.dev/.well-known/openid-configuration"
+  discovery_url: "https://idp.cianfr.one/.well-known/openid-configuration"
   id_token_signing_alg: "RS256"
   features:
     automatic_user_linking: true
@@ -58,19 +59,16 @@ input_datetime:
     has_date: false
     has_time: true
     icon: mdi:bed-clock
-    initial: "23:00"
   wakeup_time:
     name: Wake up time
     has_date: false
     has_time: true
     icon: mdi:sun-clock
-    initial: "07:00"
   coffee_machine_turnon_time:
     name: Coffee Machine turn-on time
     has_date: false
     has_time: true
     icon: mdi:coffee-maker
-    initial: "07:30"
 
 input_select:
   home_mode:
@@ -80,18 +78,15 @@ input_select:
       - Away # Nobody is at home (other than Luna perhaps)
       - Sleeping # Time to sleep and be quiet, no disturbances
       - Vacation # We are away from home for an extended period of time
-    initial: Home
     icon: mdi:home-analytics
 
 input_boolean:
   enable_litter_robot_vacuuming:
     name: Enable automatic vacuuming around the Litter Robot
     icon: mdi:robot-vacuum
-    initial: on
   turn_on_coffee_machine:
     name: Turn on the Coffee Machine in the morning
     icon: mdi:coffee-maker
-    initial: off
 
 input_number:
   litter_robot_waste_drawer_level_notification:

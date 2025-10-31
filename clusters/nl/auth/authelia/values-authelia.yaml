@@ -137,6 +137,8 @@ configMap:
             - "https://photos.ar3s3ru.dev/user-settings"
             - "https://photos2.ar3s3ru.dev/auth/login"
             - "https://photos2.ar3s3ru.dev/user-settings"
+            - "https://photos.cianfr.one/auth/login"
+            - "https://photos.cianfr.one/user-settings"
             - "app.immich:///oauth-callback"
           scopes:
             - "openid"
@@ -185,6 +187,7 @@ configMap:
           authorization_policy: one_factor
           redirect_uris:
             - https://jellyseerr.ar3s3ru.dev/login?provider=authelia&callback=true
+            - https://requests.cianfr.one/login?provider=authelia&callback=true
           scopes:
             - "openid"
             - "email"
@@ -205,6 +208,7 @@ configMap:
           authorization_policy: two_factor
           redirect_uris:
             - https://vault.ar3s3ru.dev/identity/connect/oidc-signin
+            - https://vault.cianfr.one/identity/connect/oidc-signin
           scopes:
             - "openid"
             - "offline_access"

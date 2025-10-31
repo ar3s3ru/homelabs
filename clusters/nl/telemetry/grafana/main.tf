@@ -20,7 +20,7 @@ resource "helm_release" "grafana" {
   version         = "9.4.5"
   namespace       = "telemetry"
   cleanup_on_fail = true
-  values          = [file("./values.yaml")]
+  values          = [file("${path.module}/values.yaml")]
 }
 
 # Doesn't work - must apply with kubectl manually.
