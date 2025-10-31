@@ -10,13 +10,15 @@ sync:
       enabled: false # Ignore vcluster-local storage classes.
     ingresses:
       enabled: true
+    secrets:
+      enabled: true
 
 # # Networking - keep isolated (default)
-# networking:
-#   # Use isolated networking mode (no direct pod-to-pod communication with host)
-#   replicateServices:
-#     toHost: []
-#     fromHost: []
+networking:
+  # Use isolated networking mode (no direct pod-to-pod communication with host)
+  replicateServices:
+    toHost: []
+    fromHost: []
 
 controlPlane:
   distro:
