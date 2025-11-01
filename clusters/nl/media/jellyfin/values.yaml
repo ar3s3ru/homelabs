@@ -35,14 +35,14 @@ affinity:
 ingress:
   enabled: true
   annotations:
-    cert-manager.io/cluster-issuer: ar3s3ru.dev-acme
+    cert-manager.io/cluster-issuer: cianfr.one-acme
   hosts:
-    - host: jellyfin.nl.ar3s3ru.dev
+    - host: &host media.cianfr.one
       paths:
         - path: /
           pathType: Prefix
   tls:
-    - hosts: [jellyfin.nl.ar3s3ru.dev]
+    - hosts: [*host]
       secretName: jellyfin-tls
 
 resources:

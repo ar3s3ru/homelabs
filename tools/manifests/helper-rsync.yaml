@@ -21,12 +21,7 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
-            - name: data-v2
-              mountPath: /data-v2
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: media-data
-        - name: data-v2
-          persistentVolumeClaim:
-            claimName: media-data-v2
+            claimName: immich-postgresql-backup

@@ -131,12 +131,6 @@ configMap:
           consent_mode: implicit
           authorization_policy: "one_factor"
           redirect_uris:
-            - "https://immich.tail2ff90.ts.net/auth/login"
-            - "https://immich.tail2ff90.ts.net/user-settings"
-            - "https://photos.ar3s3ru.dev/auth/login"
-            - "https://photos.ar3s3ru.dev/user-settings"
-            - "https://photos2.ar3s3ru.dev/auth/login"
-            - "https://photos2.ar3s3ru.dev/user-settings"
             - "https://photos.cianfr.one/auth/login"
             - "https://photos.cianfr.one/user-settings"
             - "app.immich:///oauth-callback"
@@ -169,7 +163,6 @@ configMap:
           consent_mode: implicit
           authorization_policy: one_factor
           redirect_uris:
-            - https://jellyfin.nl.ar3s3ru.dev/sso/OID/redirect/authelia
             - https://media.cianfr.one/sso/OID/redirect/authelia
           scopes:
             - "openid"

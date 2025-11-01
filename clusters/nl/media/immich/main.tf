@@ -87,6 +87,10 @@ resource "kubernetes_config_map_v1" "immich_config" {
   }
 }
 
+resource "kubernetes_manifest" "cnpg_cluster" {
+  manifest = yamldecode(file("${path.module}/immich-cnpg-cluster.yaml"))
+}
+
 resource "helm_release" "immich_server" {
   name            = "immich-server"
   repository      = "https://bjw-s-labs.github.io/helm-charts"

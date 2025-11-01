@@ -53,7 +53,7 @@ ingress:
 controllers:
   main:
     type: deployment
-    replicas: 0 # FIXME(ar3s3ru): set to 1 again when the third node comes back
+    replicas: 1
     strategy: Recreate
     annotations:
       "reloader.stakater.com/auto": "true"
@@ -65,7 +65,7 @@ controllers:
           TZ: Europe/Amsterdam
         image:
           repository: ghcr.io/linuxserver/sabnzbd
-          tag: 4.5.3
+          tag: 4.5.4
         probes:
           liveness: { enabled: false }
           readiness: { enabled: false }
@@ -76,6 +76,11 @@ persistence:
     enabled: true
     existingClaim: sabnzbd-config-v2
     globalMounts: [{ path: /config }]
+    type: persistentVolumeClaim
+  downloads:
+    enabled: true
+    existingClaim: sabnzbd-downloads
+    globalMounts: [{ path: /downloads/incomplete }]
     type: persistentVolumeClaim
   media:
     enabled: true

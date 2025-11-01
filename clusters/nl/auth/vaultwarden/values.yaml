@@ -17,18 +17,18 @@ ingress:
   enabled: true
   className: nginx
   annotations:
-    cert-manager.io/cluster-issuer: "acme"
-  host: "vault.ar3s3ru.dev"
+    cert-manager.io/cluster-issuer: cianfr.one-acme
+  host: &host vault.cianfr.one
   tls:
-    - hosts: ["vault.ar3s3ru.dev"]
-      secretName: vaultwarden-tls
+    - hosts: [*host]
+      secretName: vaultwarden-cianfr.one-tls
 
 persistence:
   enabled: true
   existingClaim: vaultwarden-v2
 
 vaultwarden:
-  domain: https://vault.ar3s3ru.dev
+  domain: https://vault.cianfr.one
   allowSignups: false
   requireEmail: true
   verifySignup: true

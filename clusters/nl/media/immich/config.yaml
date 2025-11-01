@@ -14,7 +14,7 @@ oauth:
   autoRegister: true
   buttonText: "Login with Authelia"
   clientId: immich
-  issuerUrl: "https://auth.ar3s3ru.dev/.well-known/openid-configuration"
+  issuerUrl: "https://idp.cianfr.one/.well-known/openid-configuration"
   mobileOverrideEnabled: false
   scope: "openid email profile"
   signingAlgorithm: "RS256"

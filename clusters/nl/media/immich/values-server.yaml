@@ -45,9 +45,9 @@ ingress:
     enabled: true
     className: nginx
     annotations:
-      cert-manager.io/cluster-issuer: "acme"
+      cert-manager.io/cluster-issuer: cianfr.one-acme
     hosts:
-      - host: &hostname photos2.ar3s3ru.dev
+      - host: &hostname photos.cianfr.one
         paths:
           - path: /
             pathType: Prefix
@@ -69,25 +69,17 @@ controllers:
       main:
         image:
           repository: ghcr.io/immich-app/immich-server
-          tag: v2.0.1
+          tag: v2.2.0
         env:
           TZ: Europe/Amsterdam
           IMMICH_TELEMETRY_INCLUDE: all
           IMMICH_CONFIG_FILE: &config-file /config/immich-config.yaml
           IMMICH_MACHINE_LEARNING_URL: http://immich-machine-learning:3003
           REDIS_HOSTNAME: immich-redis.media.svc.cluster.local
-          DB_HOSTNAME: immich-postgresql-cluster-rw.media.svc.cluster.local
-          DB_DATABASE_NAME: immich
-          DB_USERNAME:
-            valueFrom:
-              secretKeyRef:
-                name: immich-postgresql-postgres
-                key: username
-          DB_PASSWORD:
-            valueFrom:
-              secretKeyRef:
-                name: immich-postgresql-postgres
-                key: password
+          DB_HOSTNAME: immich-cnpg-cluster-rw.media.svc.cluster.local
+          DB_DATABASE_NAME: { valueFrom: { secretKeyRef: { name: immich-cnpg-cluster-app, key: dbname } } }
+          DB_USERNAME: { valueFrom: { secretKeyRef: { name: immich-cnpg-cluster-app, key: username } } }
+          DB_PASSWORD: { valueFrom: { secretKeyRef: { name: immich-cnpg-cluster-app, key: password } } }
         resources:
           requests:
             gpu.intel.com/i915: "1"
@@ -140,4 +132,7 @@ persistence:
     enabled: true
     type: persistentVolumeClaim
     existingClaim: immich-library-v3
-    globalMounts: [{ path: /usr/src/app/upload }]
+    globalMounts:
+      - path: /usr/src/app/upload
+      - path: /imported
+        subPath: imported

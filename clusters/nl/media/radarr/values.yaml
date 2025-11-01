@@ -33,7 +33,7 @@ ingress:
 controllers:
   main:
     type: deployment
-    replicas: 0 # FIXME(ar3s3ru): set to 1 again when the third node comes back
+    replicas: 1
     strategy: Recreate
     annotations:
       reloader.stakater.com/auto: "true"

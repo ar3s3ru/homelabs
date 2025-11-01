@@ -40,8 +40,3 @@ resource "helm_release" "jellyfin" {
   cleanup_on_fail = true
   values          = [file("${path.module}/values.yaml")]
 }
-
-resource "kubernetes_manifest" "ingress_media_cianfr_one" {
-  manifest   = yamldecode(file("${path.module}/media.cianfr.one-ingress.yaml"))
-  depends_on = [helm_release.jellyfin]
-}
