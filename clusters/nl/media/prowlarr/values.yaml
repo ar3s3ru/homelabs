@@ -49,7 +49,7 @@ controllers:
           TZ: Europe/Amsterdam
         image:
           repository: ghcr.io/linuxserver/prowlarr
-          tag: 1.37.0
+          tag: 2.1.5
         probes:
           liveness: { enabled: false }
           readiness: { enabled: false }
