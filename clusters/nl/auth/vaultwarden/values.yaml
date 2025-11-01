@@ -23,6 +23,14 @@ ingress:
     - hosts: [*host]
       secretName: vaultwarden-cianfr.one-tls
 
+resources:
+  requests:
+    cpu: 40u
+    memory: 24Mi
+  limits:
+    cpu: 80u
+    memory: 48Mi
+
 persistence:
   enabled: true
   existingClaim: vaultwarden-v2

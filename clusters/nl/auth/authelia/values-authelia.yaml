@@ -15,6 +15,13 @@ pod:
   env:
     - name: "TZ"
       value: "Europe/Amsterdam"
+  resources:
+    requests:
+      cpu: 500u
+      memory: 32Mi
+    limits:
+      cpu: 1500u
+      memory: 75Mi
 
 secret:
   additionalSecrets:

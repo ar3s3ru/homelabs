@@ -4,25 +4,6 @@ locals {
   oauth     = local.config["oauth"]
 }
 
-resource "kubernetes_persistent_volume_claim_v1" "backup" {
-  metadata {
-    name      = "immich-backup"
-    namespace = local.namespace
-  }
-
-  spec {
-    storage_class_name = "longhorn-nvme-1-replicas"
-    access_modes       = ["ReadWriteOnce"]
-    volume_mode        = "Filesystem"
-
-    resources {
-      requests = {
-        storage = "480Gi"
-      }
-    }
-  }
-}
-
 resource "kubernetes_persistent_volume_claim_v1" "immich_library_v3" {
   metadata {
     name      = "immich-library-v3"

@@ -22,6 +22,14 @@ spec:
       database: main
       owner: postgres
 
+  resources:
+    requests:
+      cpu: 20m
+      memory: 128Mi
+    limits:
+      cpu: 40m
+      memory: 256Mi
+
   managed:
     services:
       disabledDefaultServices: ["ro", "r"]

@@ -19,7 +19,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/lldap/lldap
-          tag: latest-alpine-rootless
+          tag: 2025-10-14-alpine-rootless
         env:
           TZ: Europe/Amsterdam
           RUST_LOG: debug
@@ -36,6 +36,13 @@ controllers:
           liveness: { enabled: false }
           readiness: { enabled: false }
           startup: { enabled: true }
+        resources:
+          requests:
+            cpu: 100u
+            memory: 24Mi
+          limits:
+            cpu: 200u
+            memory: 48Mi
   bootstrap:
     type: job
     annotations:
