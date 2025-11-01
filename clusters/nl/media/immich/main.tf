@@ -96,7 +96,7 @@ resource "helm_release" "immich_server" {
   repository      = "https://bjw-s-labs.github.io/helm-charts"
   chart           = "app-template"
   namespace       = local.namespace
-  version         = "4.3.0"
+  version         = "4.4.0"
   cleanup_on_fail = true
   values          = [file("${path.module}/values-server.yaml")]
 
@@ -111,7 +111,7 @@ resource "helm_release" "immich_machine_learning" {
   repository      = "https://bjw-s-labs.github.io/helm-charts"
   chart           = "app-template"
   namespace       = local.namespace
-  version         = "4.3.0"
+  version         = "4.4.0"
   cleanup_on_fail = true
   values          = [file("${path.module}/values-machine-learning.yaml")]
 

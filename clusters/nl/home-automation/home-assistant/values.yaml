@@ -19,7 +19,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/home-assistant/home-assistant
-          tag: "2025.9.4"
+          tag: "2025.10.4"
         env:
           TZ: Europe/Amsterdam
           PYTHONPATH: /config/deps
