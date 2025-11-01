@@ -36,7 +36,7 @@ resource "helm_release" "jellyfin" {
   repository      = "https://jellyfin.github.io/jellyfin-helm"
   chart           = "jellyfin"
   namespace       = "media"
-  version         = "2.3.0"
+  version         = "2.4.0"
   cleanup_on_fail = true
   values          = [file("${path.module}/values.yaml")]
 }
