@@ -3,7 +3,7 @@ resource "helm_release" "prometheus" {
   repository      = "https://prometheus-community.github.io/helm-charts"
   chart           = "kube-prometheus-stack"
   namespace       = "telemetry"
-  version         = "76.5.1"
+  version         = "79.1.0"
   cleanup_on_fail = true
   values          = [file("./values.yaml")]
 }
