@@ -7,7 +7,7 @@ resource "helm_release" "zigbee2mqtt" {
   repository      = "https://charts.zigbee2mqtt.io/"
   chart           = "zigbee2mqtt"
   namespace       = "home-automation"
-  version         = "2.6.2"
+  version         = "2.6.3"
   cleanup_on_fail = true
   values          = [file("./values.yaml")]
 }

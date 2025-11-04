@@ -31,7 +31,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/immich-app/immich-machine-learning
-          tag: v2.2.1-openvino
+          tag: v2.2.2-openvino
         env:
           TRANSFORMERS_CACHE: /cache
         resources:
