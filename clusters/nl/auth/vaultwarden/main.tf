@@ -39,5 +39,5 @@ resource "helm_release" "vaultwarden" {
   version         = "1.2.6"
   namespace       = "auth"
   cleanup_on_fail = true
-  values          = [file("values.yaml")]
+  values          = [file("${path.module}/values.yaml")]
 }

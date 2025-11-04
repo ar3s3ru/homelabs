@@ -34,7 +34,7 @@ resource "kubernetes_persistent_volume_claim_v1" "downloads_v2" {
 
     resources {
       requests = {
-        storage = "120Gi"
+        storage = "200Gi"
       }
     }
   }

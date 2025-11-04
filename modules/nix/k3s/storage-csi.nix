@@ -22,4 +22,7 @@
     "hugepagesz=2Mi"
     "hugepages=1024"
   ];
+
+  # To be able to mount NFS volumes in all nodes.
+  boot.supportedFilesystems = [ "nfs" ];
 }

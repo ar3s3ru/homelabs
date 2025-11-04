@@ -2,15 +2,6 @@
 # Redis Standalone Configuration for Immich
 # Ref: https://github.com/OT-CONTAINER-KIT/redis-operator/tree/main/charts/redis
 
-redisStandalone:
-  resources:
-    requests:
-      cpu: 10m
-      memory: 24Mi
-    limits:
-      cpu: 30m
-      memory: 96Mi
-
 # Storage configuration
 storageSpec:
   volumeClaimTemplate:

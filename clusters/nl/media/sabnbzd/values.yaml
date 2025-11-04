@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/app-template-4.1.1/charts/other/app-template/values.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/common-4.4.0/charts/library/common/values.schema.json
 ---
 defaultPodOptions:
   securityContext:
@@ -6,24 +6,15 @@ defaultPodOptions:
     fsGroupChangePolicy: OnRootMismatch
     runAsGroup: 1000
     runAsUser: 1000
-
+  # Prevent loopback NFS deadlock - don't run on NFS server node
   affinity:
-    podAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-        # These machines have better performances for transcoding,
-        # so Jellyfin will likely be scheduled over one of these nodes.
-        #
-        # To avoid performance bottlenecks between downloading node and consuming node,
-        # better to have them placed on the same node.
-        - weight: 80
-          podAffinityTerm:
-            topologyKey: "kubernetes.io/hostname"
-            labelSelector:
-              matchExpressions:
-                - key: app.kubernetes.io/instance
-                  operator: In
-                  values:
-                    - jellyfin
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values: ["gladius"]
 
 service:
   main:
@@ -80,7 +71,7 @@ persistence:
   downloads:
     enabled: true
     existingClaim: sabnzbd-downloads
-    globalMounts: [{ path: /downloads/incomplete }]
+    globalMounts: [{ path: /downloads }]
     type: persistentVolumeClaim
   media:
     enabled: true

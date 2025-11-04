@@ -5,7 +5,7 @@ variable "jellyfin_host" {
 
 resource "kubernetes_persistent_volume_claim_v1" "persistence_v2" {
   for_each = {
-    "jellyfin-config-v2" = "2Gi"
+    "jellyfin-config-v2" = "10Gi"
   }
 
   metadata {
