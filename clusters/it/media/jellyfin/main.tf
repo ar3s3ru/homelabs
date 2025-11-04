@@ -27,7 +27,7 @@ resource "helm_release" "jellyfin" {
   repository      = "https://jellyfin.github.io/jellyfin-helm"
   chart           = "jellyfin"
   namespace       = "media"
-  version         = "2.4.0"
+  version         = "2.5.0"
   cleanup_on_fail = true
 
   values = [yamlencode({

@@ -71,19 +71,18 @@ jobs:
         shell: nix develop --quiet -c bash -e {0}
 
   terragrunt-apply:
-    name: Terragrunt Apply (cluster-${{ matrix.cluster }})
+    name: Terragrunt Apply
     runs-on: ubuntu-latest
     needs: changes
-    if: ${{ needs.changes.outputs.terragrunt == 'true' || needs.changes.outputs.cluster-it == 'true' || needs.changes.outputs.cluster-nl == 'true' }}
+    # if: ${{ needs.changes.outputs.terragrunt == 'true' || needs.changes.outputs.cluster-it == 'true' || needs.changes.outputs.cluster-nl == 'true' }}
     strategy:
       fail-fast: false # Jobs can independently fail.
       matrix:
         include:
-          # NOTE(ar3s3ru): for now 'it' cluster is unused properly.
           # - cluster: it
           #   condition: ${{ needs.changes.outputs.cluster-it == 'true' || needs.changes.outputs.terragrunt == 'true' }}
           - cluster: nl
-            condition: ${{ needs.changes.outputs.cluster-nl == 'true' || needs.changes.outputs.terragrunt == 'true' }}
+            condition: true # ${{ needs.changes.outputs.cluster-nl == 'true' || needs.changes.outputs.terragrunt == 'true' }}
     steps:
       - name: Skip if no changes
         if: ${{ matrix.condition == 'false' }}

@@ -42,7 +42,7 @@ resource "helm_release" "tailscale_operator" {
   name = "tailscale-operator"
   # NOTE: switched to the "unstable" Helm chart to fix https://github.com/tailscale/tailscale/issues/15081
   repository      = "https://pkgs.tailscale.com/unstable/helmcharts"
-  version         = "1.91.44"
+  version         = "1.91.45"
   chart           = "tailscale-operator"
   namespace       = var.kubernetes_namespace
   cleanup_on_fail = true
