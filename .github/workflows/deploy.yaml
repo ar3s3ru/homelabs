@@ -79,8 +79,9 @@ jobs:
       fail-fast: false # Jobs can independently fail.
       matrix:
         include:
-          - cluster: it
-            condition: ${{ needs.changes.outputs.cluster-it == 'true' || needs.changes.outputs.terragrunt == 'true' }}
+          # NOTE(ar3s3ru): for now 'it' cluster is unused properly.
+          # - cluster: it
+          #   condition: ${{ needs.changes.outputs.cluster-it == 'true' || needs.changes.outputs.terragrunt == 'true' }}
           - cluster: nl
             condition: ${{ needs.changes.outputs.cluster-nl == 'true' || needs.changes.outputs.terragrunt == 'true' }}
     steps:
