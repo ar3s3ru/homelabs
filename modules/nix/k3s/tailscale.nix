@@ -20,13 +20,17 @@
     };
   };
 
-  services.k3s.autoDeployCharts.tailscale-operator = {
-    # NOTE: switched to the "unstable" Helm chart to fix https://github.com/tailscale/tailscale/issues/15081
+  services.k3s.autoDeployCharts.tailscale-operator = rec {
     name = "tailscale-operator";
-    repo = "https://pkgs.tailscale.com/unstable/helmcharts";
-    version = "1.85.21";
-    hash = "sha256-oPAV1s2Yn+oeT6xzYQEDhhf0dy/kMacmbvewQiWsMSw=";
+    repo = "https://pkgs.tailscale.com/helmcharts";
+    version = "1.90.6";
+    hash = "sha256-CCR92QMloyrpXFsRaRcBVFi1aerb1m5xFtzcdQKoK9k=";
     targetNamespace = "networking";
+    extraFieldDefinitions = {
+      spec = {
+        inherit version;
+      };
+    };
     values = {
       operatorConfig.hostname = "nl-k8s";
       apiServerProxyConfig.mode = "true";

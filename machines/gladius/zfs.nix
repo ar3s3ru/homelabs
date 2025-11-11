@@ -37,13 +37,6 @@ in
   services.nfs.server.hostName = "gladius.home";
   services.nfs.server.nproc = 16;
 
-  # Disable IPv6 for NFS to avoid binding issues
-  # Override ExecStart to use --host with IPv4 only
-  systemd.services.nfs-server.serviceConfig.ExecStart = [
-    "" # Clear default
-    "${config.services.nfs.server.package}/bin/rpc.nfsd --host 0.0.0.0 --tcp --no-udp ${toString config.services.nfs.server.nproc}"
-  ];
-
   # Fix ports so we can expose over the firewall.
   services.nfs.server.lockdPort = 4001;
   services.nfs.server.mountdPort = 4002;
@@ -61,6 +54,16 @@ in
   systemd.services.nfs-server.serviceConfig.KillMode = "mixed";
   # Ensure process dies even if in uninterruptible sleep
   systemd.services.nfs-server.serviceConfig.SendSIGKILL = "yes";
+
+  # Wait for network to be fully up before starting NFS
+  systemd.services.nfs-server.after = [ "network-online.target" ];
+  systemd.services.nfs-server.wants = [ "network-online.target" ];
+  
+  # Force NFS to bind only to IPv4 and wait for address availability
+  systemd.services.nfs-server.serviceConfig.ExecStart = [
+    "" # Clear the default ExecStart
+    "${config.systemd.package}/bin/rpc.nfsd --host 0.0.0.0 --tcp --no-udp ${toString config.services.nfs.server.nproc}"
+  ];
 
   # NFS kernel tuning to improve stability under load
   boot.kernel.sysctl = {

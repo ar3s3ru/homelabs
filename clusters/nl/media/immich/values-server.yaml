@@ -135,7 +135,8 @@ persistence:
   library:
     enabled: true
     type: persistentVolumeClaim
-    existingClaim: immich-library-v3
+    # FIXME(ar3s3ru): switch back to NFS
+    existingClaim: immich-library-v3-local
     globalMounts:
       - path: /usr/src/app/upload
       - path: /imported

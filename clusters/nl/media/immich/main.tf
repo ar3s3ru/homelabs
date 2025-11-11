@@ -23,6 +23,16 @@ resource "kubernetes_persistent_volume_claim_v1" "immich_library_v3" {
   }
 }
 
+module "immich_library_v3_local" {
+  source = "../../../../modules/local-persistent-mount"
+
+  volume_name          = "immich-library-v3-local"
+  kubernetes_namespace = local.namespace
+  kubernetes_node      = "gladius"
+  host_path            = "/mnt/zpool-nl-01/pvc-c964cd5d-c241-4ee4-b02b-a16e31d0b63c"
+  storage_size         = kubernetes_persistent_volume_claim_v1.immich_library_v3.spec[0].resources[0].requests.storage
+}
+
 resource "kubernetes_persistent_volume_claim_v1" "immich-ml-cache-v3" {
   metadata {
     name      = "immich-ml-cache-v3"
