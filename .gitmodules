@@ -1,0 +1,6 @@
+[submodule "clusters/nl/ocis-system/ocis-charts"]
+	path = clusters/nl/ocis-system/ocis-charts
+	url = https://github.com/owncloud/ocis-charts.git
+[submodule "modules/charts/garage"]
+	path = modules/charts/garage
+	url = https://git.deuxfleurs.fr/Deuxfleurs/garage

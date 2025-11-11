@@ -18,6 +18,11 @@ variable "kubernetes_node" {
   description = "Kubernetes node to use for the PersistentVolume mount"
 }
 
+variable "storage_size" {
+  type        = string
+  description = "Size of the storage to request for the PersistentVolumeClaim"
+}
+
 resource "kubernetes_persistent_volume_v1" "pv" {
   metadata {
     name = var.volume_name
@@ -28,7 +33,7 @@ resource "kubernetes_persistent_volume_v1" "pv" {
     access_modes       = ["ReadWriteOnce"]
 
     capacity = {
-      storage = "10G"
+      storage = var.storage_size
     }
 
     persistent_volume_source {
@@ -64,7 +69,7 @@ resource "kubernetes_persistent_volume_claim_v1" "pvc" {
 
     resources {
       requests = {
-        storage = "10G"
+        storage = var.storage_size
       }
     }
   }
