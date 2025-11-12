@@ -2,7 +2,6 @@
 
 {
   imports = [
-    ./fix-open-file-limit.nix
     ./storage-csi.nix
   ];
 

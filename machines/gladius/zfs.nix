@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 let
   nfsFirewallPorts = [
     111
@@ -16,10 +16,12 @@ in
 
   # ZFS support
   boot.supportedFilesystems = [ "zfs" ];
+  boot.zfs.package = pkgs.zfs_unstable; # FIXME: latest 6.17 kernel is not supported by 2.3
   boot.zfs.forceImportRoot = false;
   boot.zfs.extraPools = [ "zpool-nl-01" ];
 
   # ZFS services (weekly, default)
+  services.zfs.trim.enable = true;
   services.zfs.autoScrub.enable = true;
 
   # Backup dataset for Longhorn volumes.
@@ -54,16 +56,6 @@ in
   systemd.services.nfs-server.serviceConfig.KillMode = "mixed";
   # Ensure process dies even if in uninterruptible sleep
   systemd.services.nfs-server.serviceConfig.SendSIGKILL = "yes";
-
-  # Wait for network to be fully up before starting NFS
-  systemd.services.nfs-server.after = [ "network-online.target" ];
-  systemd.services.nfs-server.wants = [ "network-online.target" ];
-  
-  # Force NFS to bind only to IPv4 and wait for address availability
-  systemd.services.nfs-server.serviceConfig.ExecStart = [
-    "" # Clear the default ExecStart
-    "${config.systemd.package}/bin/rpc.nfsd --host 0.0.0.0 --tcp --no-udp ${toString config.services.nfs.server.nproc}"
-  ];
 
   # NFS kernel tuning to improve stability under load
   boot.kernel.sysctl = {

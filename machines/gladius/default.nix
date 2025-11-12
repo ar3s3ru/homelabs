@@ -1,6 +1,6 @@
 { nixos-hardware, ... }:
 
-{ ... }:
+{ pkgs, ... }:
 
 {
   deployment.targetHost = "gladius.tail2ff90.ts.net";
