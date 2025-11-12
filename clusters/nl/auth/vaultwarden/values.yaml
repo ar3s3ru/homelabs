@@ -13,6 +13,9 @@ service:
   httpPort: 80
   externalTrafficPolicy: Cluster
 
+strategy:
+  type: Recreate # NOTE: the Longhorn volume is ReadWriteOnce.
+
 ingress:
   enabled: true
   className: nginx
