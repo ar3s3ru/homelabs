@@ -1,5 +1,5 @@
 resource "kubernetes_manifest" "akri_sonoff_zigbee_antenna" {
-  manifest = yamldecode(file("./sonoff-antenna.yaml"))
+  manifest = yamldecode(file("${path.module}/sonoff-antenna.yaml"))
 }
 
 resource "helm_release" "zigbee2mqtt" {
@@ -9,5 +9,5 @@ resource "helm_release" "zigbee2mqtt" {
   namespace       = "home-automation"
   version         = "2.6.3"
   cleanup_on_fail = true
-  values          = [file("./values.yaml")]
+  values          = [file("${path.module}/values.yaml")]
 }

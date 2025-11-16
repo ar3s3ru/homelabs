@@ -4,33 +4,13 @@ locals {
   oauth     = local.config["oauth"]
 }
 
-resource "kubernetes_persistent_volume_claim_v1" "immich_library_v3" {
-  metadata {
-    name      = "immich-library-v3"
-    namespace = local.namespace
-  }
+resource "kubernetes_manifest" "immich_library_v3" {
+  for_each = toset([
+    "immich-library-v3-pv-nfs.yaml",
+    "immich-library-v3-pvc.yaml",
+  ])
 
-  spec {
-    storage_class_name = "zfs-generic-nfs-csi"
-    access_modes       = ["ReadWriteMany"] # NOTE: required for RollingUpdate strategy.
-    volume_mode        = "Filesystem"
-
-    resources {
-      requests = {
-        storage = "1Ti"
-      }
-    }
-  }
-}
-
-module "immich_library_v3_local" {
-  source = "../../../../modules/local-persistent-mount"
-
-  volume_name          = "immich-library-v3-local"
-  kubernetes_namespace = local.namespace
-  kubernetes_node      = "gladius"
-  host_path            = "/mnt/zpool-nl-01/pvc-c964cd5d-c241-4ee4-b02b-a16e31d0b63c"
-  storage_size         = kubernetes_persistent_volume_claim_v1.immich_library_v3.spec[0].resources[0].requests.storage
+  manifest = yamldecode(file("${path.module}/${each.key}"))
 }
 
 resource "kubernetes_persistent_volume_claim_v1" "immich-ml-cache-v3" {
@@ -93,7 +73,6 @@ resource "helm_release" "immich_server" {
 
   depends_on = [
     kubernetes_config_map_v1.immich_config,
-    kubernetes_persistent_volume_claim_v1.immich_library_v3,
   ]
 }
 

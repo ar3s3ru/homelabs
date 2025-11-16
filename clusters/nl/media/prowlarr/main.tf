@@ -1,6 +1,6 @@
 resource "kubernetes_persistent_volume_claim_v1" "persistence_v2" {
   for_each = {
-    "prowlarr-config-v2" = "300M"
+    "prowlarr-config-v2" = "288Mi"
   }
 
   metadata {
@@ -28,5 +28,5 @@ resource "helm_release" "prowlarr" {
   namespace       = "media"
   version         = "4.4.0"
   cleanup_on_fail = true
-  values          = [file("./values.yaml")]
+  values          = [file("${path.module}/values.yaml")]
 }

@@ -45,8 +45,8 @@ dependency "music-assistant" {
   skip_outputs = true
 }
 
-dependency "longhorn" { # Necessary for PVC provisioning.
-  config_path = "${get_path_to_repo_root()}/clusters/nl/longhorn-system/longhorn"
+dependency "longhorn-system" { # Necessary for PVC provisioning.
+  config_path = "${get_path_to_repo_root()}/clusters/nl/longhorn-system"
   skip_outputs = true
 }
 

@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: immich-library-v3-pv-nfs
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: truenas.lan
+    path: /mnt/zpool-nl-01/pvc-c964cd5d-c241-4ee4-b02b-a16e31d0b63c
+  mountOptions:
+    - nfsvers=4.1
+    - hard
+    - timeo=300

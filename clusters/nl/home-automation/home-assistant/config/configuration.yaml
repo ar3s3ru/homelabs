@@ -15,9 +15,7 @@ http:
   trusted_proxies:
     - "127.0.0.1"
     - "::1"
-    - "192.168.2.0/24" # LAN subnet
-    - "10.42.0.0/16" # Cluster Pods subnet
-    - "10.43.0.0/16" # Cluster Services subnet
+    - "10.0.0.0/8" # LAN subnet
     - "100.0.0.0/8" # Tailnet
 
 auth_oidc:

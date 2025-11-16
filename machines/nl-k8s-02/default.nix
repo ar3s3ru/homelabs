@@ -3,7 +3,7 @@
 { pkgs, ... }:
 
 {
-  deployment.targetHost = "10.0.0.240";
+  deployment.targetHost = "10.10.0.4";
   deployment.targetUser = "root";
   deployment.tags = [ "type-server" "k8s-server" "region-nl" ];
 

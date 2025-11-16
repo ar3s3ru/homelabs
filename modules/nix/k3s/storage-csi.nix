@@ -17,11 +17,11 @@
     "nvme-tcp"
   ];
 
-  # Longhorn v2 Data Engine requires hugepages.
-  boot.kernelParams = [
-    "hugepagesz=2Mi"
-    "hugepages=1024"
-  ];
+  # Longhorn v2 Data Engine requires hugepages (1024 pages × 2MB = 2GiB).
+  # Using sysctl instead of kernelParams for more reliable configuration.
+  boot.kernel.sysctl = {
+    "vm.nr_hugepages" = 1024;
+  };
 
   # To be able to mount NFS volumes in all nodes.
   boot.supportedFilesystems = [ "nfs" ];

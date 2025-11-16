@@ -32,6 +32,7 @@ affinity:
 
 ingress:
   enabled: true
+  className: nginx
   annotations:
     cert-manager.io/cluster-issuer: cianfr.one-acme
   hosts:
@@ -52,7 +53,7 @@ resources:
 volumes:
   - name: media-data
     persistentVolumeClaim:
-      claimName: media-data-v3-local
+      claimName: media-data-v3
 
 volumeMounts:
   - name: media-data

@@ -1,6 +1,6 @@
 resource "kubernetes_persistent_volume_claim_v1" "persistence" {
   for_each = {
-    "bazarr-config" = "300M"
+    "bazarr-config" = "288Mi"
   }
 
   metadata {

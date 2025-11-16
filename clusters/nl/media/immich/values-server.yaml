@@ -114,9 +114,10 @@ controllers:
               timeoutSeconds: 1
               failureThreshold: 30
 
+# FIXME: re-enable after deploying prometheus
 serviceMonitor:
   main:
-    enabled: true
+    enabled: false
     endpoints:
       - port: metrics-api
         scheme: http
@@ -135,8 +136,7 @@ persistence:
   library:
     enabled: true
     type: persistentVolumeClaim
-    # FIXME(ar3s3ru): switch back to NFS
-    existingClaim: immich-library-v3-local
+    existingClaim: immich-library-v3
     globalMounts:
       - path: /usr/src/app/upload
       - path: /imported

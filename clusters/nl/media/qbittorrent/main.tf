@@ -1,6 +1,6 @@
 resource "kubernetes_persistent_volume_claim_v1" "persistence_v2" {
   for_each = {
-    "qbittorrent-config-v2" = "50M"
+    "qbittorrent-config-v2" = "48Mi"
   }
 
   metadata {

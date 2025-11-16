@@ -13,15 +13,9 @@ emqxAclConfig: |
   {allow, all, subscribe, ["$SYS/#", {eq, "#"}]}.
   {allow, all}.
 
+# FIXME: re-enable after prometheus is installed
 metrics:
-  enable: true
-
-resources:
-  limits:
-    memory: 512Mi
-  requests:
-    cpu: 100m
-    memory: 256Mi
+  enable: false
 
 ingress:
   dashboard:

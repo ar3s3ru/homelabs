@@ -1,6 +1,6 @@
 resource "kubernetes_persistent_volume_claim_v1" "persistence_v2" {
   for_each = {
-    "sabnzbd-config-v2" = "500M"
+    "sabnzbd-config-v2" = "478Mi"
   }
 
   metadata {
@@ -34,7 +34,7 @@ resource "kubernetes_persistent_volume_claim_v1" "downloads_v2" {
 
     resources {
       requests = {
-        storage = "200Gi"
+        storage = "100Gi"
       }
     }
   }

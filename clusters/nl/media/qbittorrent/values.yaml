@@ -18,7 +18,7 @@ service:
     controller: main
     type: LoadBalancer
     annotations:
-      metallb.io/loadBalancerIPs: 192.168.2.202
+      metallb.io/loadBalancerIPs: 10.20.0.3
     ports:
       bt-tcp:
         port: &torrent 30963
@@ -49,7 +49,7 @@ persistence:
   data:
     enabled: true
     type: persistentVolumeClaim
-    existingClaim: media-data-v3-local
+    existingClaim: media-data-v3
     globalMounts: [{ path: "/data" }]
 
 controllers:
