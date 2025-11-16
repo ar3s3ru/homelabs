@@ -7,6 +7,8 @@ keys:
   # where the SSH host key is obtained from the remote machine.
   - &gladius age1ywr4sx3j2vuhu7w8uukhnkv96lgl7yjyaxgeqpx7vnlv5hv9gucq6hahkl
   - &momonoke age12g62sqmpz4pztx8zn94n8rxzklj7fj805g78m50kxu44yqy26azs2vph2y
+  - &nl-k8s-02 age143yn95y2n546rlqrhgy2nzrz0w87ks7fk9dlwp3ylt0dfflczuhqrv2lmv
+  - &nl-k8s-03 age1rlqxt25ldy6y2cv60gxqmgfkh4wnvvcwkj4fe0k9xy4m3ec5tegqfa5gx2
   - &r5c-gateway age1ew2akntc7tttpjjgx3v7pequ9y4f6j76guam6n3mpnypuljx7u9q2vhwrl
   # These are created using `ssh-keyscan <tailscale-ssh-addr> | ssh-to-age`
   - &gladius-ts age1g96u7w7hcfzc52t5m27e2gwy9h3877rmmmszf8ua586dw4yhu3vq7qz799
@@ -27,6 +29,8 @@ creation_rules:
           - *momonoke
           - *momonoke-ts
           - *dejima-ts
+          - *nl-k8s-02
+          - *nl-k8s-03
   - path_regex: "machines/dejima/secrets.yaml"
     key_groups:
       - pgp:
@@ -68,3 +72,5 @@ creation_rules:
           - *momonoke
           - *momonoke-ts
           - *dejima-ts
+          - *nl-k8s-02
+          - *nl-k8s-03

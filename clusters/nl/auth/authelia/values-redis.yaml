@@ -13,10 +13,13 @@ storageSpec:
         requests:
           storage: 100Mi
 
+# FIXME: re-enable after prometheus is installed
+# vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
 # Enable Redis exporter for Prometheus monitoring
 redisExporter:
-  enabled: true
+  enabled: false
 
 # Enable ServiceMonitor for Prometheus
 serviceMonitor:
-  enabled: true
+  enabled: false

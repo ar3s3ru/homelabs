@@ -2,12 +2,17 @@
 longhornUI:
   replicas: 1
 
+# FIXME: re-enable after prometheus is installed
 metrics:
   serviceMonitor:
-    enabled: true
+    enabled: false
 
 ingress:
   enabled: true
   ingressClassName: tailscale
   host: nl-longhorn
   tls: true
+
+defaultSettings:
+  v1DataEngine: false
+  v2DataEngine: true

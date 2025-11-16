@@ -1,6 +1,7 @@
 ---
+# FIXME: re-enable after prometheus is installed
 prometheus:
-  enabled: true
+  enabled: false
 
 udev:
   discovery:

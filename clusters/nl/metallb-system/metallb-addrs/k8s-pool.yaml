@@ -1,0 +1,10 @@
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: k8s-pool
+  namespace: metallb-system
+spec:
+  addresses:
+    - 10.10.0.0/16
+    - fd00:cafe:10::/48

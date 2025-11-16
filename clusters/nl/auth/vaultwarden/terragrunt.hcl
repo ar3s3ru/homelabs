@@ -11,12 +11,8 @@ dependency "auth" { # Creates the namespace.
   skip_outputs = true
 }
 
-dependency "authelia" { # Necessary for authentication.
-  config_path = "${get_path_to_repo_root()}/clusters/nl/auth/authelia"
-}
-
-dependency "longhorn" { # Necessary for PVC provisioning.
-  config_path = "${get_path_to_repo_root()}/clusters/nl/longhorn-system/longhorn"
+dependency "longhorn-system" { # Necessary for PVC provisioning.
+  config_path = "${get_path_to_repo_root()}/clusters/nl/longhorn-system"
   skip_outputs = true
 }
 
@@ -33,9 +29,6 @@ dependency "cloudflare-ddns" {
 inputs = {
   secrets = merge(
     yamldecode(sops_decrypt_file("secrets.yaml")),
-    # Additional secrets.
-    {
-      "sso-client-secret" = dependency.authelia.outputs.vaultwarden_client_secret
-    }
+    {}
   )
 }

@@ -6,7 +6,7 @@ resource "helm_release" "longhorn" {
   version          = "1.10.0"
   create_namespace = true
   cleanup_on_fail  = true
-  values           = [file("./values.yaml")]
+  values           = [file("${path.module}/values.yaml")]
 }
 
 variable "longhorn_crypto" {
@@ -25,8 +25,6 @@ resource "kubernetes_secret_v1" "longhorn_crypto" {
 }
 
 resource "kubernetes_config_map_v1" "longhorn_nixos_path" {
-  depends_on = [helm_release.longhorn]
-
   metadata {
     name      = "longhorn-nixos-path"
     namespace = "longhorn-system"
@@ -37,18 +35,18 @@ resource "kubernetes_config_map_v1" "longhorn_nixos_path" {
   }
 }
 
-resource "kubernetes_manifest" "longhorn_add_nixos_path" {
-  depends_on = [
-    helm_release.longhorn,
-    kubernetes_config_map_v1.longhorn_nixos_path
-  ]
+# FIXME: applied manually, must be imported
+# resource "kubernetes_manifest" "longhorn_add_nixos_path" {
+#   depends_on = [
+#     kubernetes_config_map_v1.longhorn_nixos_path
+#   ]
 
-  manifest = yamldecode(file("./longhorn-add-nixos-path.yaml"))
-}
+#   manifest = yamldecode(file("${path.module}/longhorn-add-nixos-path.yaml"))
+# }
 
 resource "kubernetes_manifest" "longhorn_storage_classes" {
   depends_on = [helm_release.longhorn]
 
-  for_each = fileset("./storageClasses", "*.yaml")
-  manifest = yamldecode(file("./storageClasses/${each.key}"))
+  for_each = fileset("${path.module}/storageClasses", "*.yaml")
+  manifest = yamldecode(file("${path.module}/storageClasses/${each.key}"))
 }

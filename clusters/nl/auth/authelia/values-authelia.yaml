@@ -3,7 +3,7 @@ ingress:
   enabled: true
   className: "nginx"
   annotations:
-    cert-manager.io/cluster-issuer: acme
+    cert-manager.io/cluster-issuer: cianfr.one-acme
   tls: { enabled: true }
   traefikCRD: { enabled: false, disableIngressRoute: true }
 
@@ -68,8 +68,6 @@ configMap:
 
   session:
     cookies:
-      - domain: ar3s3ru.dev
-        subdomain: auth
       - domain: cianfr.one
         subdomain: idp
     encryption_key: { secret_name: "authelia-secrets" }

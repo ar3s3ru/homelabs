@@ -20,8 +20,8 @@ resource "kubernetes_persistent_volume_claim_v1" "vaultwarden_v2" {
   }
 
   spec {
-    storage_class_name = "longhorn-encrypted-3-replicas"
-    access_modes       = ["ReadWriteOnce"]
+    storage_class_name = "longhorn-nvme-encrypted-3-replicas"
+    access_modes       = ["ReadWriteMany"]
     volume_mode        = "Filesystem"
 
     resources {
