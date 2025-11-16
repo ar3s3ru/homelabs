@@ -1,12 +1,11 @@
 inputs@{ nixpkgs, sops-nix, disko, ... }:
 
 {
+  nl-k8s-01 = import ./nl-k8s-01 inputs;
+  nl-k8s-02 = import ./nl-k8s-02 inputs;
+  nl-k8s-03 = import ./nl-k8s-03 inputs;
+  nl-k8s-04 = import ./nl-k8s-04 inputs;
   dejima = import ./dejima inputs;
-  eq14-001 = import ./eq14-001 inputs;
-  momonoke = import ./momonoke inputs;
-  gladius = import ./gladius inputs;
-  r5c-gateway = import ./r5c-gateway inputs;
-  utm-vm = import ./utm-vm inputs;
 
   meta.nixpkgs = import nixpkgs {
     system = "x86_64-linux";

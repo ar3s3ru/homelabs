@@ -2,7 +2,7 @@
   # Main server disk, boot partition and LVM mountpoint.
   disko.devices.disk.main = {
     type = "disk";
-    device = "/dev/disk/by-id/nvme-KINGSTON_OM8TAP41024K1-A00_50026B7383D8F63B";
+    device = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi0";
     content = {
       type = "gpt";
       partitions = {
@@ -50,41 +50,5 @@
     lvs.data = {
       size = "+100%FREE";
     };
-  };
-
-  # ZFS pool for Kubernetes persistent volumes.
-  #
-  # NOTE: created manually using:
-  #
-  #   zpool create \
-  #   -o ashift=12 \
-  #   -O compression=lz4 \
-  #   -O atime=off \
-  #   -O xattr=sa \
-  #   -O acltype=posixacl \
-  #   -O mountpoint=/mnt/zpool-nl-01 \
-  #   zpool-nl-01 \
-  #   /dev/disk/by-id/ata-ST4000VN006-3CW104_ZW63GZ8A
-  #
-  disko.devices.zpool.zpool-nl-01 = {
-    type = "zpool";
-    mode = ""; # Single disk initially (no RAID)
-
-    options = {
-      ashift = "12"; # 4K sector size (standard for modern HDDs)
-      autotrim = "off"; # HDDs don't support TRIM
-    };
-
-    # Root dataset options
-    rootFsOptions = {
-      compression = "lz4"; # Enable compression
-      atime = "off"; # Disable access time updates (performance)
-      xattr = "sa"; # Store extended attributes efficiently
-      acltype = "posixacl"; # POSIX ACLs for NFS
-      mountpoint = "/mnt/zpool-nl-01"; # Mount pool root
-    };
-
-    # No child datasets - democratic-csi will create them directly under pool root
-    datasets = { };
   };
 }

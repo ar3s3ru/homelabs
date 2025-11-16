@@ -3,14 +3,14 @@
 { pkgs, ... }:
 
 {
-  deployment.targetHost = "momonoke.tail2ff90.ts.net";
+  deployment.targetHost = "10.10.0.3";
   deployment.targetUser = "root";
   deployment.tags = [ "type-server" "k8s-agent" "region-nl" ];
 
   nixpkgs.system = "x86_64-linux";
 
-  networking.hostName = "momonoke";
-  networking.domain = "ar3s3ru.dev";
+  networking.hostName = "nl-k8s-04";
+  networking.domain = "lan";
   networking.networkmanager.enable = true;
 
   time.timeZone = "Europe/Amsterdam";
@@ -21,10 +21,6 @@
 
   services.k3s.extraFlags = [
     "--node-label media.transcoding.gpu=medium"
-  ];
-
-  environment.systemPackages = with pkgs; [
-    immich-cli
   ];
 
   imports = [

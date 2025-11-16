@@ -2,7 +2,7 @@
   # Main server disk, boot partition and LVM mountpoint.
   disko.devices.disk.main = {
     type = "disk";
-    device = "/dev/vda";
+    device = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi0";
     content = {
       type = "gpt";
       partitions = {
@@ -24,11 +24,12 @@
     };
   };
 
+  # Main server partition layout: home folders, Nix store, etc.
   disko.devices.lvm_vg.nixos = {
     type = "lvm_vg";
 
     lvs.root = {
-      size = "+100%FREE";
+      size = "60G";
       content.type = "filesystem";
       content.format = "ext4";
       content.mountpoint = "/";
@@ -37,6 +38,17 @@
     lvs.swap = {
       size = "8G";
       content.type = "swap";
+    };
+
+    lvs.var = {
+      size = "100G";
+      content.type = "filesystem";
+      content.format = "ext4";
+      content.mountpoint = "/var";
+    };
+
+    lvs.data = {
+      size = "+100%FREE";
     };
   };
 }
