@@ -2,46 +2,27 @@ locals {
   namespace = "democratic-csi"
 }
 
-variable "driver_config_file_yaml" {
+variable "truenas_api_key" {
   type        = string
-  description = "The content of the driver config file for democratic-csi."
+  description = "API key for TrueNAS Scale for democratic-csi driver ot use"
   sensitive   = true
 }
 
-resource "kubernetes_namespace_v1" "democratic_csi" {
-  metadata {
-    name = local.namespace
-    labels = {
-      "pod-security.kubernetes.io/enforce" = "privileged"
-    }
-  }
-}
-
-resource "kubernetes_secret_v1" "democratic_csi_driver_config_file" {
-  metadata {
-    name      = "democratic-csi-driver-config-file"
-    namespace = kubernetes_namespace_v1.democratic_csi.metadata[0].name
-  }
-
-  data = {
-    "driver-config-file.yaml" = var.driver_config_file_yaml
-  }
-}
-
-resource "helm_release" "democratic_csi_zfs_nfs" {
-  name       = "zfs-nfs"
+resource "helm_release" "truenas_nfs" {
+  name       = "truenas-nfs"
   repository = "https://democratic-csi.github.io/charts/"
   chart      = "democratic-csi"
   # version          = "0.14.6"
-  namespace        = kubernetes_namespace_v1.democratic_csi.metadata[0].name
+  namespace        = local.namespace
   cleanup_on_fail  = true
-  create_namespace = false
+  create_namespace = true
 
   values = [
     file("${path.module}/values.yaml")
   ]
 
-  depends_on = [
-    kubernetes_secret_v1.democratic_csi_driver_config_file
-  ]
+  set_sensitive {
+    name  = "driver.config.httpConnection.apiKey"
+    value = var.truenas_api_key
+  }
 }
