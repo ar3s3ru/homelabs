@@ -11,7 +11,6 @@
 
   networking.hostName = "nl-k8s-04";
   networking.domain = "lan";
-  networking.networkmanager.enable = true;
 
   time.timeZone = "Europe/Amsterdam";
 
@@ -32,6 +31,7 @@
     ./disable-docked-sleep.nix
     ./disko.nix
     ./hardware-configuration.nix
+    ./networking.nix
     ./power-management.nix
     ./tailscale.nix
   ];

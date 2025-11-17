@@ -28,11 +28,15 @@ controllers:
 
 service:
   main:
-    controller: main
     type: ClusterIP
-    ports:
+    controller: main
+    ports: &http-port
       http:
         port: 8095 # Source: https://github.com/music-assistant/server/blob/dev/Dockerfile#L71
+  lb:
+    type: LoadBalancer
+    controller: main
+    ports: *http-port
 
 ingress:
   tailscale:

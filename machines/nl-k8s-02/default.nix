@@ -27,6 +27,7 @@
     ../../modules/nix/intel-gpu-hwaccel.nix
     ../../modules/nix/k3s/server.nix
     ./disko.nix
+    ./networking.nix
     ./hardware-configuration.nix
     ./tailscale.nix
   ];

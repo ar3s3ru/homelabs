@@ -54,10 +54,15 @@ volumes:
   - name: media-data
     persistentVolumeClaim:
       claimName: media-data-v3
+  - name: media-videos
+    persistentVolumeClaim:
+      claimName: media-videos-v1
 
 volumeMounts:
   - name: media-data
     mountPath: /data
+  - name: media-videos
+    mountPath: /videos
 
 persistence:
   config:

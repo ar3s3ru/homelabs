@@ -30,6 +30,7 @@
     ../../modules/nix/k3s/server-main.nix
     ./disko.nix
     ./hardware-configuration.nix
+    ./networking.nix
     ./tailscale.nix
   ];
 }
