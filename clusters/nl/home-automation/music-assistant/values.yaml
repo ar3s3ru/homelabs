@@ -1,12 +1,5 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/app-template-4.4.0/charts/other/app-template/values.schema.json
 ---
-defaultPodOptions:
-  # DEBT(ar3s3ru): since Home Assistant integration targets the Music Assistant
-  # through its IP rather than an hostname, using hostNetwork means that the
-  # integration will break if Kubernetes schedules the pod on a different node
-  # than previously.
-  hostNetwork: true # Required for certain network features.
-
 controllers:
   main:
     type: deployment
@@ -24,19 +17,21 @@ controllers:
           # FIXME(ar3s3ru): find a way to enable these?
           liveness: { enabled: false }
           readiness: { enabled: false }
-          startup: { enabled: true }
+          startup: { enabled: false }
 
 service:
   main:
-    type: ClusterIP
-    controller: main
-    ports: &http-port
-      http:
-        port: 8095 # Source: https://github.com/music-assistant/server/blob/dev/Dockerfile#L71
-  lb:
     type: LoadBalancer
     controller: main
-    ports: *http-port
+    annotations:
+      # NOTE: this address has also been set on the UI configuration,
+      # in both webserver and streamserver settings.
+      metallb.io/loadBalancerIPs: 10.20.0.4
+    ports:
+      http:
+        port: 8095 # Source: https://github.com/music-assistant/server/blob/dev/Dockerfile#L71
+      streaming:
+        port: 8097
 
 ingress:
   tailscale:
