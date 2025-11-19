@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/app-template-4.4.0/charts/other/app-template/values.schema.json
+---
+defaultPodOptions:
+  securityContext:
+    runAsGroup: &uid 508
+    runAsUser: *uid
+    runAsNonRoot: true
+    fsGroup: *uid
+    fsGroupChangePolicy: OnRootMismatch
+    seccompProfile:
+      type: RuntimeDefault
+  # Version 6+ requires AVX support on the CPU.
+  # Source: https://github.com/mbentley/docker-omada-controller/blob/master/KNOWN_ISSUES.md#your-system-does-not-support-avx-or-armv82-a
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: feature.node.kubernetes.io/cpu-cpuid.AVX
+                operator: In
+                values: ["true"]
+
+controllers:
+  main:
+    type: deployment
+    strategy: Recreate
+    replicas: 1
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main:
+        restartPolicy: Always
+        image:
+          repository: docker.io/mbentley/omada-controller
+          tag: "6.0.0.24"
+        env:
+          TZ: Europe/Amsterdam
+          ROOTLESS: "true"
+          SKIP_USERMOD: "true"
+          MANAGE_HTTP_PORT: "8088"
+          MANAGE_HTTPS_PORT: "8043"
+          PORTAL_HTTP_PORT: "8088"
+          PORTAL_HTTPS_PORT: "8843"
+          PORT_APP_DISCOVERY: "27001"
+          PORT_ADOPT_V1: "29812"
+          PORT_UPGRADE_V1: "29813"
+          PORT_MANAGER_V1: "29811"
+          PORT_MANAGER_V2: "29814"
+          PORT_DISCOVERY: "29810"
+          PORT_TRANSFER_V2: "29815"
+          PORT_RTTY: "29816"
+          PORT_DEVICE_MONITOR: "29817"
+          SHOW_SERVER_LOGS: "true"
+          SHOW_MONGODB_LOGS: "false"
+
+service:
+  main:
+    type: LoadBalancer
+    controller: main
+    annotations:
+      metallb.io/address-pool: metallb-pool
+    ports:
+      manage-http:
+        port: 8088
+        protocol: TCP
+      manage-https:
+        port: 8043
+        protocol: TCP
+      portal-https:
+        port: 8843
+        protocol: TCP
+      app-discovery:
+        port: 27001
+        protocol: UDP
+      adopt-v1:
+        port: 29812
+        protocol: TCP
+      upgrade-v1:
+        port: 29813
+        protocol: TCP
+      manager-v1:
+        port: 29811
+        protocol: TCP
+      manager-v2:
+        port: 29814
+        protocol: TCP
+      udp-discovery:
+        port: 29810
+        protocol: UDP
+      udp-management:
+        protocol: UDP
+        port: 19810
+      transfer-v2:
+        port: 29815
+        protocol: TCP
+      rtty:
+        port: 29816
+        protocol: TCP
+      device-monitor:
+        port: 29817
+        protocol: TCP
+
+persistence:
+  data:
+    size: 1Gi
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    storageClass: longhorn-nvme-3-replicas
+    globalMounts:
+      - path: /opt/tplink/EAPController/data
+  logs:
+    size: 1Gi
+    type: persistentVolumeClaim
+    accessMode: ReadWriteOnce
+    storageClass: longhorn-nvme-3-replicas
+    globalMounts:
+      - path: /opt/tplink/EAPController/logs

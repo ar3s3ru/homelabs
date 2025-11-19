@@ -91,6 +91,14 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB8pfB5IIXKbJQaxezmQ2oC+uJl+dg0MCoFYwcsjhrm+ ar3s3ru@polus"
     ];
 
+    networking.firewall.allowedTCPPorts = [
+      5201 # iperf3
+    ];
+
+    networking.firewall.allowedUDPPorts = [
+      5201 # iperf3
+    ];
+
     # Packages
     environment.systemPackages = with pkgs; [
       util-linuxMinimal

@@ -2,12 +2,14 @@
 
 {
   imports = [
+    ../../../clusters/nl/networking/omada-controller/firewall.nix
     ./storage-csi.nix
   ];
 
   services.k3s.enable = true;
   services.k3s.extraFlags = [
     "--disable=traefik" # Using ingress-nginx instead.
+    "--disable servicelb" # Using metallb instead.
   ];
 
   sops.secrets."clusters/nl/token" = { };
