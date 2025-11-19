@@ -109,23 +109,27 @@ The disk I/O errors were **secondary symptoms** of the connection tracking table
 ### Immediate Fix
 ```bash
 # Applied on r5c.lan (OpenWrt router)
-uci set firewall.@defaults[0].nf_conntrack_max=262144
-uci commit firewall
+# Increase connection tracking limit immediately
 sysctl -w net.netfilter.nf_conntrack_max=262144
+
+# Make it persistent across reboots
+echo "net.netfilter.nf_conntrack_max=262144" >> /etc/sysctl.d/99-nf-conntrack.conf
 ```
 
 **Result**: Connection tracking capacity increased from 65,536 → 262,144 (4x increase)
 
+**Note**: The UCI command `uci set firewall.@defaults[0].nf_conntrack_max=262144` is **invalid** - this option does not exist in OpenWrt fw4 firewall configuration. Use sysctl.conf instead.
+
 ### Verification
 - Current utilization: 0.6% (1,484 / 262,144)
 - Provides ~260x headroom for connection growth
-- Change persists across reboots via UCI configuration
+- Change persists across reboots via /etc/sysctl.d/99-nf-conntrack.conf
 
 ## Action Items
 
 ### Completed
 - [x] Increase router connection tracking limit to 262,144
-- [x] Verify configuration persists in UCI
+- [x] Make persistent via /etc/sysctl.d/99-nf-conntrack.conf
 - [x] Investigate disk I/O errors (confirmed transient, caused by connection tracking exhaustion)
 
 ### High Priority
