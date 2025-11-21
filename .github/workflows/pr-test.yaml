@@ -25,7 +25,7 @@ jobs:
       cluster-nl: ${{ steps.filter.outputs.cluster-nl }}
     steps:
       - name: Checkout source code
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
       - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3
         id: filter
         with:
@@ -63,7 +63,7 @@ jobs:
         run: echo "Skipping ${{ matrix.cluster }} - no relevant changes detected"
       - name: Checkout source code
         if: ${{ matrix.condition == 'true' }}
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
       - name: Set up Nix system
         if: ${{ matrix.condition == 'true' }}
         uses: ./.github/actions/nix-setup
