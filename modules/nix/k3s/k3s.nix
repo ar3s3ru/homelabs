@@ -2,7 +2,6 @@
 
 {
   imports = [
-    ../../../clusters/nl/networking/omada-controller/firewall.nix
     ./storage-csi.nix
   ];
 
