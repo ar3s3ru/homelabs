@@ -9,7 +9,8 @@
   services.k3s.enable = true;
   services.k3s.extraFlags = [
     "--disable=traefik" # Using ingress-nginx instead.
-    "--disable servicelb" # Using metallb instead.
+    # FIXME: should be re-disabled when moving to Cilium.
+    # "--disable servicelb" # Using metallb instead.
   ];
 
   sops.secrets."clusters/nl/token" = { };

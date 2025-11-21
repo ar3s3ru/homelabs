@@ -25,16 +25,7 @@ resources:
 affinity:
   nodeAffinity:
     preferredDuringSchedulingIgnoredDuringExecution:
-      # FIXME: this is because there is some issue using the gpu on nl-k8s-02
-      # (/dev/dri/card127 i915 input/output error)
       - weight: 100
-        preference:
-          matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - nl-k8s-01
-      - weight: 80
         preference:
           matchExpressions:
             - key: media.transcoding.gpu
@@ -83,6 +74,12 @@ config: |
   ffmpeg:
     hwaccel_args: preset-intel-qsv-h264
 
+  # This is needed for Proxmox VE Intel GPU passthrough, where frigate gets confused
+  # on which device to actually use (should be card0).
+  telemetry:
+    stats:
+      intel_gpu_device: "drm:/dev/dri/card0"
+
   detect:
     enabled: false
 
@@ -109,16 +106,16 @@ config: |
   go2rtc:
     streams:
       e1-zoom-01:
-        - rtsp://{FRIGATE_E1_ZOOM_01_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_01_RTSP_PASSWORD}@e1-zoom-01.lan/h264Preview_01_main
+        - rtsp://{FRIGATE_E1_ZOOM_01_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_01_RTSP_PASSWORD}@10.0.0.20/h264Preview_01_main
         - "ffmpeg:e1-zoom-01#audio=opus"
       e1-zoom-01-sub:
-        - rtsp://{FRIGATE_E1_ZOOM_01_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_01_RTSP_PASSWORD}@e1-zoom-01.lan/h264Preview_01_sub
+        - rtsp://{FRIGATE_E1_ZOOM_01_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_01_RTSP_PASSWORD}@10.0.0.20/h264Preview_01_sub
         - "ffmpeg:e1-zoom-01-sub#audio=opus"
       e1-zoom-02:
-        - rtsp://{FRIGATE_E1_ZOOM_02_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_02_RTSP_PASSWORD}@e1-zoom-02.lan/h264Preview_01_main
+        - rtsp://{FRIGATE_E1_ZOOM_02_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_02_RTSP_PASSWORD}@10.0.0.21/h264Preview_01_main
         - "ffmpeg:e1-zoom-02#audio=opus"
       e1-zoom-02-sub:
-        - rtsp://{FRIGATE_E1_ZOOM_02_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_02_RTSP_PASSWORD}@e1-zoom-02.lan/h264Preview_01_sub
+        - rtsp://{FRIGATE_E1_ZOOM_02_RTSP_USERNAME}:{FRIGATE_E1_ZOOM_02_RTSP_PASSWORD}@10.0.0.21/h264Preview_01_sub
         - "ffmpeg:e1-zoom-02-sub#audio=opus"
 
   cameras:
