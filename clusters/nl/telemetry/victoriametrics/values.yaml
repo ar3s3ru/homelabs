@@ -1,0 +1,85 @@
+---
+# Sources:
+# - https://github.com/Smana/cloud-native-ref/blob/8ddc2e3e1f34b6b7a43a1a163451ab37696c8314/observability/base/victoria-metrics-k8s-stack/helmrelease-vmcluster.yaml
+# - https://github.com/dzervas/homelab/blob/83dce02ef5e9c8a5ade36886b2c0d618648af5d7/k8s/victoriametrics.tf
+
+fullnameOverride: "vm" # Produce sensible names
+
+global:
+  cluster:
+    dnsDomain: cluster.local
+
+alertmanager:
+  spec:
+    replicaCount: 2
+
+vmsingle:
+  enabled: false
+
+vmcluster:
+  enabled: true
+  spec:
+    replicationFactor: 2
+    retentionPeriod: 8w # 2 months
+    vmstorage:
+      storage:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: longhorn-nvme-1-replicas
+            resources:
+              requests:
+                storage: 10Gi
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1500Mi
+    vmselect:
+      storage:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: longhorn-nvme-1-replicas
+            resources:
+              requests:
+                storage: 5Gi
+    vminsert:
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1000Mi
+        requests:
+          cpu: "0.5"
+          memory: "500Mi"
+
+defaultDashboards:
+  enabled: true
+  labels:
+    grafana_dashboard: "1"
+
+# kubeProxy:
+#   enabled: true
+#   service:
+#     selector:
+#       component: "kube-proxy"
+# https://github.com/VictoriaMetrics/helm-charts/blob/master/charts/victoria-metrics-k8s-stack/values.yaml#L111
+
+# TODO: The following listen at pod-localhost by default so we can't scrape them
+# TODO: Scrape RKE2 metrics too: https://docs.rke2.io/reference/metrics
+# kubeEtcd: { enabled: true }
+# kubeScheduler: { enabled: true }
+# kubeControllerManager: { enabled: true }
+
+# defaultRules:
+#   groups:
+#     etcd:
+#       enabled: true
+#     kubernetesSystemScheduler:
+#       enabled: true
+#     kubernetesSystemControllerManager:
+#       enabled: false
+
+prometheus-node-exporter:
+  enabled: true
+
+grafana:
+  enabled: false
+  forceDeployDatasource: true

@@ -11,8 +11,8 @@ dependency "telemetry" { # Creates the namespace.
   skip_outputs = true
 }
 
-dependency "prometheus" { # Necessary for data source.
-  config_path  = "${get_path_to_repo_root()}/clusters/nl/telemetry/prometheus"
+dependency "victoriametrics" { # Needed for service monitors
+  config_path  = "${get_path_to_repo_root()}/clusters/nl/telemetry/victoriametrics"
   skip_outputs = true
 }
 

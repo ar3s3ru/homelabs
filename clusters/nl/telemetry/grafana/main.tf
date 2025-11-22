@@ -17,7 +17,7 @@ resource "helm_release" "grafana" {
   name            = "grafana"
   repository      = "https://grafana.github.io/helm-charts"
   chart           = "grafana"
-  version         = "10.1.4"
+  version         = "10.2.0"
   namespace       = "telemetry"
   cleanup_on_fail = true
   values          = [file("${path.module}/values.yaml")]

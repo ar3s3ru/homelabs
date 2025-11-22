@@ -12,20 +12,15 @@ ingress:
 annotations:
   reloader.stakater.com/auto: "true"
 
+plugins:
+  - victoriametrics-metrics-datasource
+  - victoriametrics-logs-datasource
+
 sidecar:
-  datasources:
-    enabled: true
-    searchNamespace: ALL
   dashboards:
     enabled: true
     searchNamespace: ALL
   alerts:
-    enabled: true
-    searchNamespace: ALL
-  plugins:
-    enabled: true
-    searchNamespace: ALL
-  notifiers:
     enabled: true
     searchNamespace: ALL
 
@@ -33,25 +28,28 @@ datasources:
   datasources.yaml:
     apiVersion: 1
     datasources:
-      - name: Prometheus
+      - name: VMPrometheus
         type: prometheus
-        uid: prometheus
-        url: http://prometheus-operated.telemetry.svc.cluster.local:9090
+        uid: vmprometheus
+        url: http://vmselect-vm.telemetry.svc.cluster.local:8481/select/0/prometheus
         access: proxy
         isDefault: true
         editable: false
         basicAuth: false
+        jsonData:
+          prometheusType: Prometheus
+          prometheusVersion: 2.24.0
+      # - name: VictoriaLogs
+      #   type: victoriametrics-logs-datasource
+      #   uid: victorialogs
+      #   access: proxy
+      #   url: http://vlsingle-vm.infra-observability:9428/
+      #   editable: false
+      #   basicAuth: false
       - name: AlertManager
         type: alertmanager
         uid: alertmanager
-        url: http://alertmanager-operated.telemetry.svc.cluster.local:9093
-        access: proxy
-        editable: false
-        basicAuth: false
-      - name: Loki
-        type: loki
-        uid: loki
-        url: http://loki-read.telemetry.svc.cluster.local:3100
+        url: http://vmalertmanager-vm.telemetry.svc.cluster.local:9093
         access: proxy
         editable: false
         basicAuth: false
@@ -72,7 +70,7 @@ grafana.ini:
   server:
     root_url: https://nl-grafana.tail2ff90.ts.net
   auth:
-    disable_login_form: true
+    disable_login_form: false
   auth.generic_oauth:
     enabled: true
     auto_login: false
