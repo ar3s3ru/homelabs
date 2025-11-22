@@ -1,6 +1,6 @@
 # INC-0004: Temporary Cluster Connectivity Loss - Router Connection Tracking Table Full
 
-**Date**: 2025-01-26
+**Date**: November 19th, 2025
 **Severity**: High (Cluster accessibility impacted)
 **Duration**: ~5-10 minutes (self-recovered)
 **Affected Systems**: All k8s nodes (nl-k8s-01 through nl-k8s-04), SSH access, etcd raft

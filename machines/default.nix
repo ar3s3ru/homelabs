@@ -130,6 +130,7 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
       htop
       grc
       gptfdisk
+      sqlite
       # Fish plugins
       fishPlugins.fzf-fish
       fishPlugins.grc

@@ -2,7 +2,7 @@
 
 ## Incident Summary
 
-**Date**: 2025-11-17
+**Date**: November 17th, 2025
 **Duration**: ~2 hours
 **Severity**: Critical (P1)
 **Impact**: Complete Kubernetes cluster outage - nl-k8s-01 (cluster init node) unable to start k3s service
