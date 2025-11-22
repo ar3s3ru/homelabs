@@ -35,18 +35,24 @@ resource "kubernetes_config_map_v1" "longhorn_nixos_path" {
   }
 }
 
-# FIXME: applied manually, must be imported
-# resource "kubernetes_manifest" "longhorn_add_nixos_path" {
-#   depends_on = [
-#     kubernetes_config_map_v1.longhorn_nixos_path
-#   ]
+resource "kubernetes_manifest" "longhorn_add_nixos_path" {
+  depends_on = [
+    kubernetes_config_map_v1.longhorn_nixos_path
+  ]
 
-#   manifest = yamldecode(file("${path.module}/longhorn-add-nixos-path.yaml"))
-# }
+  manifest = yamldecode(file("${path.module}/longhorn-add-nixos-path.yaml"))
+}
 
 resource "kubernetes_manifest" "longhorn_storage_classes" {
   depends_on = [helm_release.longhorn]
 
   for_each = fileset("${path.module}/storageClasses", "*.yaml")
   manifest = yamldecode(file("${path.module}/storageClasses/${each.key}"))
+}
+
+resource "kubernetes_manifest" "longhorn_recurring_jobs" {
+  depends_on = [helm_release.longhorn]
+
+  for_each = fileset("${path.module}/recurringJobs", "*.yaml")
+  manifest = yamldecode(file("${path.module}/recurringJobs/${each.key}"))
 }
