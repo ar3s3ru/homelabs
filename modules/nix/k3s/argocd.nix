@@ -2,7 +2,7 @@
 
 {
   services.k3s.autoDeployCharts.argocd = {
-    enable = false;
+    enable = true;
     name = "argo-cd";
     repo = "https://argoproj.github.io/argo-helm";
     version = "9.1.3";

@@ -6,7 +6,6 @@ controller:
       # Fixes the IP of the Ingress Controller; we should expose 80 and 443 on this IP.
       metallb.io/loadBalancerIPs: "10.20.0.2"
 
-  # FIXME: re-enable after prometheus is installed
   metrics:
-    enabled: false
-    serviceMonitor: { enabled: false }
+    enabled: true
+    serviceMonitor: { enabled: true }

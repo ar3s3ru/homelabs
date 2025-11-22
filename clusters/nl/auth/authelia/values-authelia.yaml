@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/authelia/chartrepo/refs/heads/master/charts/authelia/values.schema.json
 ingress:
   enabled: true
   className: "nginx"
@@ -15,6 +16,14 @@ pod:
   env:
     - name: "TZ"
       value: "Europe/Amsterdam"
+  # FIXME: review these limits
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
 
 secret:
   additionalSecrets:

@@ -2,6 +2,13 @@
 # Redis Standalone Configuration for Immich
 # Ref: https://github.com/OT-CONTAINER-KIT/redis-operator/tree/main/charts/redis
 
+redisStandalone:
+  resources:
+    requests: &requests
+      cpu: 50m
+      memory: 64Mi
+    limits: *requests
+
 # Storage configuration
 storageSpec:
   volumeClaimTemplate:
@@ -13,13 +20,10 @@ storageSpec:
         requests:
           storage: 100Mi
 
-# FIXME: re-enable after prometheus is installed
-# vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
 # Enable Redis exporter for Prometheus monitoring
 redisExporter:
-  enabled: false
+  enabled: true
 
 # Enable ServiceMonitor for Prometheus
 serviceMonitor:
-  enabled: false
+  enabled: true

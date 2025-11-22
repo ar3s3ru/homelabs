@@ -16,6 +16,11 @@ dependency "reloader" { # Necessary for ConfigMap watcher and StatefulSet reload
   skip_outputs = true
 }
 
+dependency "victoriametrics" { # Needed for service monitors
+  config_path  = "${get_path_to_repo_root()}/clusters/nl/telemetry/victoriametrics"
+  skip_outputs = true
+}
+
 locals {
   secrets = yamldecode(sops_decrypt_file("secrets.yaml"))
   credentials = yamldecode(sops_decrypt_file("credentials.yaml"))

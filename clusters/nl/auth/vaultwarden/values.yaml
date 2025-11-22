@@ -4,6 +4,15 @@ image:
   tag: 1.34.3
   pullPolicy: IfNotPresent
 
+# FIXME: review these limits
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
 database:
   type: sqlite
   wal: true
@@ -14,7 +23,7 @@ service:
   externalTrafficPolicy: Cluster
 
 strategy:
-  type: Recreate # NOTE: the Longhorn volume is ReadWriteOnce.
+  type: RollingUpdate # Longhorn volume is ReadWriteMany, so we can do rolling updates.
 
 ingress:
   enabled: true

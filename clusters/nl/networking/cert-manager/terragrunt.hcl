@@ -11,8 +11,8 @@ dependency "metallb-system" { # MetalLB gives out an IP address to Traefik, whic
   skip_outputs = true
 }
 
-dependency "prometheus" { # Needed for service monitors
-  config_path  = "${get_path_to_repo_root()}/clusters/nl/telemetry/prometheus"
+dependency "victoriametrics" { # Needed for service monitors
+  config_path  = "${get_path_to_repo_root()}/clusters/nl/telemetry/victoriametrics"
   skip_outputs = true
 }
 

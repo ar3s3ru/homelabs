@@ -2,8 +2,7 @@
 crds:
   enabled: true
 
-# FIXME: re-enable after prometheus is installed
 prometheus:
-  enabled: false
+  enabled: true
   servicemonitor:
-    enabled: false
+    enabled: true

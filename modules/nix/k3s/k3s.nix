@@ -10,6 +10,7 @@
     "--disable=traefik" # Using ingress-nginx instead.
     # FIXME: should be re-disabled when moving to Cilium.
     # "--disable servicelb" # Using metallb instead.
+    "--flannel-backend=host-gw" # Use direct routing instead of VXLAN (required for /8 networks)
   ];
 
   sops.secrets."clusters/nl/token" = { };

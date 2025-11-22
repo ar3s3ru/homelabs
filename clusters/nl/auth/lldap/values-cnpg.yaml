@@ -34,6 +34,5 @@ spec:
               type: LoadBalancer
               loadBalancerClass: tailscale
 
-  # FIXME: re-enable monitoring after prometheus is installed
   monitoring:
-    enablePodMonitor: false
+    enablePodMonitor: true

@@ -33,8 +33,8 @@
         {
           devShell = with pkgs; mkShellNoCC {
             packages = [
-              nil
               nixpkgs-fmt
+              nixd
               gnumake
               git-crypt
               terraform
@@ -50,6 +50,7 @@
               immich-go # For bulk imports.
               q-text-as-data # For querying CSV/TSV files.
               garage # Management of garage system.
+              argocd # CLI for interacting with ArgoCD.
             ];
 
             shellHook = ''
