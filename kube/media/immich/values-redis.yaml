@@ -13,6 +13,12 @@ storageSpec:
         requests:
           storage: 200Mi
 
+# FIXME: this is a hack to make sure that redisConfig is rendered properly,
+# and not assigned to 'null', which was preventing ArgoCD from syncing.
+externalConfig:
+  enabled: true
+  data: ""
+
 # Enable Redis exporter for Prometheus monitoring
 redisExporter:
   enabled: true

@@ -73,7 +73,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/immich-app/immich-server
-          tag: v2.2.2
+          tag: v2.3.1
         env:
           TZ: Europe/Amsterdam
           IMMICH_TELEMETRY_INCLUDE: all
@@ -126,7 +126,6 @@ serviceMonitor:
 
 persistence:
   config:
-    enabled: true
     type: secret
     name: immich-config
     globalMounts:
@@ -138,7 +137,6 @@ persistence:
     existingClaim: media-videos-v1
     globalMounts: [{ path: /external/videos }]
   library:
-    enabled: true
     type: persistentVolumeClaim
     existingClaim: immich-library-v3
     globalMounts:
