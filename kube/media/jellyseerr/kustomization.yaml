@@ -2,6 +2,7 @@
 # yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: &namespace media
 
 resources:
   - jellyseerr-config-v2.yaml
@@ -11,5 +12,5 @@ helmCharts:
     repo: https://bjw-s-labs.github.io/helm-charts
     version: 4.4.0
     releaseName: jellyseerr
-    namespace: media
+    namespace: *namespace
     valuesFile: values.yaml

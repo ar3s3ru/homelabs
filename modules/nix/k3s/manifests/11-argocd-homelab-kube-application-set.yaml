@@ -24,10 +24,9 @@ spec:
         name: in-cluster
         namespace: argo-system
       syncPolicy:
-        # FIXME: turn these on
         automated:
-          selfHeal: false
-          prune: false
+          selfHeal: true
+          prune: true
         syncOptions:
           - ServerSideApply=true
           - ApplyOutOfSyncOnly=true
@@ -57,10 +56,9 @@ spec:
         name: in-cluster
         namespace: argo-system
       syncPolicy:
-        # FIXME: turn these on
         automated:
-          selfHeal: false
-          prune: false
+          selfHeal: true
+          prune: true
         syncOptions:
           - ServerSideApply=true
           - ApplyOutOfSyncOnly=true

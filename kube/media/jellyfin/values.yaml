@@ -1,24 +1,14 @@
 ---
 replicaCount: 1
 
-securityContext:
+podSecurityContext:
   fsGroup: 1000
   fsGroupChangePolicy: OnRootMismatch
   runAsGroup: 1000
   runAsUser: 1000
-  supplementalGroups:
-    - 26
-    - 303
 
 podAnnotations:
   reloader.stakater.com/auto: "true"
-
-podSecurityContext:
-  fsGroup: 1000
-  privileged: true # Necessary for hw acceleration.
-  supplementalGroups:
-    - 26
-    - 303
 
 affinity:
   nodeAffinity:
