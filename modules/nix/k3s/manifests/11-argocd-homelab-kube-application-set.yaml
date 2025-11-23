@@ -1,0 +1,66 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: namespaces
+  namespace: argo-system
+spec:
+  generators:
+    - git:
+        repoURL: git@github.com:ar3s3ru/homelabs.git
+        revision: main
+        directories:
+          - path: kube/*
+  template:
+    metadata:
+      name: "ns-{{ path.basename }}" # ns-media, ns-networking, etc.
+    spec:
+      project: default
+      source:
+        repoURL: git@github.com:ar3s3ru/homelabs.git
+        targetRevision: main
+        path: "{{ path }}"
+      destination:
+        name: in-cluster
+        namespace: argo-system
+      syncPolicy:
+        # FIXME: turn these on
+        automated:
+          selfHeal: false
+          prune: false
+        syncOptions:
+          - ServerSideApply=true
+          - ApplyOutOfSyncOnly=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: apps
+  namespace: argo-system
+spec:
+  generators:
+    - git:
+        repoURL: git@github.com:ar3s3ru/homelabs.git
+        revision: main
+        directories:
+          - path: kube/*/* # Matches kube/<namespace>/<app>
+  template:
+    metadata:
+      name: "app-{{ path.basename }}" # app name is last path segment.
+    spec:
+      project: default
+      source:
+        repoURL: git@github.com:ar3s3ru/homelabs.git
+        targetRevision: main
+        path: "{{ path }}"
+      destination:
+        name: in-cluster
+        namespace: argo-system
+      syncPolicy:
+        # FIXME: turn these on
+        automated:
+          selfHeal: false
+          prune: false
+        syncOptions:
+          - ServerSideApply=true
+          - ApplyOutOfSyncOnly=true

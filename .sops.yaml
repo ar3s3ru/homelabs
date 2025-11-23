@@ -74,3 +74,19 @@ creation_rules:
           - *dejima-ts
           - *nl-k8s-02
           - *nl-k8s-03
+  - path_regex: "modules/nix/k3s/secrets/.*.yaml"
+    encrypted_regex: "^(data|stringData)$"
+    key_groups:
+      - pgp:
+          - *ar3s3ru
+        age:
+          - *github-actions
+          - *gladius
+          - *gladius-ts
+          - *eq14-001
+          - *eq14-001-ts
+          - *momonoke
+          - *momonoke-ts
+          - *dejima-ts
+          - *nl-k8s-02
+          - *nl-k8s-03

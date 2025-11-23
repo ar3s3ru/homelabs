@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - namespace.yaml
+  - media-data-v3.yaml
+  - media-videos-v1.yaml
+# helmCharts:
+#   - name: app-template
+#     repo: https://bjw-s-labs.github.io/helm-charts
+#     version: 4.4.0
+#     releaseName: miniflux
+#     namespace: miniflux
+#     valuesFile: values.yaml

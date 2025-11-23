@@ -1,8 +1,14 @@
 { config, ... }:
 
 {
+  sops.secrets."argocd-homelab-repo" = {
+    key = "";
+    format = "yaml";
+    sopsFile = ./secrets/10-argocd-homelab-repo.yaml;
+    path = "/var/lib/rancher/k3s/server/manifests/10-argocd-homelab-repo.yaml";
+  };
+
   services.k3s.autoDeployCharts.argocd = {
-    enable = true;
     name = "argo-cd";
     repo = "https://argoproj.github.io/argo-helm";
     version = "9.1.3";
