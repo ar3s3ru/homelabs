@@ -1,0 +1,80 @@
+---
+replicaCount: 1
+
+securityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+  runAsGroup: 1000
+  runAsUser: 1000
+  supplementalGroups:
+    - 26
+    - 303
+
+podAnnotations:
+  reloader.stakater.com/auto: "true"
+
+podSecurityContext:
+  fsGroup: 1000
+  privileged: true # Necessary for hw acceleration.
+  supplementalGroups:
+    - 26
+    - 303
+
+affinity:
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+            - key: media.transcoding.gpu
+              operator: In
+              values:
+                - fast
+      - weight: 50
+        preference:
+          matchExpressions:
+            - key: media.transcoding.gpu
+              operator: In
+              values:
+                - medium
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: cianfr.one-acme
+  hosts:
+    - host: &host media.cianfr.one
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts: [*host]
+      secretName: jellyfin-tls
+
+resources:
+  limits:
+    gpu.intel.com/i915: "1"
+  requests:
+    gpu.intel.com/i915: "1"
+
+volumes:
+  - name: media-data
+    persistentVolumeClaim:
+      claimName: media-data-v3
+  - name: media-videos
+    persistentVolumeClaim:
+      claimName: media-videos-v1
+
+volumeMounts:
+  - name: media-data
+    mountPath: /data
+  - name: media-videos
+    mountPath: /videos
+
+persistence:
+  config:
+    enabled: true
+    existingClaim: jellyfin-config-v2
+  media:
+    enabled: false # Managed separately and manually.

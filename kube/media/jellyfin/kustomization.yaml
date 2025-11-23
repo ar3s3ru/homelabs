@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - jellyfin-config-v2.yaml
+
+helmCharts:
+  - name: jellyfin
+    repo: https://jellyfin.github.io/jellyfin-helm
+    version: 2.5.0
+    releaseName: jellyfin
+    namespace: media
+    valuesFile: values.yaml
