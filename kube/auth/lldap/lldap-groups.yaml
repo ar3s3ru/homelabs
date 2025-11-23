@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.34.2/configmap-v1.json
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lldap-groups
+  namespace: auth
+data:
+  admin.json: '{"name":"admin"}'
+  home-admin.json: '{"name":"home-admin"}'
+  home-member.json: '{"name":"home-member"}'
+  media-admin.json: '{"name":"media-admin"}'
+  media-viewer.json: '{"name":"media-viewer"}'

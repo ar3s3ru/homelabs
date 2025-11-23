@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: &namespace auth
+
+resources:
+  - lldap-cnpg-cluster.yaml
+  - lldap-groups.yaml
+
+generators:
+  - ksops.yaml
+
+helmCharts:
+  - name: app-template
+    repo: https://bjw-s-labs.github.io/helm-charts
+    version: 4.4.0
+    releaseName: lldap
+    namespace: *namespace
+    valuesFile: values.yaml

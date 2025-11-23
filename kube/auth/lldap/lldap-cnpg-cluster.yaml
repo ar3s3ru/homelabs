@@ -1,0 +1,39 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: lldap-cnpg-cluster
+  namespace: auth
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.6
+
+  storage:
+    size: 1Gi
+    storageClass: longhorn-nvme-3-replicas
+
+  # Enable superuser access with the secret you created
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: lldap-cnpg-postgres
+
+  bootstrap:
+    initdb:
+      database: main
+      owner: postgres
+
+  managed:
+    services:
+      disabledDefaultServices: ["ro", "r"]
+      additional:
+        - selectorType: rw
+          serviceTemplate:
+            metadata:
+              name: lldap-cnpg
+            spec:
+              type: LoadBalancer
+              loadBalancerClass: tailscale
+          updateStrategy: patch
+
+  monitoring:
+    enablePodMonitor: true
