@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/app-template-4.4.0/charts/other/app-template/values.schema.json
+---
+defaultPodOptions:
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+    fsGroupChangePolicy: "OnRootMismatch"
+
+service:
+  main:
+    controller: main
+    type: ClusterIP
+    ports:
+      http:
+        port: &webui 8080
+  torrent:
+    controller: main
+    type: LoadBalancer
+    annotations:
+      metallb.io/loadBalancerIPs: 10.20.0.3
+    ports:
+      bt-tcp:
+        port: &torrent 30963
+        nodePort: 30963 # Needed for opening the firewall on the host and on the gateway.
+        protocol: TCP
+
+ingress:
+  tailscale:
+    enabled: true
+    className: tailscale
+    hosts:
+      - host: nl-torrent
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              identifier: main
+              port: http
+    tls:
+      - hosts: [nl-torrent]
+
+persistence:
+  config:
+    enabled: true
+    type: persistentVolumeClaim
+    existingClaim: qbittorrent-config-v2
+    globalMounts: [{ path: "/config" }]
+  data:
+    enabled: true
+    type: persistentVolumeClaim
+    existingClaim: media-data-v3
+    globalMounts: [{ path: "/data" }]
+
+controllers:
+  main:
+    type: deployment
+    replicas: 1
+    strategy: Recreate
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main:
+        image:
+          repository: "ghcr.io/linuxserver/qbittorrent"
+          tag: "5.1.2"
+        env:
+          TZ: "Europe/Amsterdam"
+          PGUID: 1000
+          PGID: 1000
+          WEBUI_PORT: *webui
+          TORRENTING_PORT: *torrent
+        probes:
+          liveness: { enabled: false }
+          readiness: { enabled: false }
+          startup: { enabled: true }

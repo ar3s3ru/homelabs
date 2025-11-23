@@ -5,7 +5,7 @@ kind: Kustomization
 namespace: &namespace media
 
 resources:
-  - jellyseerr-config-v2.yaml
+  - persistentvolumeclaims.yaml
 
 helmCharts:
   - name: app-template

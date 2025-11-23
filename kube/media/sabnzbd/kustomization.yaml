@@ -11,6 +11,6 @@ helmCharts:
   - name: app-template
     repo: https://bjw-s-labs.github.io/helm-charts
     version: 4.4.0
-    releaseName: prowlarr
+    releaseName: sabnzbd
     namespace: *namespace
     valuesFile: values.yaml
