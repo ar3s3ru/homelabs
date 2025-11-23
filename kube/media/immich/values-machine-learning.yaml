@@ -1,0 +1,64 @@
+---
+defaultPodOptions:
+  # Only schedule on nodes with fast GPU transcoding/compute capabilities,
+  # since it needs to run inference on images/videos quickly.
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: media.transcoding.gpu
+                operator: In
+                values:
+                  - fast
+
+service:
+  main:
+    type: ClusterIP
+    controller: main
+    ports:
+      http:
+        port: &http-port 3003
+
+controllers:
+  main:
+    type: deployment
+    replicas: 1
+    strategy: Recreate
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main:
+        image:
+          repository: ghcr.io/immich-app/immich-machine-learning
+          tag: v2.2.2-openvino
+        env:
+          TRANSFORMERS_CACHE: /cache
+        resources:
+          requests:
+            gpu.intel.com/i915: "1"
+          limits:
+            gpu.intel.com/i915: "1"
+        probes:
+          # Disabling liveness/readiness probe, as they keep failing during heavy processing
+          # but do not impact functionality.
+          liveness: { enabled: false }
+          readiness: { enabled: false }
+          startup:
+            enabled: true
+            custom: true
+            spec:
+              httpGet:
+                path: /ping
+                port: *http-port
+              initialDelaySeconds: 0
+              periodSeconds: 10
+              timeoutSeconds: 1
+              failureThreshold: 30
+
+persistence:
+  cache:
+    enabled: true
+    type: persistentVolumeClaim
+    existingClaim: immich-ml-cache-v3
+    globalMounts: [{ path: /cache }]

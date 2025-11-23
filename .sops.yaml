@@ -2,18 +2,14 @@
 keys:
   - &ar3s3ru C8DAE39DAA00FF97
   - &github-actions age18eehnlpn44hpk4d823zfnkq72vqmf6kqhrh009uwdajneeaqzskqscx589
-  - &eq14-001 age1z3t2tgda3cvzuppqqxc992q5npalwq6wzspnma4q6u7jp5wwds9qgv32wm
+  # Generated manually using `age-keygen -o age.agekey`
+  - &argocd age1m38eu4srfs6puqtrpcazlu5kv24fd57yda4p505k9msqjwzttujs825kzl
   # Generated using `cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age`,
   # where the SSH host key is obtained from the remote machine.
-  - &gladius age1ywr4sx3j2vuhu7w8uukhnkv96lgl7yjyaxgeqpx7vnlv5hv9gucq6hahkl
-  - &momonoke age12g62sqmpz4pztx8zn94n8rxzklj7fj805g78m50kxu44yqy26azs2vph2y
+  - &nl-k8s-01 age1krvwskkgw5f3ufcwgl6l2jz0emxnkn40wpup2aqhqdulqy2x99js4p5fnq
   - &nl-k8s-02 age143yn95y2n546rlqrhgy2nzrz0w87ks7fk9dlwp3ylt0dfflczuhqrv2lmv
   - &nl-k8s-03 age1rlqxt25ldy6y2cv60gxqmgfkh4wnvvcwkj4fe0k9xy4m3ec5tegqfa5gx2
-  - &r5c-gateway age1ew2akntc7tttpjjgx3v7pequ9y4f6j76guam6n3mpnypuljx7u9q2vhwrl
-  # These are created using `ssh-keyscan <tailscale-ssh-addr> | ssh-to-age`
-  - &gladius-ts age1g96u7w7hcfzc52t5m27e2gwy9h3877rmmmszf8ua586dw4yhu3vq7qz799
-  - &eq14-001-ts age1krvwskkgw5f3ufcwgl6l2jz0emxnkn40wpup2aqhqdulqy2x99js4p5fnq
-  - &momonoke-ts age12g62sqmpz4pztx8zn94n8rxzklj7fj805g78m50kxu44yqy26azs2vph2y
+  - &nl-k8s-04 age12g62sqmpz4pztx8zn94n8rxzklj7fj805g78m50kxu44yqy26azs2vph2y
   - &dejima-ts age18tdafrhnvtp9fyja20e9dhq3knq9lyrtnyppr3xu8n0nwce40gxswu5ww9
 creation_rules:
   - path_regex: "machines/secrets.yaml"
@@ -22,15 +18,11 @@ creation_rules:
           - *ar3s3ru
         age:
           - *github-actions
-          - *gladius
-          - *gladius-ts
-          - *eq14-001
-          - *eq14-001-ts
-          - *momonoke
-          - *momonoke-ts
           - *dejima-ts
+          - *nl-k8s-01
           - *nl-k8s-02
           - *nl-k8s-03
+          - *nl-k8s-04
   - path_regex: "machines/dejima/secrets.yaml"
     key_groups:
       - pgp:
@@ -38,21 +30,13 @@ creation_rules:
         age:
           - *github-actions
           - *dejima-ts
-  - path_regex: "machines/momonoke/secrets.yaml"
+  - path_regex: "machines/nl-k8s-04/secrets.yaml"
     key_groups:
       - pgp:
           - *ar3s3ru
         age:
           - *github-actions
-          - *momonoke
-          - *momonoke-ts
-  - path_regex: "machines/r5c-gateway/secrets.yaml"
-    key_groups:
-      - pgp:
-          - *ar3s3ru
-        age:
-          - *github-actions
-          - *r5c-gateway
+          - *nl-k8s-04
   - path_regex: "clusters/.*"
     key_groups:
       - pgp:
@@ -65,15 +49,11 @@ creation_rules:
           - *ar3s3ru
         age:
           - *github-actions
-          - *gladius
-          - *gladius-ts
-          - *eq14-001
-          - *eq14-001-ts
-          - *momonoke
-          - *momonoke-ts
           - *dejima-ts
+          - *nl-k8s-01
           - *nl-k8s-02
           - *nl-k8s-03
+          - *nl-k8s-04
   - path_regex: "modules/nix/k3s/secrets/.*.yaml"
     encrypted_regex: "^(data|stringData)$"
     key_groups:
@@ -81,12 +61,15 @@ creation_rules:
           - *ar3s3ru
         age:
           - *github-actions
-          - *gladius
-          - *gladius-ts
-          - *eq14-001
-          - *eq14-001-ts
-          - *momonoke
-          - *momonoke-ts
           - *dejima-ts
+          - *nl-k8s-01
           - *nl-k8s-02
           - *nl-k8s-03
+          - *nl-k8s-04
+  - path_regex: "kube/.*.enc.yaml"
+    encrypted_regex: "^(data|stringData)$"
+    key_groups:
+      - pgp:
+          - *ar3s3ru
+        age:
+          - *argocd

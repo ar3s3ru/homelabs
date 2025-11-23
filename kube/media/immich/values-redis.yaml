@@ -1,0 +1,22 @@
+---
+# Redis Standalone Configuration for Immich
+# Ref: https://github.com/OT-CONTAINER-KIT/redis-operator/tree/main/charts/redis
+
+# Storage configuration
+storageSpec:
+  volumeClaimTemplate:
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: longhorn-nvme-3-replicas
+      resources:
+        requests:
+          storage: 200Mi
+
+# Enable Redis exporter for Prometheus monitoring
+redisExporter:
+  enabled: true
+
+# Enable ServiceMonitor for Prometheus
+serviceMonitor:
+  enabled: true
