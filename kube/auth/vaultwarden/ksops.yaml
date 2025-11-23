@@ -1,0 +1,12 @@
+---
+apiVersion: viaduct.ai/v1
+kind: ksops
+metadata:
+  name: vaultwarden-secrets-generator
+  namespace: auth
+  annotations:
+    config.kubernetes.io/function: |
+      exec:
+        path: ksops
+files:
+  - ./vaultwarden-secrets.enc.yaml
