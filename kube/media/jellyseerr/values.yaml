@@ -41,8 +41,9 @@ service:
 ingress:
   main:
     enabled: true
+    className: nginx
     annotations:
-      cert-manager.io/cluster-issuer: acme
+      cert-manager.io/cluster-issuer: cianfr.one-acme
     hosts:
       - host: &host requests.cianfr.one
         paths:

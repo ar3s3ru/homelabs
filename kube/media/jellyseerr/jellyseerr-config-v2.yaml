@@ -9,7 +9,7 @@ spec:
   storageClassName: longhorn-nvme-3-replicas
   volumeMode: Filesystem
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 150M
+      storage: 144Mi

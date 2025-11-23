@@ -1,5 +1,3 @@
-{ config, ... }:
-
 {
   sops.secrets."argocd-homelab-repo" = {
     key = "";
@@ -45,6 +43,32 @@
       };
       applicationSet = {
         replicas = 2;
+      };
+      configs = {
+        cm = {
+          # Kustomize build options
+          # --enable-helm: Enabling Helm chart rendering with Kustomize
+          # --load-restrictor LoadRestrictionsNone: Local kustomizations may load files from outside their root
+          "kustomize.buildOptions" = "--enable-helm --load-restrictor LoadRestrictionsNone";
+          # Exclude certain resources from ArgoCD management
+          # https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#resource-exclusioninclusion
+          # Ignore VolumeSnapshot and VolumeSnapshotContent: Created by backup processes.
+          "resource.exclusions" = ''
+            - apiGroups:
+                - snapshot.storage.k8s.io
+              kinds:
+                - VolumeSnapshot
+                - VolumeSnapshotContent
+              clusters:
+                - "*"
+            - apiGroups:
+                - cilium.io
+              kinds:
+                - CiliumIdentity
+              clusters:
+                - "*"
+          '';
+        };
       };
     };
   };
