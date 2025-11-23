@@ -55,7 +55,7 @@ persistence:
 controllers:
   main:
     type: deployment
-    replicas: 1
+    replicas: 0 # FIXME: re-enable
     strategy: Recreate
     annotations:
       reloader.stakater.com/auto: "true"
