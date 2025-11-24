@@ -28,7 +28,7 @@ statefulset:
 zigbee2mqtt:
   permit_join: true
   mqtt:
-    server: mqtt://emqx.home-automation.svc.cluster.local:1883
+    server: mqtt://mochi-mqtt.home-automation.svc.cluster.local:1883
   serial:
     port: /dev/ttyUSB0
     adapter: ezsp # Sonoff dongle is based on Silicon Labs.

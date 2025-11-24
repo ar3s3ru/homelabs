@@ -1,0 +1,16 @@
+---
+listeners:
+  - type: "tcp"
+    id: "file-tcp1"
+    address: ":1883"
+  - type: "ws"
+    id: "file-websocket"
+    address: ":1882"
+  - type: "healthcheck"
+    id: "file-healthcheck"
+    address: ":1880"
+hooks:
+  auth:
+    allow_all: true
+options:
+  inline_client: true
