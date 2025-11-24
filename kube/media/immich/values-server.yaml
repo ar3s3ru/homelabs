@@ -138,7 +138,7 @@ persistence:
     globalMounts: [{ path: /external/videos }]
   library:
     type: persistentVolumeClaim
-    existingClaim: immich-library-v3
+    existingClaim: immich-library-v4
     globalMounts:
       - path: /usr/src/app/upload
       - path: /imported
