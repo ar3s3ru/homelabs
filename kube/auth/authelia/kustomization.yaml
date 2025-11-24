@@ -19,7 +19,7 @@ helmCharts:
     valuesFile: values-authelia.yaml
   - name: redis
     repo: https://ot-container-kit.github.io/helm-charts
-    version: 0.16.7
+    version: 0.16.8
     releaseName: authelia-redis
     namespace: *namespace
     valuesFile: values-redis.yaml

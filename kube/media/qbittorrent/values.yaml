@@ -63,7 +63,7 @@ controllers:
       main:
         image:
           repository: "ghcr.io/linuxserver/qbittorrent"
-          tag: "5.1.2"
+          tag: "5.1.4"
         env:
           TZ: "Europe/Amsterdam"
           PGUID: 1000
