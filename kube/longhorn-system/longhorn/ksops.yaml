@@ -1,0 +1,12 @@
+---
+apiVersion: viaduct.ai/v1
+kind: ksops
+metadata:
+  name: longhorn-secrets-generator
+  namespace: longhorn-system
+  annotations:
+    config.kubernetes.io/function: |
+      exec:
+        path: ksops
+files:
+  - ./longhorn-crypto.enc.yaml

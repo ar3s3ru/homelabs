@@ -1,0 +1,24 @@
+---
+apiVersion: v1
+clusters:
+  - name: it
+    cluster:
+      server: https://it-tailscale-operator.tail2ff90.ts.net
+  - name: nl
+    cluster:
+      server: https://nl-k8s.tail2ff90.ts.net
+contexts:
+  - name: nl
+    context:
+      cluster: nl
+      user: tailscale-auth
+  - name: it
+    context:
+      cluster: it
+      user: tailscale-auth
+kind: Config
+preferences: {}
+users:
+  - name: tailscale-auth
+    user:
+      token: unused
