@@ -26,18 +26,13 @@ jobs:
           oauth-secret: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
           tags: "tag:ci"
       - name: Send ArgoCD webhook to trigger sync
+        env:
+          GITHUB_WEBHOOK_PAYLOAD: ${{ toJSON(github.event) }}
         run: |
-          # Get the GitHub event payload
-          PAYLOAD='${{ toJSON(github.event.push) }}'
-
-          echo "test: $(echo '${{ github.event.push }}' | jq)"
-          echo "payload: $PAYLOAD"
-
-          # Send webhook to ArgoCD with GitHub signature
-          curl -X POST \
+          curl -v -X POST \
             -H "Content-Type: application/json" \
-            -H "X-GitHub-Event: ${{ github.event_name }}" \
-            -d "$PAYLOAD" \
+            -H "X-GitHub-Event: push" \
+            -d "$GITHUB_WEBHOOK_PAYLOAD" \
             https://nl-argocd.tail2ff90.ts.net/api/webhook
 
   changes:
