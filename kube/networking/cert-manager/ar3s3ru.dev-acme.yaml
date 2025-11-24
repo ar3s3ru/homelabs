@@ -1,0 +1,20 @@
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: ar3s3ru.dev-acme
+  annotations:
+    # To ensure cert-manager is installed first.
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  acme:
+    email: danilocianfr+letsencrypt@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: ar3s3ru.dev-acme-account-key
+    solvers:
+      - dns01:
+          cloudflare:
+            apiTokenSecretRef:
+              name: cert-manager-cloudflare-tokens
+              key: ar3s3ru.dev
