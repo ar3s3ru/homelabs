@@ -1,0 +1,9 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.34.2/configmap-v1.json
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflare-ddns-env
+  namespace: networking
+data:
+  DOMAINS: "idp.cianfr.one,photos.cianfr.one,media.cianfr.one,vault.cianfr.one,requests.cianfr.one"
