@@ -1,5 +1,5 @@
 ---
-replicaCount: 3
+replicaCount: 1
 recreatePods: true
 
 emqxConfig:
@@ -13,9 +13,8 @@ emqxAclConfig: |
   {allow, all, subscribe, ["$SYS/#", {eq, "#"}]}.
   {allow, all}.
 
-# FIXME: re-enable after prometheus is installed
 metrics:
-  enable: false
+  enable: true
 
 ingress:
   dashboard:
