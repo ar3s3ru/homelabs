@@ -72,7 +72,7 @@ controllers:
         image:
           repository: docker.io/owncloud/ocis
           tag: 7.3.0
-        command: ["ocis", "server"]
+        command: ["ocis", "proxy", "server"]
     initContainers:
       01-ocis-init:
         <<: *ct

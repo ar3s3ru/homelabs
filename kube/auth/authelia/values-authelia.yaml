@@ -280,7 +280,7 @@ configMap:
           pkce_challenge_method: "S256"
           scopes:
             - "openid"
-            - "offline_access"
+            # - "offline_access"
             - "groups"
             - "profile"
             - "email"
