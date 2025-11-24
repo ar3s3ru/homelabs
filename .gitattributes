@@ -1,4 +1,2 @@
-# Mark Terragrunt-generated files as generated.
-**/backend.tf linguist-generated=true
-**/provider_override.tf linguist-generated=true
-**/provider_variables.tf linguist-generated=true
+# Detect all manifests under kube directory.
+kube/** linguist-detectable
