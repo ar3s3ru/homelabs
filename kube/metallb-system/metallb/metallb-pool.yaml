@@ -4,6 +4,9 @@ kind: IPAddressPool
 metadata:
   name: metallb-pool
   namespace: metallb-system
+  annotations:
+    # To ensure metallb is installed first.
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   addresses:
     - 10.20.0.0/16
