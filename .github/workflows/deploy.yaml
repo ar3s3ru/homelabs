@@ -53,19 +53,10 @@ jobs:
         id: filter
         with:
           filters: |
-            terragrunt:
-              - 'modules/**'
-              - '!modules/nix/**'
-              - '*.tf'
-              - '*.hcl'
             nix:
               - 'flake.*'
               - 'modules/nix/**'
               - 'machines/**'
-            cluster-it:
-              - 'clusters/it/**'
-            cluster-nl:
-              - 'clusters/nl/**'
 
   colmena-apply:
     name: Colmena Apply
