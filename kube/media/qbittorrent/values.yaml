@@ -49,7 +49,7 @@ persistence:
   data:
     enabled: true
     type: persistentVolumeClaim
-    existingClaim: media-data-v3
+    existingClaim: media-data-v4
     globalMounts: [{ path: "/data" }]
 
 controllers:

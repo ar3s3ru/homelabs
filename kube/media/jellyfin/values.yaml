@@ -51,7 +51,7 @@ resources:
 volumes:
   - name: media-data
     persistentVolumeClaim:
-      claimName: media-data-v3
+      claimName: media-data-v4
   - name: media-videos
     persistentVolumeClaim:
       claimName: media-videos-v1
