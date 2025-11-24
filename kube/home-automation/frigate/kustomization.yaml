@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: &namespace home-automation
+
+resources:
+  - persistentvolumeclaims.yaml
+
+generators:
+  - ksops.yaml
+
+helmCharts:
+  - name: frigate
+    repo: https://blakeblackshear.github.io/blakeshome-charts
+    version: 7.8.0
+    releaseName: frigate
+    namespace: *namespace
+    valuesFile: values.yaml
