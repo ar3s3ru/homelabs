@@ -5,7 +5,8 @@ kind: Kustomization
 namespace: &namespace media
 
 resources:
-  - persistentvolumeclaims.yaml
+  - immich-library-v4.yaml
+  - immich-ml-cache-v3.yaml
   - immich-cnpg-cluster.yaml
 
 generators:

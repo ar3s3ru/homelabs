@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.34.2/persistentvolume-v1.json
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: immich-library-v4
+spec:
+  capacity:
+    storage: 500Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: truenas.lan
+    path: /mnt/pool0/gallery/immich
+  mountOptions:
+    - nfsvers=4.1
+    - hard
+    - timeo=300
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.34.2/persistentvolumeclaim-v1.json
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-library-v4
+  namespace: media
+spec:
+  storageClassName: ""
+  volumeName: immich-library-v4
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 500Gi

@@ -1,0 +1,100 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/app-template-4.4.0/charts/other/app-template/values.schema.json
+---
+defaultPodOptions:
+  securityContext:
+    fsGroup: 1000
+    fsGroupChangePolicy: OnRootMismatch
+    runAsGroup: 1000
+    runAsUser: 1000
+
+service:
+  main:
+    type: ClusterIP
+    controller: main
+    ports:
+      http:
+        port: 9200
+
+ingress:
+  main:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: cianfr.one-acme
+    hosts:
+      - host: &host ocis.cianfr.one
+        paths:
+          - path: "/"
+            pathType: Prefix
+            service:
+              identifier: main
+              port: http
+    tls:
+      - hosts: [*host]
+        secretName: ocis-cianfr.one-tls
+
+configMaps:
+  config:
+    data:
+      TZ: Europe/Amsterdam
+      OCIS_URL: https://nl-ocis.tail2ff90.ts.net
+      OCIS_LOG_LEVEL: info
+      OCIS_INSECURE: "true"
+      PROXY_HTTP_ADDR: "0.0.0.0:9200"
+      PROXY_TLS: "false"
+      DEMO_USERS: "false"
+      # OIDC settings
+      OCIS_EXCLUDE_RUN_SERVICES: "idp"
+      PROXY_OIDC_ISSUER: https://idp.cianfr.one
+      PROXY_OIDC_REWRITE_WELLKNOWN: "true"
+      PROXY_OIDC_ACCESS_TOKEN_VERIFY_METHOD: none
+      PROXY_OIDC_SKIP_USER_INFO: "false"
+      PROXY_AUTOPROVISION_ACCOUNTS: "true"
+      PROXY_AUTOPROVISION_CLAIM_USERNAME: preferred_username
+      PROXY_AUTOPROVISION_CLAIM_EMAIL: email
+      PROXY_AUTOPROVISION_CLAIM_DISPLAYNAME: name
+      PROXY_AUTOPROVISION_CLAIM_GROUPS: groups
+
+controllers:
+  main:
+    type: deployment
+    replicas: 1
+    strategy: Recreate
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main: &ct
+        envFrom:
+          - configMap: config
+          - secretRef: { name: ocis-secrets }
+        image:
+          repository: docker.io/owncloud/ocis
+          tag: 7.3.0
+        command: ["ocis", "server"]
+    initContainers:
+      01-ocis-init:
+        <<: *ct
+        command: ["/bin/sh", "-c", "ocis init || true"]
+        resources:
+          requests:
+            cpu: "1m"
+            memory: "50Mi"
+
+persistence:
+  data:
+    type: persistentVolumeClaim
+    existingClaim: ocis-data
+    globalMounts:
+      - { path: /data, subPath: data }
+      - { path: /etc/ocis, subPath: config }
+      - { path: /var/lib/ocis, subPath: varlib }
+  config-proxy:
+    type: configMap
+    name: ocis-static-config
+    globalMounts:
+      - { path: /etc/ocis/proxy.yaml, subPath: proxy.yaml, readOnly: true }
+  tmp:
+    type: emptyDir
+    medium: Memory
+    globalMounts:
+      - { path: /tmp, subPath: tmp }

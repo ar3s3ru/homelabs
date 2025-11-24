@@ -1,0 +1,24 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: &namespace ocis-system
+
+resources:
+  - ocis-data.yaml
+
+generators:
+  - ksops.yaml
+
+configMapGenerator:
+  - name: ocis-static-config
+    files:
+      - proxy.yaml
+
+helmCharts:
+  - name: app-template
+    repo: https://bjw-s-labs.github.io/helm-charts
+    version: 4.4.0
+    releaseName: ocis
+    namespace: *namespace
+    valuesFile: values.yaml
