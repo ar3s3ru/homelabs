@@ -1,0 +1,37 @@
+---
+- id: vacuum_around_litter_robot
+  alias: Vacuum around Litter Robot after use
+  triggers:
+    # All the status codes are available here:
+    # https://github.com/home-assistant/core/blob/a71ae4db3749ec653abc7ecfbceb9f9c678e4368/homeassistant/components/litterrobot/strings.json#L91-L119
+    - alias: Cat has left from the Litter Robot
+      trigger: state
+      entity_id: sensor.litter_robot_4_status_code
+      to: "ccp" # Clean cycle in progress
+  conditions:
+    - alias: Only if NOT within sleeping times
+      condition: not
+      conditions:
+        - alias: Within sleeping times
+          condition: time
+          after: input_datetime.sleeping_time
+          before: input_datetime.wakeup_time
+    - alias: Vacuum has completed its previous task
+      condition: state
+      entity_id: sensor.xiaomi_robot_vacuum_x20_task_status
+      state: completed
+    - alias: Automatic vacuuming is enabled
+      condition: state
+      entity_id: input_boolean.enable_litter_robot_vacuuming
+      state: "on"
+  actions:
+    - alias: Start vacuuming around the Litter Robot
+      action: dreame_vacuum.vacuum_clean_zone
+      target:
+        entity_id: vacuum.xiaomi_robot_vacuum_x20
+      data:
+        # Coordinates from the Vacuum Map
+        # Source: https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card/blob/master/docs/templates/setup.md#getting-coordinates
+        zone: [[-1940, 2220, -14, 4091]]
+        repeats: 2
+        suction_level: 1 # Standard

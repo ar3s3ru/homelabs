@@ -1,0 +1,38 @@
+---
+- id: turn_on_coffee_machine_in_the_morning
+  alias: Turn on the Coffee Machine in the morning
+  triggers:
+    - alias: Reached 'Coffee Machine Turn-on' time
+      trigger: time
+      at: input_datetime.coffee_machine_turnon_time
+  conditions:
+    - alias: Check if the Coffee Machine should be turned on
+      condition: state
+      entity_id: input_boolean.turn_on_coffee_machine
+      state: "on"
+  actions:
+    - alias: Turn on the Coffee Machine
+      action: switch.turn_on
+      entity_id: switch.coffee_machine_plug
+    - alias: Disable the 'Turn on Coffee Machine' flag
+      action: input_boolean.turn_off
+      entity_id: input_boolean.turn_on_coffee_machine
+
+- id: turn_off_coffee_machine_after_safety_deadline
+  alias: Turn off the Coffee Machine after safety deadline
+  triggers:
+    - alias: 1 hour has passed since the Coffee Machine was turned on
+      trigger: state
+      entity_id: switch.coffee_machine_plug
+      from: "off"
+      to: "on"
+      for: "02:00:00"
+  conditions:
+    - alias: Check if the Coffee Machine is still on
+      condition: state
+      entity_id: switch.coffee_machine_plug
+      state: "on"
+  actions:
+    - alias: Turn off the Coffee Machine
+      action: switch.turn_off
+      entity_id: switch.coffee_machine_plug

@@ -1,0 +1,12 @@
+---
+apiVersion: viaduct.ai/v1
+kind: ksops
+metadata:
+  name: home-assistant-secrets-generator
+  annotations:
+    config.kubernetes.io/function: |
+      exec:
+        path: ksops
+files:
+  - ./home-assistant-secrets.enc.yaml
+  - ./home-assistant-oauth-secrets.enc.yaml
