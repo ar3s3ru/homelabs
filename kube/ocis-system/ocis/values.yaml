@@ -37,12 +37,14 @@ configMaps:
   config:
     data:
       TZ: Europe/Amsterdam
-      OCIS_URL: https://nl-ocis.tail2ff90.ts.net
+      OCIS_URL: https://ocis.cianfr.one
       OCIS_LOG_LEVEL: info
       OCIS_INSECURE: "true"
       PROXY_HTTP_ADDR: "0.0.0.0:9200"
       PROXY_TLS: "false"
       DEMO_USERS: "false"
+      # CORS settings - mounted as config map file down in 'persistence'
+      PROXY_CSP_CONFIG_FILE_LOCATION: &csp /etc/ocis/csp.yaml
       # OIDC settings
       OCIS_EXCLUDE_RUN_SERVICES: "idp"
       PROXY_OIDC_ISSUER: https://idp.cianfr.one
@@ -59,7 +61,7 @@ controllers:
   main:
     type: deployment
     replicas: 1
-    strategy: Recreate
+    strategy: RollingUpdate
     annotations:
       reloader.stakater.com/auto: "true"
     containers:
@@ -93,6 +95,7 @@ persistence:
     name: ocis-static-config
     globalMounts:
       - { path: /etc/ocis/proxy.yaml, subPath: proxy.yaml, readOnly: true }
+      - { path: *csp, subPath: csp.yaml, readOnly: true }
   tmp:
     type: emptyDir
     medium: Memory

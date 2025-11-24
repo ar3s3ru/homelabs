@@ -14,6 +14,7 @@ configMapGenerator:
   - name: ocis-static-config
     files:
       - proxy.yaml
+      - csp.yaml
 
 helmCharts:
   - name: app-template
