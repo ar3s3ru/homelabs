@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/app-template-4.4.0/charts/other/app-template/values.schema.json
+---
+defaultPodOptions:
+  securityContext:
+    fsGroup: 1000
+    fsGroupChangePolicy: OnRootMismatch
+    runAsGroup: 1000
+    runAsUser: 1000
+
+service:
+  main:
+    type: ClusterIP
+    controller: main
+    ports:
+      http:
+        port: 9200
+      nats:
+        port: 9233
+      grpc:
+        port: 9142
+
+ingress:
+  main:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: cianfr.one-acme
+    hosts:
+      - host: &host drive.cianfr.one
+        paths:
+          - path: "/"
+            pathType: Prefix
+            service:
+              identifier: main
+              port: http
+    tls:
+      - hosts: [*host]
+        secretName: opencloud-cianfr.one-tls
+
+configMaps:
+  config:
+    # Sources: https://gist.github.com/kulmann/78f012cd549e61b146be1473982f6c51
+    data:
+      TZ: Europe/Amsterdam
+      OC_URL: https://drive.cianfr.one
+      OC_LOG_LEVEL: debug
+      STORAGE_USERS_DRIVER: posix
+      STORAGE_USERS_ID_CACHE_STORE: nats-js-kv
+      MICRO_REGISTRY_ADDRESS: 127.0.0.1:9233
+      NATS_NATS_HOST: 0.0.0.0
+      NATS_NATS_PORT: "9233"
+      GATEWAY_GRPC_ADDR: 0.0.0.0:9142
+      PROXY_HTTP_ADDR: 0.0.0.0:9200
+      DEMO_USERS: "false"
+      # CORS settings - mounted as config map file down in 'persistence'
+      PROXY_CSP_CONFIG_FILE_LOCATION: &csp /etc/opencloud/csp.yaml
+      # OIDC settings
+      OC_EXCLUDE_RUN_SERVICES: "idp"
+      OC_OIDC_ISSUER: https://idp.cianfr.one
+      OC_OIDC_CLIENT_ID: opencloud
+      PROXY_ROLE_ASSIGNMENT_DRIVER: oidc
+      PROXY_ROLE_ASSIGNMENT_OIDC_CLAIM: groups
+      WEB_OIDC_SCOPE: openid profile email groups
+      GRAPH_ASSIGN_DEFAULT_USER_ROLE: "true"
+      GRAPH_USERNAME_MATCH: none
+      PROXY_OIDC_ACCESS_TOKEN_VERIFY_METHOD: none
+      PROXY_TLS: "false"
+      PROXY_USER_OIDC_CLAIM: preferred_username
+      PROXY_USER_CS3_CLAIM: username
+      PROXY_AUTOPROVISION_ACCOUNTS: "true"
+
+controllers:
+  main:
+    type: deployment
+    replicas: 1
+    strategy: Recreate
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main:
+        envFrom:
+          - configMap: config
+        image:
+          repository: opencloudeu/opencloud-rolling
+          tag: 3.7.0
+        command: ["/bin/sh", "-c"]
+        args: ["opencloud server"]
+
+persistence:
+  data:
+    type: persistentVolumeClaim
+    existingClaim: opencloud-data
+    globalMounts:
+      - { path: /data, subPath: data }
+      - { path: /var/lib/opencloud, subPath: varlib }
+  config-files:
+    type: configMap
+    name: opencloud-config
+    globalMounts:
+      - { path: *csp, subPath: csp.yaml, readOnly: true }
+      - { path: /etc/opencloud/proxy.yaml, subPath: proxy.yaml, readOnly: true }
+  config-opencloud:
+    type: secret
+    name: opencloud-secrets
+    globalMounts:
+      - { path: /etc/opencloud/opencloud.yaml, subPath: opencloud.yaml, readOnly: true }
+  tmp:
+    type: emptyDir
+    medium: Memory
+    globalMounts:
+      - { path: /tmp, subPath: tmp }

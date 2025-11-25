@@ -6,4 +6,5 @@ metadata:
   name: cloudflare-ddns-env
   namespace: networking
 data:
-  DOMAINS: "idp.cianfr.one,photos.cianfr.one,media.cianfr.one,vault.cianfr.one,requests.cianfr.one,ocis.cianfr.one"
+  # TODO: remove ocis.cianfr.one
+  DOMAINS: "idp.cianfr.one,photos.cianfr.one,media.cianfr.one,vault.cianfr.one,requests.cianfr.one,ocis.cianfr.one,drive.cianfr.one"

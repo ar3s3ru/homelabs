@@ -1,0 +1,14 @@
+---
+role_assignment:
+  driver: oidc
+  oidc_role_mapper:
+    role_claim: groups
+    role_mapping:
+      - role_name: admin
+        claim_value: opencloud-admin
+      - role_name: spaceadmin
+        claim_value: opencloud-spaceadmin
+      - role_name: user
+        claim_value: opencloud-member
+      - role_name: guest
+        claim_value: opencloud-guest

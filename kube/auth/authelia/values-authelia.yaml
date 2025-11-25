@@ -135,15 +135,18 @@ configMap:
       cors:
         allowed_origins_from_client_redirect_uris: true
         endpoints: [userinfo, authorization, token, revocation, introspection]
+        allowed_origins:
+          - &opencloud-host https://drive.cianfr.one
 
-      # Extend the access and refresh token lifespan from the default 30m to work around ownCloud client re-authentication prompts every few hours.
+      # Extend the access and refresh token lifespan from the default 30m to work around OpenCloud client re-authentication prompts every few hours.
       # It should be possible to remove this once Authelia supports dynamic client registration (DCR).
-      # Note: ownCloud's built-in IDP uses a value of 30d.
       lifespans:
         custom:
-          ocis:
-            access_token: "2 days"
-            refresh_token: "3 days"
+          opencloud:
+            access_token: 2d
+            refresh_token: 7d
+            authorize_code: 5m
+            id_token: 1h
 
       claims_policies:
         # https://www.authelia.com/integration/openid-connect/openid-connect-1.0-claims/#restore-functionality-prior-to-claims-parameter
@@ -271,29 +274,30 @@ configMap:
           access_token_signed_response_alg: none
           userinfo_signed_response_alg: none
           token_endpoint_auth_method: client_secret_basic
-        - client_id: "ocis"
-          client_name: "ownCloud Infinite Scale"
-          lifespan: "ocis"
+        - client_id: opencloud
+          client_name: OpenCloud Web
+          lifespan: opencloud
           public: true
-          authorization_policy: "two_factor"
+          authorization_policy: two_factor
           require_pkce: true
-          pkce_challenge_method: "S256"
           scopes:
-            - "openid"
-            # - "offline_access"
-            - "groups"
-            - "profile"
-            - "email"
+            - openid
+            - email
+            - profile
+            - groups
           redirect_uris:
-            - "https://ocis.cianfr.one/"
-            - "https://ocis.cianfr.one/oidc-callback.html"
-            - "https://ocis.cianfr.one/oidc-silent-redirect.html"
-            - "https://ocis.cianfr.one/apps/openidconnect/redirect"
+            - "https://drive.cianfr.one/"
+            - "https://drive.cianfr.one/oidc-callback.html"
+            - "https://drive.cianfr.one/oidc-silent-redirect.html"
           response_types:
-            - "code"
+            - code
           grant_types:
-            - "authorization_code"
-            - "refresh_token"
-          access_token_signed_response_alg: "none"
-          userinfo_signed_response_alg: "none"
-          token_endpoint_auth_method: "none"
+            - refresh_token
+            - authorization_code
+          response_modes:
+            - query
+            - fragment
+            - form_post
+          access_token_signed_response_alg: none
+          userinfo_signed_response_alg: none
+          token_endpoint_auth_method: none
