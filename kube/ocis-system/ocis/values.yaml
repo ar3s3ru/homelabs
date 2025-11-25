@@ -61,26 +61,18 @@ controllers:
   main:
     type: deployment
     replicas: 1
-    strategy: RollingUpdate
+    strategy: Recreate
     annotations:
       reloader.stakater.com/auto: "true"
     containers:
-      main: &ct
+      main:
         envFrom:
           - configMap: config
           - secretRef: { name: ocis-secrets }
         image:
           repository: docker.io/owncloud/ocis
           tag: 7.3.0
-        command: ["ocis", "proxy", "server"]
-    initContainers:
-      01-ocis-init:
-        <<: *ct
-        command: ["/bin/sh", "-c", "ocis init || true"]
-        resources:
-          requests:
-            cpu: "1m"
-            memory: "50Mi"
+        command: ["ocis", "server"]
 
 persistence:
   data:
@@ -88,14 +80,17 @@ persistence:
     existingClaim: ocis-data
     globalMounts:
       - { path: /data, subPath: data }
-      - { path: /etc/ocis, subPath: config }
       - { path: /var/lib/ocis, subPath: varlib }
   config-proxy:
     type: configMap
-    name: ocis-static-config
+    name: ocis-static
     globalMounts:
-      - { path: /etc/ocis/proxy.yaml, subPath: proxy.yaml, readOnly: true }
       - { path: *csp, subPath: csp.yaml, readOnly: true }
+  config-ocis:
+    type: secret
+    name: ocis-secrets
+    globalMounts:
+      - { path: /etc/ocis/ocis.yaml, subPath: ocis.yaml, readOnly: true }
   tmp:
     type: emptyDir
     medium: Memory

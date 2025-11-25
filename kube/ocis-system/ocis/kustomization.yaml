@@ -11,9 +11,8 @@ generators:
   - ksops.yaml
 
 configMapGenerator:
-  - name: ocis-static-config
+  - name: ocis-static
     files:
-      - proxy.yaml
       - csp.yaml
 
 helmCharts:
