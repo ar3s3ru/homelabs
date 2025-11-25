@@ -64,13 +64,13 @@ configMaps:
       PROXY_ROLE_ASSIGNMENT_DRIVER: oidc
       PROXY_ROLE_ASSIGNMENT_OIDC_CLAIM: groups
       WEB_OIDC_SCOPE: openid profile email groups
-      GRAPH_ASSIGN_DEFAULT_USER_ROLE: "true"
+      GRAPH_ASSIGN_DEFAULT_USER_ROLE: "false"
       GRAPH_USERNAME_MATCH: none
       PROXY_OIDC_ACCESS_TOKEN_VERIFY_METHOD: none
       PROXY_TLS: "false"
+      PROXY_AUTOPROVISION_ACCOUNTS: "true"
       PROXY_USER_OIDC_CLAIM: preferred_username
       PROXY_USER_CS3_CLAIM: username
-      PROXY_AUTOPROVISION_ACCOUNTS: "true"
 
 controllers:
   main:
@@ -92,10 +92,10 @@ controllers:
 persistence:
   data:
     type: persistentVolumeClaim
-    existingClaim: opencloud-data
+    existingClaim: opencloud-data-v2
     globalMounts:
       - { path: /data, subPath: data }
-      - { path: /var/lib/opencloud, subPath: varlib }
+      - { path: /var/lib/opencloud, subPath: data }
   config-files:
     type: configMap
     name: opencloud-config

@@ -5,7 +5,7 @@ kind: Kustomization
 namespace: &namespace opencloud-system
 
 resources:
-  - opencloud-data.yaml
+  - opencloud-data-v2.yaml
 
 generators:
   - ksops.yaml

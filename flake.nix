@@ -41,6 +41,7 @@
               terragrunt
               kubectl
               k9s
+              stern
               kubernetes-helm
               tfk8s
               ssh-to-age
