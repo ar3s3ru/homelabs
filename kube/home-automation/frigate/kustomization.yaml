@@ -5,7 +5,7 @@ kind: Kustomization
 namespace: &namespace home-automation
 
 resources:
-  - persistentvolumeclaims.yaml
+  - frigate-config-v2.yaml
   - frigate-media-v3.yaml
 
 generators:

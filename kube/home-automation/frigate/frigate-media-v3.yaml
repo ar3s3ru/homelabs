@@ -10,6 +10,8 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
+  # NOTE: maprootuser and maprootgroup are set to root manually
+  # to avoid permission issues with Frigate writing to the NFS share.
   nfs:
     server: truenas.lan
     path: /mnt/pool0/cctv
