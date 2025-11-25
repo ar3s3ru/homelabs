@@ -10,3 +10,4 @@ metadata:
         path: ksops
 files:
   - ./ocis-secrets.enc.yaml
+  - ./ocis-static-secret.enc.yaml

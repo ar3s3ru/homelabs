@@ -51,11 +51,14 @@ configMaps:
       PROXY_OIDC_REWRITE_WELLKNOWN: "true"
       PROXY_OIDC_ACCESS_TOKEN_VERIFY_METHOD: none
       PROXY_OIDC_SKIP_USER_INFO: "false"
-      PROXY_AUTOPROVISION_ACCOUNTS: "true"
       PROXY_AUTOPROVISION_CLAIM_USERNAME: preferred_username
       PROXY_AUTOPROVISION_CLAIM_EMAIL: email
       PROXY_AUTOPROVISION_CLAIM_DISPLAYNAME: name
       PROXY_AUTOPROVISION_CLAIM_GROUPS: groups
+      # Authelia role management is not working...
+      # Source: https://github.com/owncloud/ocis/issues/9602
+      PROXY_ROLE_ASSIGNMENT_DRIVER: default
+      PROXY_AUTOPROVISION_ACCOUNTS: "false"
 
 controllers:
   main:
@@ -88,7 +91,7 @@ persistence:
       - { path: *csp, subPath: csp.yaml, readOnly: true }
   config-ocis:
     type: secret
-    name: ocis-secrets
+    name: ocis-static-secret
     globalMounts:
       - { path: /etc/ocis/ocis.yaml, subPath: ocis.yaml, readOnly: true }
   tmp:
