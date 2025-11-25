@@ -6,6 +6,7 @@ namespace: &namespace home-automation
 
 resources:
   - persistentvolumeclaims.yaml
+  - frigate-media-v3.yaml
 
 generators:
   - ksops.yaml

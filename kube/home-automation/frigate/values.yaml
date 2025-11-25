@@ -8,6 +8,10 @@ envFromSecrets:
 securityContext:
   privileged: true # Needs this to access the GPU for hwaccel
 
+podSecurityContext:
+  # fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+
 podAnnotations:
   reloader.stakater.com/auto: "true"
 
@@ -64,7 +68,7 @@ persistence:
     existingClaim: frigate-config-v2
   media:
     enabled: true
-    existingClaim: frigate-media-v2
+    existingClaim: frigate-media-v3
 
 config: |
   mqtt:
