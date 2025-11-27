@@ -1,6 +1,7 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/app-template-4.4.0/charts/other/app-template/values.schema.json
 defaultPodOptions:
+  hostNetwork: true
   securityContext:
     runAsUser: 1000
     runAsGroup: 1000
@@ -9,9 +10,6 @@ defaultPodOptions:
 
 service:
   main:
-    type: LoadBalancer
-    annotations:
-      metallb.io/loadBalancerIPs: 10.20.0.5
     ports:
       http:
         port: 6052
@@ -21,14 +19,13 @@ ingress:
     enabled: true
     className: tailscale
     hosts:
-      - host: &host nl-esphome
+      - host: &host nl-esphome.tail2ff90.ts.net
         paths:
           - path: /
             pathType: Prefix
             service: { identifier: main, port: http }
     tls:
-      - hosts:
-          - *host
+      - hosts: [*host]
 
 controllers:
   main:
