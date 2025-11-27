@@ -56,7 +56,7 @@ configMaps:
             mode: 750
         shares:
           directories:
-            - /data/soulseek/shared
+            - /data/media/music
           filters:
             - \.ini$
             - Thumbs.db$
