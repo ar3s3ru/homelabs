@@ -13,9 +13,12 @@
     colmena.url = "github:zhaofengli/colmena";
     colmena.inputs.nixpkgs.follows = "nixpkgs";
     colmena.inputs.flake-utils.follows = "flake-utils";
+
+    devshell.url = "github:numtide/devshell";
+    devshell.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ nixpkgs, flake-utils, colmena, self, ... }:
+  outputs = inputs@{ nixpkgs, flake-utils, colmena, devshell, self, ... }:
     {
       colmena = import ./machines inputs;
       colmenaHive = colmena.lib.makeHive self.outputs.colmena;
@@ -23,15 +26,18 @@
     } // flake-utils.lib.eachDefaultSystem
       (system:
         let
+          overlays = [
+            devshell.overlays.default
+            (import ./modules/nix/overlays)
+          ];
+
           pkgs = import nixpkgs {
-            inherit system;
+            inherit system overlays;
             config.allowUnfree = true;
           };
-
-          realpath = "${pkgs.coreutils}/bin/realpath";
         in
         {
-          devShell = with pkgs; mkShellNoCC {
+          devShell = with pkgs; pkgs.devshell.mkShell {
             packages = [
               nixpkgs-fmt
               nixd
@@ -52,11 +58,15 @@
               q-text-as-data # For querying CSV/TSV files.
               garage # Management of garage system.
               argocd # CLI for interacting with ArgoCD.
+              kustomize
             ];
 
-            shellHook = ''
-              export KUBECONFIG="$(${realpath} ./kube/config.yaml)"
-            '';
+            env = [
+              {
+                name = "KUBECONFIG";
+                eval = "$PRJ_ROOT/kube/config.yaml";
+              }
+            ];
           };
         }
       );
