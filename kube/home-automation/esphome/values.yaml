@@ -1,0 +1,65 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/app-template-4.4.0/charts/other/app-template/values.schema.json
+defaultPodOptions:
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+    fsGroupChangePolicy: OnRootMismatch
+
+service:
+  main:
+    type: LoadBalancer
+    annotations:
+      metallb.io/loadBalancerIPs: 10.20.0.5
+    ports:
+      http:
+        port: 6052
+
+ingress:
+  tailscale:
+    enabled: true
+    className: tailscale
+    hosts:
+      - host: &host nl-esphome
+        paths:
+          - path: /
+            pathType: Prefix
+            service: { identifier: main, port: http }
+    tls:
+      - hosts:
+          - *host
+
+controllers:
+  main:
+    type: deployment
+    replicas: 1
+    strategy: Recreate
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      app:
+        image:
+          repository: ghcr.io/home-operations/esphome
+          tag: 2025.11.1@sha256:396e7b1772d64124364f398dcbf3c89ccdc9d30da67a1e8160904eff07f74310
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+
+persistence:
+  config:
+    type: persistentVolumeClaim
+    existingClaim: esphome-config
+    globalMounts: [{ path: /config }]
+  secrets:
+    type: secret
+    name: esphome-secrets
+    globalMounts: [{ path: /config/secrets.yaml, subPath: secrets.yaml }]
+  tmpfs:
+    type: emptyDir
+    globalMounts:
+      - { path: /tmp }
+      - { path: /cache }
