@@ -65,7 +65,7 @@ ingress:
 controllers:
   main:
     type: deployment
-    replicas: 1
+    replicas: 0
     strategy: Recreate # Underlying config PVC is RWO.
     annotations:
       reloader.stakater.com/auto: "true"

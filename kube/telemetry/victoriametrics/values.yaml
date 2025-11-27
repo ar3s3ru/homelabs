@@ -11,7 +11,7 @@ global:
 
 alertmanager:
   spec:
-    replicaCount: 2
+    replicaCount: 0
 
 vmsingle:
   enabled: false

@@ -8,9 +8,10 @@ resources:
   - sonoff-zigbee-antenna.yaml
 
 helmCharts:
-  - name: zigbee2mqtt
-    repo: https://charts.zigbee2mqtt.io
-    version: 2.6.3
-    releaseName: zigbee2mqtt
-    namespace: *namespace
-    valuesFile: values.yaml
+  []
+  # - name: zigbee2mqtt
+  #   repo: https://charts.zigbee2mqtt.io
+  #   version: 2.6.3
+  #   releaseName: zigbee2mqtt
+  #   namespace: *namespace
+  #   valuesFile: values.yaml

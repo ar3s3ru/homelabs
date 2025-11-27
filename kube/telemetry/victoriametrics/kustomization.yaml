@@ -5,15 +5,15 @@ kind: Kustomization
 namespace: &namespace telemetry
 
 helmCharts:
-  - name: victoria-metrics-k8s-stack
-    repo: https://victoriametrics.github.io/helm-charts/
-    # To update: https://github.com/VictoriaMetrics/helm-charts/releases?q=victoria-metrics-k8s-stack&expanded=true
-    # https://docs.victoriametrics.com/helm/victoriametrics-k8s-stack/#upgrade-guide
-    version: 0.63.6
-    releaseName: victoriametrics
-    namespace: *namespace
-    includeCRDs: true
-    valuesFile: values.yaml
+  # - name: victoria-metrics-k8s-stack
+  #   repo: https://victoriametrics.github.io/helm-charts/
+  #   # To update: https://github.com/VictoriaMetrics/helm-charts/releases?q=victoria-metrics-k8s-stack&expanded=true
+  #   # https://docs.victoriametrics.com/helm/victoriametrics-k8s-stack/#upgrade-guide
+  #   version: 0.63.6
+  #   releaseName: victoriametrics
+  #   namespace: *namespace
+  #   includeCRDs: true
+  #   valuesFile: values.yaml
   # Add the prometheys CRDs so that vm can scrape servicemonitors, etc.
   - name: prometheus-operator-crds
     repo: https://prometheus-community.github.io/helm-charts

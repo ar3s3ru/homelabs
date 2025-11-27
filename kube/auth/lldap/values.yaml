@@ -20,7 +20,7 @@ controllers:
   main:
     type: deployment
     strategy: RollingUpdate
-    replicas: 1
+    replicas: 0
     annotations:
       reloader.stakater.com/auto: "true"
     containers:
