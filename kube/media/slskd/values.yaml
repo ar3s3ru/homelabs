@@ -76,6 +76,7 @@ controllers:
           tag: 0.24.0
         envFrom:
           - configMap: env
+          - secretRef: { name: slskd-secrets }
         probes:
           liveness: &probes
             enabled: true

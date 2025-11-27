@@ -7,6 +7,9 @@ namespace: &namespace media
 resources:
   - slskd-config.yaml
 
+generators:
+  - ksops.yaml
+
 helmCharts:
   - name: app-template
     repo: https://bjw-s-labs.github.io/helm-charts
