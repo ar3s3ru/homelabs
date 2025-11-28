@@ -9,7 +9,7 @@ defaultPodOptions:
 
 service:
   main:
-    type: LoadBalancer
+    type: ClusterIP
     controller: main
     ports:
       http:

@@ -26,7 +26,7 @@ service:
     annotations:
       # NOTE: this address has also been set on the UI configuration,
       # in both webserver and streamserver settings.
-      metallb.io/loadBalancerIPs: 10.20.0.4
+      metallb.io/loadBalancerIPs: 10.0.3.4
     ports:
       http:
         port: 8095 # Source: https://github.com/music-assistant/server/blob/dev/Dockerfile#L71

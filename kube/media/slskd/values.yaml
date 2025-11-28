@@ -12,7 +12,7 @@ service:
     type: LoadBalancer
     controller: main
     annotations:
-      metallb.io/loadBalancerIPs: 10.20.0.5
+      metallb.io/loadBalancerIPs: 10.0.3.2
     ports:
       http:
         port: &port 8080
