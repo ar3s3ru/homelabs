@@ -22,7 +22,7 @@ statefulset:
       akri.sh/sonoff-zigbee-antenna: "1"
   storage:
     enabled: true
-    storageClassName: longhorn-nvme-replicated
+    storageClassName: longhorn-nvme-3-replicas
     size: 200M
 
 zigbee2mqtt:

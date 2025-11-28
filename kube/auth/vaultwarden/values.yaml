@@ -13,7 +13,7 @@ resources:
     cpu: 100m
     memory: 128Mi
 
-replicaCount: 0
+replicaCount: 1
 
 database:
   type: sqlite

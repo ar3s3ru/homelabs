@@ -4,8 +4,8 @@ kind: Cluster
 metadata:
   name: immich-cnpg-cluster
   namespace: media
-  annotations:
-    cnpg.io/hibernation: "on"
+  # annotations:
+  #   cnpg.io/hibernation: "on"
 spec:
   # A bug was reported in v0.3.0, which does not allow a replicated setup:
   # https://github.com/immich-app/immich-charts/issues/149#issuecomment-2559012759

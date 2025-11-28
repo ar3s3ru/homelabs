@@ -4,8 +4,8 @@ kind: Cluster
 metadata:
   name: authelia-cnpg-cluster
   namespace: auth
-  annotations:
-    cnpg.io/hibernation: "on"
+  # annotations:
+  #   cnpg.io/hibernation: "on"
 spec:
   instances: 1
   imageName: ghcr.io/cloudnative-pg/postgresql:17.6

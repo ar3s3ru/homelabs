@@ -6,8 +6,8 @@ namespace: &namespace media
 
 resources:
   - immich-library-v4.yaml
-  # - immich-ml-cache-v3.yaml
-  # - immich-cnpg-cluster.yaml
+  - immich-ml-cache-v3.yaml
+  - immich-cnpg-cluster.yaml
 
 generators:
   - ksops.yaml
@@ -25,9 +25,9 @@ helmCharts:
     releaseName: immich-machine-learning
     namespace: *namespace
     valuesFile: values-machine-learning.yaml
-  # - name: redis
-  #   repo: https://ot-container-kit.github.io/helm-charts
-  #   version: 0.16.8
-  #   releaseName: immich-redis
-  #   namespace: *namespace
-  #   valuesFile: values-redis.yaml
+  - name: redis
+    repo: https://ot-container-kit.github.io/helm-charts
+    version: 0.16.8
+    releaseName: immich-redis
+    namespace: *namespace
+    valuesFile: values-redis.yaml
