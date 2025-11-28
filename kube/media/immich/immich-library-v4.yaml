@@ -11,7 +11,7 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   nfs:
-    server: truenas.lan
+    server: truenas.home.arpa
     path: /mnt/pool0/gallery/immich
   mountOptions:
     - nfsvers=4.1

@@ -9,5 +9,5 @@ metadata:
     argocd.argoproj.io/sync-wave: "1"
 spec:
   addresses:
-    - 10.20.0.0/16
-    - fd00:cafe:20::/48
+    - 10.0.3.0/16
+    - fd00:cafe::3:/64

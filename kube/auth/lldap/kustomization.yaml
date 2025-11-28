@@ -5,7 +5,7 @@ kind: Kustomization
 namespace: &namespace auth
 
 resources:
-  - lldap-cnpg-cluster.yaml
+  # - lldap-cnpg-cluster.yaml
   - lldap-groups.yaml
 
 generators:

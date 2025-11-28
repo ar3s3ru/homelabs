@@ -13,7 +13,7 @@ spec:
   # NOTE: maprootuser and maprootgroup are set to root manually
   # to avoid permission issues with Frigate writing to the NFS share.
   nfs:
-    server: truenas.lan
+    server: truenas.home.arpa
     path: /mnt/pool0/cctv
   mountOptions:
     - nfsvers=4.1

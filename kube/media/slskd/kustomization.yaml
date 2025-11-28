@@ -4,8 +4,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: &namespace media
 
-resources:
-  - slskd-config.yaml
+# resources:
+#   - slskd-config.yaml
 
 generators:
   - ksops.yaml

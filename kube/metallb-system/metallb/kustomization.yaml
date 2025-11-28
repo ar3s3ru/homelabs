@@ -6,7 +6,6 @@ namespace: &namespace metallb-system
 
 resources:
   - metallb-pool.yaml
-  - k8s-pool.yaml
   - l2-advertisement.yaml
 
 helmCharts:

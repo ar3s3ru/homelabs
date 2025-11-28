@@ -9,6 +9,7 @@ reclaimPolicy: Retain
 volumeBindingMode: Immediate
 parameters:
   numberOfReplicas: "1"
+  stateReplicaTimeout: "30"
   fromBackup: ""
   diskSelector: "nvme"
   dataEngine: "v2"

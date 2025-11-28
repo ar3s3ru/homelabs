@@ -1,4 +1,24 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.34.2/persistentvolume-v1.json
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-videos-v1
+spec:
+  capacity:
+    storage: 500Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: truenas.home.arpa
+    # FIXME: this must be moved to the other new dataset.
+    path: /mnt/pool0/kube/vol/pvc-bd6fd2d5-c40d-477d-a8fb-c4108277e0eb
+  mountOptions:
+    - nfsvers=4.1
+    - hard
+    - timeo=300
+---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.34.2/persistentvolumeclaim-v1.json
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -6,7 +26,8 @@ metadata:
   name: media-videos-v1
   namespace: media
 spec:
-  storageClassName: truenas-nfs
+  storageClassName: ""
+  volumeName: media-videos-v1
   accessModes:
     - ReadWriteMany
   resources:

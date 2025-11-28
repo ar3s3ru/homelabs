@@ -32,5 +32,5 @@ defaultSettings:
 
 defaultBackupStore:
   # FIXME: should move to the new ZFS pool at some point.
-  backupTarget: nfs://truenas.lan:/mnt/zpool-nl-01/longhorn-backups-v2?nfsOptions=soft,timeo=330,retrans=3
+  backupTarget: nfs://truenas.home.arpa:/mnt/zpool-nl-01/longhorn-backups-v2?nfsOptions=soft,timeo=330,retrans=3
   pollInterval: 300 # 5 minutes

@@ -6,8 +6,8 @@ namespace: &namespace media
 
 resources:
   - immich-library-v4.yaml
-  - immich-ml-cache-v3.yaml
-  - immich-cnpg-cluster.yaml
+  # - immich-ml-cache-v3.yaml
+  # - immich-cnpg-cluster.yaml
 
 generators:
   - ksops.yaml
