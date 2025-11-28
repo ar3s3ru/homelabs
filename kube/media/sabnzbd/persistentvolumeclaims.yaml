@@ -20,6 +20,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: sabnzbd-downloads
   namespace: media
+  annotations:
+    recurring-job-group.longhorn.io/no-recurring-job: enabled
 spec:
   storageClassName: longhorn-nvme-1-replicas
   volumeMode: Filesystem
