@@ -1,4 +1,9 @@
 ---
+# Source: https://github.com/cert-manager/cert-manager/issues/7502#issuecomment-2585460045
+global:
+  leaderElection:
+    namespace: networking
+
 crds:
   enabled: true
 
