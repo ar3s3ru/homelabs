@@ -6,3 +6,6 @@
 **/backend.tf
 **/provider_override.tf
 **/provider_variables.tf
+
+# Miscellaneous
+.DS_Store

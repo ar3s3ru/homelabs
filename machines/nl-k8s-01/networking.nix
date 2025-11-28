@@ -5,19 +5,12 @@
   # Static IP configuration to prevent ARP conflicts
   # Using /16 netmask with static routes for other subnets
   networking.interfaces.enp0s20f0u1.ipv4.addresses = [{
-    address = "10.10.0.2";
+    address = "10.0.1.1";
     prefixLength = 16;
   }];
 
-  # Static routes to access other subnets without requiring /8 prefix
-  networking.interfaces.enp0s20f0u1.ipv4.routes = [
-    { address = "10.0.0.0"; prefixLength = 16; via = "10.0.0.1"; }
-    { address = "10.11.0.0"; prefixLength = 16; via = "10.0.0.1"; }
-    { address = "10.20.0.0"; prefixLength = 16; via = "10.0.0.1"; }
-  ];
-
   networking.interfaces.enp0s20f0u1.ipv6.addresses = [{
-    address = "fd00:cafe:10::2";
+    address = "fd00:cafe::1:1";
     prefixLength = 64;
   }];
 

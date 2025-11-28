@@ -3,20 +3,21 @@
 { pkgs, ... }:
 
 {
-  deployment.targetHost = "10.10.0.4";
+  deployment.targetHost = "10.0.1.2";
   deployment.targetUser = "root";
   deployment.tags = [ "type-server" "k8s-server" "region-nl" ];
 
   nixpkgs.system = "x86_64-linux";
 
   networking.hostName = "nl-k8s-02";
-  networking.domain = "lan";
+  networking.domain = "home.arpa";
   networking.networkmanager.enable = true;
 
   time.timeZone = "Europe/Amsterdam";
 
   services.k3s.extraFlags = [
     "--node-label media.transcoding.gpu=fast"
+    "--node-ip=10.0.1.2,fd00:cafe::1:2"
   ];
 
   imports = [
