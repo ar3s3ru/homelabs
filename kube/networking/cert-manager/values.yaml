@@ -1,4 +1,5 @@
 ---
+# To fix the issue with `tls: failed to verify certificate`.
 # Source: https://github.com/cert-manager/cert-manager/issues/7502#issuecomment-2585460045
 global:
   leaderElection:

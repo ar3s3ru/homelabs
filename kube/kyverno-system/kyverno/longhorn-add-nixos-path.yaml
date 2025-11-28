@@ -12,6 +12,10 @@ metadata:
       to be aware of the host systems PATH. This modifies all
       deployments such that the PATH is explicitly set to support
       NixOS based systems.
+    # Adding a later sync wave in the Kyverno namespace
+    # due to ArgoCD not picking up the manifest to deploy if this
+    # is placed under longhorn instead.
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   rules:
     - name: add-env-vars

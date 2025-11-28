@@ -5,7 +5,7 @@ kind: Kustomization
 namespace: &namespace longhorn-system
 
 resources:
-  - longhorn-add-nixos-path.yaml
+  - longhorn-nixos-path.yaml
   # NOTE: apparently we cannot use globbing...
   # https://github.com/kubernetes-sigs/kustomize/issues/119
   - storageClasses/nvme-1-replicas.yaml
