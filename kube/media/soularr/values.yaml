@@ -1,0 +1,57 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/app-template-4.4.0/charts/other/app-template/values.schema.json
+defaultPodOptions:
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+    fsGroupChangePolicy: OnRootMismatch
+  # # FIXME: review these limits
+  # resources:
+  #   limits:
+  #     cpu: 200m
+  #     memory: 256Mi
+  #   requests:
+  #     cpu: 100m
+  #     memory: 128Mi
+
+controllers:
+  main:
+    type: deployment
+    strategy: Recreate
+    replicas: 1
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main:
+        image:
+          repository: ghcr.io/mrusse/soularr
+          tag: main@sha256:61181c5809845d2c49c8c3c182c0280c5c91069cd2e5d7c341ddd8bfa2c01598
+        env:
+          TZ: Europe/Amsterdam
+        probes:
+          liveness: { enabled: false }
+          readiness: { enabled: false }
+          startup: { enabled: false }
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities: { drop: ["ALL"] }
+
+persistence:
+  config:
+    type: secret
+    name: soularr-secrets
+    globalMounts: [{ path: /data/config.ini, subPath: config.ini }]
+  data:
+    type: persistentVolumeClaim
+    existingClaim: soularr-data
+    globalMounts: [{ path: /data }]
+  media:
+    type: persistentVolumeClaim
+    existingClaim: media-data-v4
+    # NOTE: this is primarily because soularr uses /data folder already
+    # for its own configuration.
+    globalMounts:
+      - { path: /soulseek, subPath: soulseek }
+      - { path: /media, subPath: media }
