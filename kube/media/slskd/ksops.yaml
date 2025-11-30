@@ -9,4 +9,5 @@ metadata:
       exec:
         path: ksops
 files:
+  - ./slskd.enc.yaml
   - ./slskd-secrets.enc.yaml

@@ -45,22 +45,6 @@ configMaps:
       SLSKD_NO_HTTPS: "true"
       SLSKD_NO_VERSION_CHECK: "true"
       SLSKD_SLSK_LISTEN_PORT: "50429"
-  config:
-    data:
-      slskd.yml: |-
-        directories:
-          downloads: /data/soulseek/complete
-          incomplete: /data/soulseek/incomplete
-        permissions:
-          file:
-            mode: 750
-        shares:
-          directories:
-            - /data/media/music
-          filters:
-            - \.ini$
-            - Thumbs.db$
-            - \.DS_Store$
 
 controllers:
   main:
@@ -104,8 +88,8 @@ persistence:
     existingClaim: slskd-config
     globalMounts: [{ path: /config }]
   config-file:
-    type: configMap
-    identifier: config
+    type: secret
+    name: slskd
     globalMounts: [{ path: /config/slskd.yml, subPath: slskd.yml }]
   media:
     type: persistentVolumeClaim
