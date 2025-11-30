@@ -9,7 +9,7 @@ defaultPodOptions:
 controllers:
   main:
     type: deployment
-    replicas: 0
+    replicas: 1
     strategy: Recreate
 
     annotations:
