@@ -1,5 +1,7 @@
 ---
 replicaCount: 1
+deploymentStrategy:
+  type: Recreate # Using RWO backing volume.
 
 podSecurityContext:
   fsGroup: 1000
