@@ -57,7 +57,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/slskd/slskd
-          tag: 0.24.0
+          tag: 0.24.1
         envFrom:
           - configMap: env
           - secretRef: { name: slskd-secrets }

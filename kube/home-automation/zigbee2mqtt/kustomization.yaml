@@ -10,7 +10,7 @@ resources:
 helmCharts:
   - name: zigbee2mqtt
     repo: https://charts.zigbee2mqtt.io
-    version: 2.6.3
+    version: 2.7.0
     releaseName: zigbee2mqtt
     namespace: *namespace
     valuesFile: values.yaml
