@@ -17,6 +17,8 @@
 
   services.k3s.extraFlags = [
     "--node-label media.transcoding.gpu=fast"
+    "--node-label cianfr.one/gpu.transcoding.speed=fast"
+    "--node-label cianfr.one/networking.linkspeed=2500Mbits"
     "--node-ip=10.0.1.1,fd00:cafe::1:1"
     "--tls-san=nl-k8s-01.home.arpa"
   ];

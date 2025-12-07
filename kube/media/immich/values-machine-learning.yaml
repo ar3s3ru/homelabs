@@ -7,7 +7,7 @@ defaultPodOptions:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
           - matchExpressions:
-              - key: media.transcoding.gpu
+              - key: cianfr.one/gpu.transcoding.speed
                 operator: In
                 values:
                   - fast

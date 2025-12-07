@@ -14,14 +14,14 @@ defaultPodOptions:
         - weight: 100
           preference:
             matchExpressions:
-              - key: media.transcoding.gpu
+              - key: cianfr.one/gpu.transcoding.speed
                 operator: In
                 values:
                   - fast
         - weight: 50
           preference:
             matchExpressions:
-              - key: media.transcoding.gpu
+              - key: cianfr.one/gpu.transcoding.speed
                 operator: In
                 values:
                   - medium

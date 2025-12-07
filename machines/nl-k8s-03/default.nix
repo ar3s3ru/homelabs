@@ -17,6 +17,8 @@
 
   services.k3s.extraFlags = [
     "--node-label media.transcoding.gpu=medium"
+    "--node-label cianfr.one/gpu.transcoding.speed=medium"
+    "--node-label cianfr.one/networking.linkspeed=1000Mbits"
     "--node-ip=10.0.1.3,fd00:cafe::1:3"
   ];
 
