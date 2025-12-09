@@ -1,0 +1,22 @@
+---
+provider: cloudflare
+
+managedRecordTypes:
+  - A
+  - AAAA
+  - CNAME
+domainFilters:
+  - cianfr.one
+sources:
+  - ingress
+
+env:
+  # TODO: move to its own secret and token.
+  - name: CF_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: cloudflare-ddns-secrets
+        key: CLOUDFLARE_API_TOKEN
+
+serviceMonitor:
+  enabled: true
