@@ -39,13 +39,13 @@ datasources:
         jsonData:
           prometheusType: Prometheus
           prometheusVersion: 2.24.0
-      # - name: VictoriaLogs
-      #   type: victoriametrics-logs-datasource
-      #   uid: victorialogs
-      #   access: proxy
-      #   url: http://vlsingle-vm.infra-observability:9428/
-      #   editable: false
-      #   basicAuth: false
+      - name: VictoriaLogs
+        type: victoriametrics-logs-datasource
+        uid: victorialogs
+        access: proxy
+        url: http://victorialogs-victoria-logs-single-server.telemetry.svc.cluster.local:9428
+        editable: false
+        basicAuth: false
       - name: AlertManager
         type: alertmanager
         uid: alertmanager

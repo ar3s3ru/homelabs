@@ -1,0 +1,41 @@
+---
+server:
+  enabled: true
+  image:
+    repository: docker.io/victoriametrics/victoria-logs
+    tag: "v1.24.0-victorialogs@sha256:1ec31ddccc39dc9ead2607cddbf2829be1eb5ad39890e72bba26b359be20801d"
+    pullPolicy: IfNotPresent
+  retentionPeriod: 1 # months
+  persistentVolume:
+    enabled: true
+    existingClaim: victorialogs-data
+  extraArgs:
+    syslog.listenAddr.tcp: ":9514"
+  resources: # TODO: tune
+    requests:
+      cpu: 10m
+      memory: 512Mi
+    limits:
+      cpu: 3000m
+      memory: 4Gi
+  securityContext:
+    enabled: true
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities: { drop: [ALL] }
+  podSecurityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+    fsGroupChangePolicy: Always
+    seccompProfile: { type: "RuntimeDefault" }
+  statefulSet:
+    enabled: false
+  serviceMonitor:
+    enabled: true
+  affinity: {}
+
+vector:
+  enabled: true
