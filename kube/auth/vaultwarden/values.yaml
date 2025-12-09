@@ -32,7 +32,9 @@ ingress:
   className: nginx
   annotations:
     cert-manager.io/cluster-issuer: cianfr.one-acme
-  host: &host vault.cianfr.one
+    external-dns.alpha.kubernetes.io/hostname: &host vault.cianfr.one
+    external-dns.alpha.kubernetes.io/target: in.nl.cianfr.one
+  host: *host
   tls:
     - hosts: [*host]
       secretName: vaultwarden-cianfr.one-tls

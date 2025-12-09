@@ -47,11 +47,13 @@ ingress:
     className: nginx
     annotations:
       cert-manager.io/cluster-issuer: cianfr.one-acme
+      external-dns.alpha.kubernetes.io/hostname: &host photos.cianfr.one
+      external-dns.alpha.kubernetes.io/target: in.nl.cianfr.one
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
       nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
       nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
     hosts:
-      - host: &hostname photos.cianfr.one
+      - host: *host
         paths:
           - path: /
             pathType: Prefix
@@ -59,7 +61,7 @@ ingress:
               identifier: main
               port: http
     tls:
-      - hosts: [*hostname]
+      - hosts: [*host]
         secretName: immich-server-tls
 
 controllers:
