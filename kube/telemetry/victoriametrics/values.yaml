@@ -11,44 +11,22 @@ global:
 
 alertmanager:
   spec:
-    replicaCount: 0
+    replicaCount: 1
 
 vmsingle:
-  enabled: false
-
-vmcluster:
   enabled: true
   spec:
-    replicationFactor: 2
     retentionPeriod: 8w # 2 months
-    vmstorage:
-      storage:
-        volumeClaimTemplate:
-          spec:
-            storageClassName: longhorn-nvme-1-replicas
-            resources:
-              requests:
-                storage: 10Gi
+    storage:
+      storageClassName: longhorn-nvme-3-replicas
+      accessModes:
+        - ReadWriteOnce
       resources:
-        limits:
-          cpu: "1"
-          memory: 1500Mi
-    vmselect:
-      storage:
-        volumeClaimTemplate:
-          spec:
-            storageClassName: longhorn-nvme-1-replicas
-            resources:
-              requests:
-                storage: 5Gi
-    vminsert:
-      resources:
-        limits:
-          cpu: "1"
-          memory: 1000Mi
         requests:
-          cpu: "0.5"
-          memory: "500Mi"
+          storage: 20Gi
+
+vmcluster:
+  enabled: false
 
 defaultDashboards:
   enabled: true

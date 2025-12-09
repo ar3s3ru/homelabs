@@ -31,7 +31,7 @@ datasources:
       - name: VMPrometheus
         type: prometheus
         uid: vmprometheus
-        url: http://vmselect-vm.telemetry.svc.cluster.local:8481/select/0/prometheus
+        url: http://vmsingle-vm.telemetry.svc.cluster.local:8428
         access: proxy
         isDefault: true
         editable: false
