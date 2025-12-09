@@ -6,4 +6,5 @@ metadata:
   name: cloudflare-ddns-env
   namespace: networking
 data:
-  DOMAINS: "idp.cianfr.one,photos.cianfr.one,media.cianfr.one,vault.cianfr.one,drive.cianfr.one"
+  # TODO: migrate idp.cianfr.one,photos.cianfr.one,media.cianfr.one,vault.cianfr.one,drive.cianfr.one
+  DOMAINS: "in.nl.cianfr.one"

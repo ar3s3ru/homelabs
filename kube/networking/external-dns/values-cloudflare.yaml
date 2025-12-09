@@ -2,8 +2,6 @@
 provider: cloudflare
 
 managedRecordTypes:
-  - A
-  - AAAA
   - CNAME
 domainFilters:
   - cianfr.one
