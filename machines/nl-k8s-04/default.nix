@@ -1,6 +1,6 @@
 { nixos-hardware, ... }:
 
-{ ... }:
+{ lib, ... }:
 
 {
   deployment.targetHost = "10.0.1.4";
@@ -14,7 +14,7 @@
 
   time.timeZone = "Europe/Amsterdam";
 
-  services.k3s.extraFlags = [
+  services.k3s.extraFlags = lib.mkAfter [
     "--node-label media.transcoding.gpu=medium"
     "--node-label cianfr.one/gpu.transcoding.speed=medium"
     "--node-label cianfr.one/networking.linkspeed=1000Mbits"
@@ -26,7 +26,7 @@
     ../../modules/nix/server.nix
     ../../modules/nix/aarch64-cross-compile.nix
     ../../modules/nix/intel-gpu-hwaccel.nix
-    ../../modules/nix/k3s/server.nix
+    ../../modules/nix/k3s/server-join.nix
     ./disable-docked-sleep.nix
     ./disko.nix
     ./hardware-configuration.nix

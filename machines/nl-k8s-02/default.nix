@@ -1,6 +1,6 @@
 { nixos-hardware, ... }:
 
-{ ... }:
+{ lib, ... }:
 
 {
   deployment.targetHost = "10.0.1.2";
@@ -14,7 +14,7 @@
 
   time.timeZone = "Europe/Amsterdam";
 
-  services.k3s.extraFlags = [
+  services.k3s.extraFlags = lib.mkAfter [
     "--node-label media.transcoding.gpu=fast"
     "--node-label cianfr.one/gpu.transcoding.speed=fast"
     "--node-label cianfr.one/networking.linkspeed=10000Mbits"
@@ -27,7 +27,7 @@
     nixos-hardware.nixosModules.common-gpu-intel
     ../../modules/nix/server.nix
     ../../modules/nix/intel-gpu-hwaccel.nix
-    ../../modules/nix/k3s/server.nix
+    ../../modules/nix/k3s/server-join.nix
     ./disko.nix
     ./networking.nix
     ./hardware-configuration.nix

@@ -1,6 +1,6 @@
 { nixos-hardware, ... }:
 
-{ ... }:
+{ lib, ... }:
 
 {
   deployment.targetHost = "10.0.1.1";
@@ -14,7 +14,7 @@
 
   time.timeZone = "Europe/Amsterdam";
 
-  services.k3s.extraFlags = [
+  services.k3s.extraFlags = lib.mkAfter [
     "--node-label media.transcoding.gpu=fast"
     "--node-label cianfr.one/gpu.transcoding.speed=fast"
     "--node-label cianfr.one/networking.linkspeed=2500Mbits"

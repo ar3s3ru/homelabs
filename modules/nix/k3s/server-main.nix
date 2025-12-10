@@ -1,6 +1,6 @@
 {
   imports = [
-    ./k3s.nix
+    ./server.nix
     ./argocd.nix
     ./tailscale.nix
   ];
