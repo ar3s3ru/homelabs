@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/app-template-4.5.0/charts/other/app-template/values.schema.json
+---
+defaultPodOptions:
+  securityContext:
+    fsGroup: 1000
+    fsGroupChangePolicy: OnRootMismatch
+    runAsGroup: 1000
+    runAsUser: 1000
+
+service:
+  main:
+    type: ClusterIP
+    controller: main
+    ports:
+      http:
+        port: 8080
+
+ingress:
+  tailscale:
+    className: tailscale
+    enabled: true
+    hosts:
+      - host: &host nl-attic.tail2ff90.ts.net
+        paths:
+          - path: "/"
+            pathType: Prefix
+            service:
+              identifier: main
+              port: http
+    tls:
+      - hosts: [*host]
+
+controllers:
+  main:
+    type: deployment
+    replicas: 1
+    strategy: Recreate
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main:
+        image:
+          repository: ghcr.io/zhaofengli/attic
+          tag: latest@sha256:18574aba70fc89d2b695273fbe2e7b2f8ad7e8e786b4cc535124fbe14bada1d0
+        args: [-f, &config-path /var/lib/attic/config.toml]
+        env:
+          PGID: 1000
+          PGUID: 1000
+          TZ: Europe/Amsterdam
+          ATTIC_SERVER_DATABASE_URL:
+            valueFrom:
+              secretKeyRef:
+                name: attic-cnpg-cluster-app
+                key: fqdn-uri
+        probes:
+          liveness: { enabled: false }
+          readiness: { enabled: false }
+          startup: { enabled: false }
+
+persistence:
+  config:
+    enabled: true
+    type: secret
+    name: attic-config
+    globalMounts: [{ path: *config-path, subPath: config.toml }]
+  data:
+    enabled: true
+    type: persistentVolumeClaim
+    existingClaim: attic-data
+    globalMounts: [{ path: /var/lib/attic/data }]

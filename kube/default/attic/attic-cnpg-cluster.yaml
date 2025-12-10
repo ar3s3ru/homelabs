@@ -1,0 +1,36 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: attic-cnpg-cluster
+  namespace: default
+  # annotations:
+  #   cnpg.io/hibernation: "on"
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:18
+
+  storage:
+    size: 5Gi
+    storageClass: longhorn-nvme-3-replicas
+
+  bootstrap:
+    initdb:
+      database: attic
+      owner: attic
+
+  managed:
+    services:
+      disabledDefaultServices: ["ro", "r"]
+      additional:
+        - selectorType: rw
+          serviceTemplate:
+            metadata:
+              name: attic-cnpg
+            spec:
+              type: LoadBalancer
+              loadBalancerClass: tailscale
+          updateStrategy: patch
+
+  monitoring:
+    enablePodMonitor: true
