@@ -1,6 +1,6 @@
 { nixos-hardware, ... }:
 
-{ pkgs, ... }:
+{ ... }:
 
 {
   deployment.targetHost = "10.0.1.4";
@@ -13,10 +13,6 @@
   networking.domain = "home.arpa";
 
   time.timeZone = "Europe/Amsterdam";
-
-  networking.firewall.allowedTCPPorts = [
-    40000 # NOTE: not sure where this is coming from... It was the router (192.168.2.254)
-  ];
 
   services.k3s.extraFlags = [
     "--node-label media.transcoding.gpu=medium"

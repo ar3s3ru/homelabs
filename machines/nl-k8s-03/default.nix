@@ -1,6 +1,6 @@
 { nixos-hardware, ... }:
 
-{ pkgs, ... }:
+{ ... }:
 
 {
   deployment.targetHost = "10.0.1.3";
@@ -11,7 +11,6 @@
 
   networking.hostName = "nl-k8s-03";
   networking.domain = "home.arpa";
-  networking.networkmanager.enable = true;
 
   time.timeZone = "Europe/Amsterdam";
 
