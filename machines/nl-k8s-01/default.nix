@@ -3,7 +3,7 @@
 { lib, ... }:
 
 {
-  deployment.targetHost = "10.0.1.1";
+  deployment.targetHost = "nl-k8s-01.tail2ff90.ts.net";
   deployment.targetUser = "root";
   deployment.tags = [ "type-server" "k8s-server" "region-nl" ];
 

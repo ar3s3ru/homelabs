@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: &name helper-rsync
-  namespace: media
+  namespace: auth
 spec:
   selector:
     matchLabels:
@@ -14,6 +14,15 @@ spec:
       labels:
         app: *name
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - nl-k8s-02
       containers:
         - name: rsync
           image: alpine:3.10.2
@@ -21,7 +30,13 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
+            - name: backup
+              mountPath: /backup
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: immich-postgresql-backup
+            claimName: vaultwarden-v2
+        - name: backup
+          hostPath:
+            type: Directory
+            path: /root/manual-backup-vaultwarden-20251212

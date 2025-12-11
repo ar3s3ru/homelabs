@@ -16,11 +16,15 @@ service:
         port: 8080
 
 ingress:
-  tailscale:
-    className: tailscale
+  main:
     enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: cianfr.one-acme
+      external-dns.alpha.kubernetes.io/hostname: &host attic.cianfr.one
+      external-dns.alpha.kubernetes.io/target: in.nl.cianfr.one
     hosts:
-      - host: &host nl-attic.tail2ff90.ts.net
+      - host: *host
         paths:
           - path: "/"
             pathType: Prefix
@@ -29,6 +33,7 @@ ingress:
               port: http
     tls:
       - hosts: [*host]
+        secretName: attic-tls
 
 controllers:
   main:

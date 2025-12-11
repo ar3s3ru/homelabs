@@ -15,6 +15,9 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
   meta.machinesFile = ./remote-builders;
 
   defaults = { pkgs, lib, ... }: {
+    nix.settings.substituters = [ "https://nl-attic.tail2ff90.ts.net/main" ];
+    nix.settings.trusted-public-keys = [ "main:n0xPC74lOqQnzDSNH3QBE0aWLRdXwuK9ztFxxpMG/Xg=" ];
+
     imports = [
       disko.nixosModules.disko
       sops-nix.nixosModules.sops
