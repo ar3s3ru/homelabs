@@ -139,7 +139,7 @@ configMap:
         allowed_origins_from_client_redirect_uris: true
         endpoints: [userinfo, authorization, token, revocation, introspection]
         allowed_origins:
-          - &opencloud-host https://drive.cianfr.one
+          - https://drive.cianfr.one
 
       # Extend the access and refresh token lifespan from the default 30m to work around OpenCloud client re-authentication prompts every few hours.
       # It should be possible to remove this once Authelia supports dynamic client registration (DCR).
@@ -306,6 +306,7 @@ configMap:
           token_endpoint_auth_method: none
         - client_id: OpenCloudIOS
           client_name: OpenCloud iOS Client
+          claims_policy: default
           lifespan: opencloud
           public: true
           authorization_policy: two_factor
