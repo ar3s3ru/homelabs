@@ -9,7 +9,7 @@ helmCharts:
     repo: https://victoriametrics.github.io/helm-charts/
     # To update: https://github.com/VictoriaMetrics/helm-charts/releases?q=victoria-metrics-k8s-stack&expanded=true
     # https://docs.victoriametrics.com/helm/victoriametrics-k8s-stack/#upgrade-guide
-    version: 0.65.1
+    version: 0.66.0
     releaseName: victoriametrics
     namespace: *namespace
     includeCRDs: true
@@ -17,7 +17,7 @@ helmCharts:
   # Add the prometheys CRDs so that vm can scrape servicemonitors, etc.
   - name: prometheus-operator-crds
     repo: https://prometheus-community.github.io/helm-charts
-    version: 25.0.0
+    version: 25.0.1
     releaseName: prometheus-crds
     namespace: *namespace
     includeCRDs: true
