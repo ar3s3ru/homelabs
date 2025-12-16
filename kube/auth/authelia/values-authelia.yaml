@@ -315,7 +315,6 @@ configMap:
             - openid
             - email
             - profile
-            - groups
             - offline_access
           redirect_uris:
             - oc://ios.opencloud.eu
