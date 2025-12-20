@@ -12,7 +12,7 @@ defaultPodOptions:
 controllers:
   main:
     type: deployment
-    replicas: 1
+    replicas: 0
     annotations:
       reloader.stakater.com/auto: "true"
     containers:
