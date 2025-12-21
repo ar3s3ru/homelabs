@@ -19,7 +19,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/ar3s3ru/homelabs/authelia-proxy
-          tag: latest@sha256:1ad285a3e2354cfb984d9417e631ed51d4dc65da100faa61f1c1238837513014
+          tag: latest@sha256:31cfd733e55475b47d8a34cf342b7ff648cafd5c8bc355895126bbb55949943c
         env:
           PROXY_LISTEN_ADDRESS: 0.0.0.0:10080
           PROXY_UPSTREAM_SERVER_ADDRESS: http://authelia.auth.svc.cluster.local
