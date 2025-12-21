@@ -98,7 +98,7 @@ func appendGroupsOIDCScopeIfMissing(original func(*http.Request)) func(*http.Req
 		// If scope is present, ensure groups is included
 		if scope := values.Get("scope"); scope != "" {
 			if !strings.Contains(scope, "groups") {
-				values.Set("scope", scope+"+groups")
+				values.Set("scope", scope+" groups")
 				log.Printf("added 'groups' to scope: %s", values.Get("scope"))
 			}
 		}
