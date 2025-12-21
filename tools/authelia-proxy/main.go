@@ -91,10 +91,7 @@ func appendGroupsOIDCScopeIfMissing(original func(*http.Request)) func(*http.Req
 	return func(req *http.Request) {
 		original(req)
 
-		// Only process POST/PUT requests with form data
-		if req.Method != http.MethodPost && req.Method != http.MethodPut {
-			return
-		}
+		log.Printf("processing request '%s %s%s' from '%s'", req.Method, req.URL.String(), req.Pattern, req.RemoteAddr)
 
 		contentType := req.Header.Get("Content-Type")
 		if !strings.HasPrefix(contentType, "application/x-www-form-urlencoded") {
@@ -125,6 +122,8 @@ func appendGroupsOIDCScopeIfMissing(original func(*http.Request)) func(*http.Req
 
 			return
 		}
+
+		log.Printf("received url query values: %v", values.Encode())
 
 		// If scope is present, ensure groups is included
 		if scope := values.Get("scope"); scope != "" {
