@@ -4,11 +4,9 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"errors"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -93,49 +91,19 @@ func appendGroupsOIDCScopeIfMissing(original func(*http.Request)) func(*http.Req
 
 		log.Printf("processing request '%s %s%s' from '%s'", req.Method, req.URL.String(), req.Pattern, req.RemoteAddr)
 
-		contentType := req.Header.Get("Content-Type")
-		if !strings.HasPrefix(contentType, "application/x-www-form-urlencoded") {
-			return
-		}
-
-		if req.Body == nil {
-			return
-		}
-
-		bodyBytes, err := io.ReadAll(req.Body)
-		if err != nil {
-			log.Printf("failed to read request body: %v", err)
-			return
-		}
-
-		if err := req.Body.Close(); err != nil {
-			log.Printf("failed to close request body: %v", err)
-			return
-		}
-
-		values, err := url.ParseQuery(string(bodyBytes))
-		if err != nil {
-			log.Printf("failed to parse form values: %v", err)
-
-			req.Body = io.NopCloser(bytes.NewReader(bodyBytes))
-			req.ContentLength = int64(len(bodyBytes))
-
-			return
-		}
+		values := req.URL.Query()
 
 		log.Printf("received url query values: %v", values.Encode())
 
 		// If scope is present, ensure groups is included
 		if scope := values.Get("scope"); scope != "" {
 			if !strings.Contains(scope, "groups") {
-				values.Set("scope", scope+" groups")
+				values.Set("scope", scope+"+groups")
 				log.Printf("added 'groups' to scope: %s", values.Get("scope"))
 			}
 		}
 
-		// Encode the modified body
-		newBody := values.Encode()
-		req.Body = io.NopCloser(strings.NewReader(newBody))
-		req.ContentLength = int64(len(newBody))
+		// Update the request URL with the modified query parameters
+		req.URL.RawQuery = values.Encode()
 	}
 }
