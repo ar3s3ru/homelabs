@@ -59,6 +59,16 @@
               garage # Management of garage system.
               argocd # CLI for interacting with ArgoCD.
               kustomize
+            ] ++
+            # Go packages for tool development.
+            [
+              go
+              ko
+              golangci-lint
+              gopls
+              delve
+              go-outline
+              gopkgs
             ];
 
             env = [

@@ -1,0 +1,28 @@
+---
+name: Build Tools
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+on: # yamllint disable-line rule:truthy
+  workflow_dispatch: {}
+  push:
+    branches:
+      - main
+
+jobs:
+  authelia-proxy:
+    name: Build authelia-proxy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.x"
+      - uses: ko-build/setup-ko@v0.8
+      - run: ko build ./tools/authelia-proxy

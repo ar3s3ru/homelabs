@@ -1,0 +1,131 @@
+---
+version: "2"
+run:
+  timeout: 5m
+linters:
+  default: none
+  enable:
+    - bodyclose
+    - copyloopvar
+    - dogsled
+    - errcheck
+    - exhaustive
+    - exhaustruct
+    - funlen
+    - gochecknoinits
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - govet
+    - ineffassign
+    - lll
+    - makezero
+    - misspell
+    - mnd
+    - nakedret
+    - nestif
+    - nilerr
+    - nolintlint
+    - prealloc
+    - revive
+    - rowserrcheck
+    - sqlclosecheck
+    - staticcheck
+    - tagliatelle
+    - testpackage
+    - unconvert
+    - unparam
+    - wastedassign
+    - whitespace
+    # - wsl
+    - wsl_v5
+  settings:
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
+    exhaustruct:
+      exclude:
+        - http\.Server
+        - http2\.Server
+    exhaustive:
+      ignore-enum-members: ".+_not_set_case"
+    gocritic:
+      disabled-checks:
+        - dupImport
+      enabled-tags:
+        - diagnostic
+        - experimental
+        - opinionated
+        - performance
+        - style
+    gocyclo:
+      min-complexity: 20
+    gomodguard:
+      blocked:
+        modules:
+          - github.com/golang/protobuf:
+              recommendations:
+                - google.golang.org/protobuf
+    lll:
+      line-length: 160
+    misspell:
+      locale: US
+    tagliatelle:
+      case:
+        rules:
+          json: snake
+    unparam:
+      check-exported: true
+    unused:
+      exported-fields-are-used: false
+    varnamelen:
+      ignore-names:
+        - err
+        - tc
+        - id
+    wsl_v5:
+      allow-first-in-block: true
+      allow-whole-block: false
+      branch-max-lines: 2
+  exclusions:
+    generated: lax
+    rules:
+      - linters:
+          - funlen
+        path: _test\.go
+    paths:
+      - gen/go
+      - backend/internal/storage
+      - third_party$
+      - builtin$
+      - examples$
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+formatters:
+  enable:
+    - gci
+    - gofumpt
+    - goimports
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(github.com/ar3s3ru/homelabs)
+    goimports:
+      local-prefixes:
+        - prefix(github.com/ar3s3ru/homelabs)
+  exclusions:
+    generated: lax
+    paths:
+      - gen/go
+      - third_party$
+      - builtin$
+      - examples$
