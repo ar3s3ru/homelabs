@@ -1,0 +1,28 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.32.4/ingress.json
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: authelia
+  namespace: auth
+  annotations:
+    cert-manager.io/cluster-issuer: cianfr.one-acme
+    external-dns.alpha.kubernetes.io/hostname: &host idp.cianfr.one
+    external-dns.alpha.kubernetes.io/target: in.nl.cianfr.one
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: *host
+      http:
+        paths:
+          - backend:
+              service:
+                name: authelia
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - *host
+      secretName: authelia-tls

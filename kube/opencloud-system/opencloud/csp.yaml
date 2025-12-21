@@ -9,6 +9,7 @@ directives:
     # - "wss://${COMPANION_DOMAIN|companion.opencloud.test}/"
     - "https://raw.githubusercontent.com/opencloud-eu/awesome-apps/"
     - "https://idp.cianfr.one"
+    - "https://idpx.cianfr.one"
   default-src:
     - "'none'"
   font-src:
@@ -24,6 +25,7 @@ directives:
     # This is needed for the external-sites web extension when embedding sites
     - "https://docs.opencloud.eu"
     - "https://idp.cianfr.one"
+    - "https://idpx.cianfr.one"
   img-src:
     - "'self'"
     - "data:"

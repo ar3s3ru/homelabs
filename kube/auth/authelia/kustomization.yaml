@@ -6,6 +6,7 @@ namespace: &namespace auth
 
 resources:
   - authelia-cnpg-cluster.yaml
+  - ingress.yaml
 
 generators:
   - ksops.yaml
@@ -17,6 +18,12 @@ helmCharts:
     releaseName: authelia
     namespace: *namespace
     valuesFile: values-authelia.yaml
+  - name: app-template
+    repo: https://bjw-s-labs.github.io/helm-charts
+    version: 4.5.0
+    releaseName: authelia-proxy
+    namespace: *namespace
+    valuesFile: values-proxy.yaml
   - name: redis
     repo: https://ot-container-kit.github.io/helm-charts
     version: 0.16.8

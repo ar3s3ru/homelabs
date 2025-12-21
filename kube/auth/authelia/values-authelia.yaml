@@ -1,14 +1,7 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/authelia/chartrepo/refs/heads/master/charts/authelia/values.schema.json
 ingress:
-  enabled: true
-  className: "nginx"
-  annotations:
-    cert-manager.io/cluster-issuer: cianfr.one-acme
-    external-dns.alpha.kubernetes.io/hostname: idp.cianfr.one
-    external-dns.alpha.kubernetes.io/target: in.nl.cianfr.one
-  tls: { enabled: true }
-  traefikCRD: { enabled: false, disableIngressRoute: true }
+  enabled: false # Managed manually in a separate resource.
 
 pod:
   kind: Deployment # Only need a single deployment/replica for now.
@@ -99,7 +92,6 @@ configMap:
   session:
     cookies:
       - domain: cianfr.one
-        subdomain: idp
     encryption_key: { secret_name: "authelia-secrets" }
     redis:
       enabled: true
@@ -318,6 +310,7 @@ configMap:
             - email
             - profile
             - offline_access
+            - groups
           redirect_uris:
             - http://127.0.0.1
           response_types:
@@ -343,6 +336,7 @@ configMap:
             - email
             - profile
             - offline_access
+            - groups
           redirect_uris:
             - oc://ios.opencloud.eu
           response_types:
