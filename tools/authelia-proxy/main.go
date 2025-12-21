@@ -4,9 +4,11 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -91,19 +93,65 @@ func appendGroupsOIDCScopeIfMissing(original func(*http.Request)) func(*http.Req
 
 		log.Printf("processing request '%s %s%s' from '%s'", req.Method, req.URL.String(), req.Pattern, req.RemoteAddr)
 
-		values := req.URL.Query()
-
-		log.Printf("received url query values: %v", values.Encode())
-
-		// If scope is present, ensure groups is included
-		if scope := values.Get("scope"); scope != "" {
-			if !strings.Contains(scope, "groups") {
-				values.Set("scope", scope+" groups")
-				log.Printf("added 'groups' to scope: %s", values.Get("scope"))
-			}
+		switch req.Method {
+		case http.MethodGet:
+			appendGroupsToQueryParams(req)
+		case http.MethodPost:
+			appendGroupsToFormBody(req)
 		}
-
-		// Update the request URL with the modified query parameters
-		req.URL.RawQuery = values.Encode()
 	}
+}
+
+func appendGroupsToQueryParams(req *http.Request) {
+	values := req.URL.Query()
+
+	log.Printf("received url query values: %v", values.Encode())
+
+	if scope := values.Get("scope"); scope != "" {
+		if !strings.Contains(scope, "groups") {
+			values.Set("scope", scope+" groups")
+			log.Printf("added 'groups' to scope in query: %s", values.Get("scope"))
+		}
+	}
+
+	req.URL.RawQuery = values.Encode()
+}
+
+func appendGroupsToFormBody(req *http.Request) {
+	contentType := req.Header.Get("Content-Type")
+	if !strings.HasPrefix(contentType, "application/x-www-form-urlencoded") {
+		return
+	}
+
+	if req.Body == nil {
+		return
+	}
+
+	bodyBytes, err := io.ReadAll(req.Body)
+	if err != nil {
+		log.Printf("failed to read request body: %v", err)
+		return
+	}
+	req.Body.Close()
+
+	log.Printf("received form body: %s", string(bodyBytes))
+
+	values, err := url.ParseQuery(string(bodyBytes))
+	if err != nil {
+		log.Printf("failed to parse form values: %v", err)
+		req.Body = io.NopCloser(bytes.NewReader(bodyBytes))
+		req.ContentLength = int64(len(bodyBytes))
+		return
+	}
+
+	if scope := values.Get("scope"); scope != "" {
+		if !strings.Contains(scope, "groups") {
+			values.Set("scope", scope+" groups")
+			log.Printf("added 'groups' to scope in body: %s", values.Get("scope"))
+		}
+	}
+
+	newBody := values.Encode()
+	req.Body = io.NopCloser(strings.NewReader(newBody))
+	req.ContentLength = int64(len(newBody))
 }
