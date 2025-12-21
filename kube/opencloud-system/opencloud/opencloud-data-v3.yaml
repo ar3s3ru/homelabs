@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.34.2/persistentvolume-v1.json
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: opencloud-data-v3
+spec:
+  capacity:
+    storage: 200Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: truenas.home.arpa
+    path: /mnt/pool0/files
+  mountOptions:
+    - nfsvers=4.2
+    - hard
+    - timeo=300
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.34.2/persistentvolumeclaim-v1.json
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: opencloud-data-v3
+  namespace: opencloud-system
+spec:
+  storageClassName: ""
+  volumeName: opencloud-data-v3
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 200Gi
