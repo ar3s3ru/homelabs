@@ -10,7 +10,6 @@ keys:
   - &nl-k8s-02 age143yn95y2n546rlqrhgy2nzrz0w87ks7fk9dlwp3ylt0dfflczuhqrv2lmv
   - &nl-k8s-03 age1n6eedefn6afu4e2f492xhfhckrayvp65jp7hla3x4nwj2zwz7sasw6ls6k
   - &nl-k8s-04 age12g62sqmpz4pztx8zn94n8rxzklj7fj805g78m50kxu44yqy26azs2vph2y
-  - &dejima-ts age18tdafrhnvtp9fyja20e9dhq3knq9lyrtnyppr3xu8n0nwce40gxswu5ww9
 creation_rules:
   - path_regex: "machines/secrets.yaml"
     key_groups:
@@ -18,7 +17,6 @@ creation_rules:
           - *ar3s3ru
         age:
           - *github-actions
-          - *dejima-ts
           - *nl-k8s-01
           - *nl-k8s-02
           - *nl-k8s-03
@@ -29,7 +27,6 @@ creation_rules:
           - *ar3s3ru
         age:
           - *github-actions
-          - *dejima-ts
   - path_regex: "machines/nl-k8s-04/secrets.yaml"
     key_groups:
       - pgp:
@@ -49,19 +46,17 @@ creation_rules:
           - *ar3s3ru
         age:
           - *github-actions
-          - *dejima-ts
           - *nl-k8s-01
           - *nl-k8s-02
           - *nl-k8s-03
           - *nl-k8s-04
-  - path_regex: "modules/nix/k3s/secrets/.*.yaml"
+  - path_regex: "modules/k3s/secrets/.*.yaml"
     encrypted_regex: "^(data|stringData)$"
     key_groups:
       - pgp:
           - *ar3s3ru
         age:
           - *github-actions
-          - *dejima-ts
           - *nl-k8s-01
           - *nl-k8s-02
           - *nl-k8s-03

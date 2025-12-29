@@ -5,14 +5,11 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
   nl-k8s-02 = import ./nl-k8s-02 inputs;
   nl-k8s-03 = import ./nl-k8s-03 inputs;
   nl-k8s-04 = import ./nl-k8s-04 inputs;
-  dejima = import ./dejima inputs;
 
   meta.nixpkgs = import nixpkgs {
     system = "x86_64-linux";
-    overlays = [ (import ../modules/nix/overlays) ];
+    overlays = [ ];
   };
-
-  meta.machinesFile = ./remote-builders;
 
   defaults = { pkgs, lib, ... }: {
     nix.settings.substituters = [ "https://nl-attic.tail2ff90.ts.net/main" ];

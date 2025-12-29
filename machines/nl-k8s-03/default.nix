@@ -25,9 +25,9 @@
     nixos-hardware.nixosModules.common-pc-ssd
     nixos-hardware.nixosModules.common-cpu-intel
     nixos-hardware.nixosModules.common-gpu-intel
-    ../../modules/nix/server.nix
-    ../../modules/nix/intel-gpu-hwaccel.nix
-    ../../modules/nix/k3s/server-join.nix
+    ../../modules/server.nix
+    ../../modules/intel-gpu-hwaccel.nix
+    ../../modules/k3s/server-join.nix
     ./disko.nix
     ./networking.nix
     ./hardware-configuration.nix
