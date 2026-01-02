@@ -10,7 +10,7 @@ generators:
 helmCharts:
   - name: grafana
     repo: https://grafana.github.io/helm-charts
-    version: 10.4.0
+    version: 10.4.3
     releaseName: grafana
     namespace: *namespace
     valuesFile: values.yaml
