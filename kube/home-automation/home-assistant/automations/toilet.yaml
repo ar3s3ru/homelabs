@@ -19,7 +19,7 @@
         entity_id: media_player.toilet_speaker
       data:
         media_type: album
-        media_id: "jellyfin--Dzu8fLKR://album/eedbcfa88594ceda380a69a3b875b978"
+        media_id: library://album/49
     - alias: Turn on shuffling on Toilet Speaker
       action: media_player.shuffle_set
       target:
