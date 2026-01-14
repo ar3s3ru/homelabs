@@ -6,12 +6,11 @@ namespace: &namespace telemetry
 
 resources:
   - victorialogs-data.yaml
-
-helmCharts:
-  - name: victoria-logs-single
-    repo: https://victoriametrics.github.io/helm-charts/
-    version: 0.11.23
-    releaseName: victorialogs
-    namespace: *namespace
-    includeCRDs: true
-    valuesFile: values.yaml
+# helmCharts:
+#   - name: victoria-logs-single
+#     repo: https://victoriametrics.github.io/helm-charts/
+#     version: 0.11.23
+#     releaseName: victorialogs
+#     namespace: *namespace
+#     includeCRDs: true
+#     valuesFile: values.yaml
