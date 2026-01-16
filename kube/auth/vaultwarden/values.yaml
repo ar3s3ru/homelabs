@@ -60,5 +60,5 @@ vaultwarden:
     enabled: true
     host: smtp.gmail.com
     from: "nl.homelab.ar3s3ru@gmail.com"
-    port: 587
+    port: "587"
     existingSecret: vaultwarden-secrets
