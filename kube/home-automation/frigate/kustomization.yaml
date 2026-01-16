@@ -5,15 +5,16 @@ kind: Kustomization
 namespace: &namespace home-automation
 
 resources:
-  # - frigate-config-v2.yaml
+  - frigate-config-v2.yaml
   - frigate-media-v3.yaml
 
 generators:
   - ksops.yaml
-# helmCharts:
-#   - name: frigate
-#     repo: https://blakeblackshear.github.io/blakeshome-charts
-#     version: 7.8.0
-#     releaseName: frigate
-#     namespace: *namespace
-#     valuesFile: values.yaml
+
+helmCharts:
+  - name: frigate
+    repo: https://blakeblackshear.github.io/blakeshome-charts
+    version: 7.8.0
+    releaseName: frigate
+    namespace: *namespace
+    valuesFile: values.yaml
