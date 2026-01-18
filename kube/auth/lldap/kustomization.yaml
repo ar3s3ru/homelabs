@@ -14,7 +14,7 @@ generators:
 helmCharts:
   - name: app-template
     repo: https://bjw-s-labs.github.io/helm-charts
-    version: 4.5.0
+    version: 4.6.2
     releaseName: lldap
     namespace: *namespace
     valuesFile: values.yaml
