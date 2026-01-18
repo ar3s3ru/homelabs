@@ -73,6 +73,11 @@ input_boolean:
     name: Turn on the Coffee Machine in the morning
     icon: mdi:coffee-maker
 
+input_button:
+  vacuum_around_litter_robot:
+    name: Vacuum around Litter Robot
+    icon: mdi:robot-vacuum
+
 input_number:
   litter_robot_waste_drawer_level_notification:
     name: Litter Robot waste drawer fill percentage notification
