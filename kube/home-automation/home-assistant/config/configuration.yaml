@@ -34,18 +34,6 @@ auth_oidc:
     admin: home-admin
     user: home-member
 
-# Used for sending notifications to relevant devices/people.
-telegram_bot:
-  - platform: polling
-    api_key: !secret telegram_bot_token
-    allowed_chat_ids:
-      - !secret telegram_chat_id
-
-notify:
-  - platform: telegram
-    name: telegram-bot
-    chat_id: !secret telegram_chat_id
-
 automation: !include automations.yaml # Required for the UI automations to work
 script: !include scripts.yaml
 scene: !include scenes.yaml
