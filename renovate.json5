@@ -1,16 +1,10 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: [":pinDependencies", "config:best-practices", "group:allNonMajor", "customManagers:githubActionsVersions"],
+  extends: [":pinDependencies", "config:best-practices", "customManagers:githubActionsVersions"],
   branchPrefix: "chore/renovate-",
   rebaseWhen: "behind-base-branch",
-  ignorePaths: ["**/provider_override.tf"],
   nix: {
     enabled: true,
-  },
-  lockFileMaintenance: {
-    enabled: true,
-    recreateWhen: "always",
-    rebaseWhen: "behind-base-branch",
   },
   packageRules: [
     {
