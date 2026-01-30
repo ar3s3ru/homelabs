@@ -10,7 +10,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/music-assistant/server
-          tag: "2.7.5"
+          tag: "2.7.6"
         env:
           LOG_LEVEL: info
         probes:
