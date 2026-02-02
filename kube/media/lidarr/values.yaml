@@ -44,7 +44,7 @@ controllers:
           TZ: Europe/Amsterdam
         image:
           repository: ghcr.io/linuxserver/lidarr
-          tag: 2.14.5
+          tag: 3.1.0
         probes:
           liveness: { enabled: false }
           readiness: { enabled: false }
