@@ -17,7 +17,7 @@ helmCharts:
   # Add the prometheys CRDs so that vm can scrape servicemonitors, etc.
   - name: prometheus-operator-crds
     repo: https://prometheus-community.github.io/helm-charts
-    version: 26.0.0
+    version: 26.0.1
     releaseName: prometheus-crds
     namespace: *namespace
     includeCRDs: true
