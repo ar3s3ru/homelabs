@@ -7,10 +7,10 @@ namespace: &namespace media
 resources:
   - persistentvolumeclaims.yaml
 
-# helmCharts:
-#   - name: app-template
-#     repo: https://bjw-s-labs.github.io/helm-charts
-#     version: 4.5.0
-#     releaseName: lidarr
-#     namespace: *namespace
-#     valuesFile: values.yaml
+helmCharts:
+  - name: app-template
+    repo: https://bjw-s-labs.github.io/helm-charts
+    version: 4.5.0
+    releaseName: lidarr
+    namespace: *namespace
+    valuesFile: values.yaml
