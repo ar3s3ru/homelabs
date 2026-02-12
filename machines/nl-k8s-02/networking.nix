@@ -11,7 +11,7 @@
 
   # networking.interfaces.ens18.ipv6.addresses = [{
   #   address = "fd00:cafe::1:2";
-  #   prefixLength = 64;
+  #   prefixLength = 128;
   # }];
 
   # networking.nameservers = [ "10.0.0.1" ];
