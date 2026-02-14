@@ -1,18 +1,11 @@
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/values.schema.json
 defaultPodOptions:
+  hostNetwork: true
   securityContext:
-    runAsUser: 1000
-    runAsGroup: 1000
     fsGroup: 1000
-    fsGroupChangePolicy: "OnRootMismatch"
-  resources:
-    requests:
-      memory: 256Mi
-      cpu: 100m
-    limits:
-      memory: 512Mi
-      cpu: 200m
+    fsGroupChangePolicy: OnRootMismatch
+    runAsGroup: 1000
+    runAsUser: 1000
 
 service:
   main:
@@ -20,14 +13,14 @@ service:
     controller: main
     ports:
       http:
-        port: 9696
+        port: &esphome-port 6052
 
 ingress:
   tailscale:
     className: tailscale
     enabled: true
     hosts:
-      - host: nl-prowlarr
+      - host: &host nl-esphome.tail2ff90.ts.net
         paths:
           - path: "/"
             pathType: Prefix
@@ -35,13 +28,12 @@ ingress:
               identifier: main
               port: http
     tls:
-      - hosts: [nl-prowlarr]
+      - hosts: [*host]
 
 controllers:
   main:
     type: deployment
     replicas: 1
-    strategy: Recreate
     annotations:
       "reloader.stakater.com/auto": "true"
     containers:
@@ -51,21 +43,34 @@ controllers:
           PGUID: 1000
           TZ: Europe/Amsterdam
         image:
-          repository: ghcr.io/linuxserver/prowlarr
-          tag: 2.3.0
+          repository: ghcr.io/home-operations/esphome
+          tag: 2026.1.0@sha256:8f151bbd451517ebb000c9094646475d3ea10b4559fbb8dc919926208e86c017
         probes:
           liveness: { enabled: false }
           readiness: { enabled: false }
-          startup: { enabled: true }
+          startup: { enabled: false }
+        resources:
+          requests:
+            cpu: 5m
+            memory: 512Mi
+          limits:
+            memory: 3072Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          # capabilities:
+          #   drop:
+          #     - ALL
 
 persistence:
   config:
     enabled: true
-    existingClaim: prowlarr-config-v2
+    type: persistentVolumeClaim
+    existingClaim: esphome-config
     globalMounts: [{ path: /config }]
-    type: persistentVolumeClaim
-  media:
+  tmpfs:
     enabled: true
-    existingClaim: media-data-v4
-    globalMounts: [{ path: /data }]
-    type: persistentVolumeClaim
+    type: emptyDir
+    globalMounts:
+      - { path: /cache, subPath: cache }
+      - { path: /tmp, subPath: esphome-tmp }
