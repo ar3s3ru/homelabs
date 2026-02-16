@@ -89,7 +89,7 @@ controllers:
           - configMap: config
         image:
           repository: opencloudeu/opencloud-rolling
-          tag: 5.0.1
+          tag: 5.1.0
         command: ["/bin/sh", "-c"]
         args: ["opencloud server"]
 
