@@ -56,7 +56,7 @@ controllers:
         probes:
           liveness: { enabled: false }
           readiness: { enabled: false }
-          startup: { enabled: true }
+          startup: { enabled: false }
 
 persistence:
   config:
