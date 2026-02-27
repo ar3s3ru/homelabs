@@ -12,7 +12,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 478Mi
+      storage: 1.5Gi
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.34.2/persistentvolumeclaim-v1.json
 apiVersion: v1
