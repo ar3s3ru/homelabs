@@ -49,7 +49,7 @@
       customType: "regex",
       managerFilePatterns: ["/(^|/)*\\.nix$/"],
       datasourceTemplate: "helm",
-      matchStrings: ['\\s*repo\\s+=\\s+"*(?<depName>.*?)";*\\s*version\\s+=\\s+"*(?<currentValue>[\\w+\\.\\-]*)"*'],
+      matchStrings: ['\\s*name\\s+=\\s+"*(?<depName>.*?)";*\\s*repo\\s+=\\s+"*(?<registryUrl>.*?)";*\\s*version\\s+=\\s+"*(?<currentValue>[\\w+\\.\\-]*)"*'],
     },
   ],
 }
