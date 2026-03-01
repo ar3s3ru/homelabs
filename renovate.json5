@@ -17,6 +17,17 @@
     {
       matchManagers: ["nix"],
     },
+    // Automerge patch updates.
+    {
+      matchUpdateTypes: ["patch"],
+      automerge: true,
+    },
+    // Automerge minor updates for non 0.x.x versions.
+    {
+      matchUpdateTypes: ["minor"],
+      matchCurrentVersion: "!/^0/",
+      automerge: true,
+    },
   ],
   customManagers: [
     // Docker images defined in Terraform files (as Helm values).
