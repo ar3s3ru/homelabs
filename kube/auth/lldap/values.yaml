@@ -48,7 +48,8 @@ controllers:
     type: job
     annotations:
       reloader.stakater.com/auto: "true"
-      helm.sh/hook-delete-policy: before-hook-creation
+      argocd.argoproj.io/hook: PreSync
+      argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
     containers:
       main:
         image:

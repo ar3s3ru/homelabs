@@ -15,3 +15,4 @@ data:
   opencloud-spaceadmin.json: '{"name":"opencloud-spaceadmin"}'
   opencloud-member.json: '{"name":"opencloud-member"}'
   opencloud-guest.json: '{"name":"opencloud-guest"}'
+  ticket-printer-operator.json: '{"name":"ticket-printer-operator"}'
