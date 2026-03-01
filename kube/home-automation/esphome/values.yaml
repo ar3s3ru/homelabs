@@ -44,7 +44,7 @@ controllers:
           TZ: Europe/Amsterdam
         image:
           repository: ghcr.io/home-operations/esphome
-          tag: 2026.2.2@sha256:8f151bbd451517ebb000c9094646475d3ea10b4559fbb8dc919926208e86c017
+          tag: 2026.2.2@sha256:26ab98348a285e660ffb1eabd91fc52128985dbb3aba8570b2d76a7229f84aaa
         probes:
           liveness: { enabled: false }
           readiness: { enabled: false }
