@@ -68,3 +68,9 @@ creation_rules:
           - *ar3s3ru
         age:
           - *argocd
+  - path_regex: "networking/.*/secrets.yaml"
+    key_groups:
+      - pgp:
+          - *ar3s3ru
+        age:
+          - *github-actions

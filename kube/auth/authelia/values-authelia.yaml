@@ -126,6 +126,7 @@ configMap:
     oidc:
       enabled: true
       hmac_secret: { secret_name: "authelia-secrets" }
+      enable_jwt_access_token_stateless_introspection: true
 
       cors:
         allowed_origins_from_client_redirect_uris: true
@@ -349,3 +350,27 @@ configMap:
           access_token_signed_response_alg: none
           userinfo_signed_response_alg: none
           token_endpoint_auth_method: none
+        - client_id: "ticket-printer"
+          client_name: "Ticket Printer"
+          public: true
+          require_pkce: true
+          pkce_challenge_method: S256
+          authorization_policy: one_factor
+          token_endpoint_auth_method: none
+          audience:
+            - https://ticketprinter.cianfr.one
+            - http://localhost:10080
+          scopes:
+            - openid
+            - profile
+            - groups
+            - offline_access
+          redirect_uris:
+            - ticketprinter://auth-callback
+          grant_types:
+            - authorization_code
+            - refresh_token
+          response_types:
+            - code
+          response_modes:
+            - query

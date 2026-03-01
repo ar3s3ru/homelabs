@@ -27,6 +27,7 @@
   networking.firewall.allowedTCPPorts = [
     2379
     2380 # k3s etcd cluster coordination
+    6052 # esphome hostNetwork
     6443 # k8s apiserver
     7946
     8056 # govee2mqtt
