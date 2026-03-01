@@ -24,7 +24,7 @@
     name = "tailscale-operator";
     repo = "https://pkgs.tailscale.com/helmcharts";
     version = "1.94.2";
-    hash = "sha256-8pZyWgBTDtnUXnYzDCtbXtTzvUe35BnqHckI/bBuk7o=";
+    hash = "sha256-BtZ24mCT2GMHE9iR+2xuIkB+4m1r2OC3WLkY3jC3i3I=";
     targetNamespace = "networking";
     extraFieldDefinitions = {
       spec = {
