@@ -45,7 +45,7 @@ controllers:
           TZ: Europe/Amsterdam
         image:
           repository: ghcr.io/linuxserver/sonarr
-          tag: 4.0.16
+          tag: 4.0.16@sha256:6f73bbba33391a338e20d836a60c86beaf2a865a89b706b339fc8cb0b8ce1559
         probes:
           liveness: { enabled: false }
           readiness: { enabled: false }

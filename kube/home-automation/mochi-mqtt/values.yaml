@@ -18,7 +18,7 @@ controllers:
       main:
         image:
           repository: docker.io/mochimqtt/server
-          tag: 2.7.9
+          tag: 2.7.9@sha256:acbffec341dc5fac5cf55710a4ae8b6ad977658d38148dd85c417dd5478a0a81
         probes:
           liveness: &probe
             enabled: true
