@@ -39,7 +39,7 @@
       customType: "regex",
       managerFilePatterns: ["/(^|/)*\\.yaml$/"],
       datasourceTemplate: "docker",
-      matchStrings: ['\\s*repository:\\s+"*(?<depName>.*?)"*\\s*tag:\\s+"*(?<currentValue>[\\w+\\.\\-]*)"*'],
+      matchStrings: ['\\s*repository:\\s+"*(?<depName>.*?)"*\\s*tag:\\s+"*(?<currentValue>[\\w+\\.\\-]*)(@(?<currentDigest>sha256:[a-f0-9]+))?"*'],
     },
     // Helm charts defined in Nix files.
     {
