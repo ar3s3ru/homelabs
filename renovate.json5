@@ -3,9 +3,6 @@
   extends: [":pinDependencies", "config:best-practices", "customManagers:githubActionsVersions"],
   branchPrefix: "chore/renovate-",
   rebaseWhen: "behind-base-branch",
-  nix: {
-    enabled: true,
-  },
   packageRules: [
     {
       matchManagers: "github-actions",
