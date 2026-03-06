@@ -51,7 +51,7 @@ controllers:
           YTDL_OPTIONS: '{"http_headers":{"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0"},"cookiefile":"/config/cookies.txt"}'
         image:
           repository: ghcr.io/alexta69/metube
-          tag: "2026.03.03@sha256:2abd785e515a632562deafd3cb97d318c7acc63b5cec0657b36f257d0254d8e4"
+          tag: "2026.03.06@sha256:065d6f9fd49210bdf54fa272017502a70b7483d98824953d01a22f82b0527855"
         probes:
           liveness: { enabled: false }
           readiness: { enabled: false }
