@@ -28,7 +28,6 @@
         let
           overlays = [
             devshell.overlays.default
-            (import ./modules/nix/overlays)
           ];
 
           pkgs = import nixpkgs {
