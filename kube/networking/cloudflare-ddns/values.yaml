@@ -19,7 +19,7 @@ controllers:
       main:
         image:
           repository: docker.io/favonia/cloudflare-ddns
-          tag: edge-alpine@sha256:9887faab1811d12e52c04089c2c343e0fb416260c80c35deb21aff95052f2a49
+          tag: edge-alpine@sha256:ae2c274f6173fc6bdf14ad422e3ae9c2d8051ec2af22e38b5ae9a3908e75f31f
         probes:
           # FIXME(ar3s3ru): find a way to enable these?
           liveness: { enabled: false }
