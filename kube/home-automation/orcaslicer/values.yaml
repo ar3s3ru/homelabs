@@ -18,7 +18,7 @@ controllers:
       main:
         image:
           repository: ghcr.io/linuxserver/orcaslicer
-          tag: 2.3.2@sha256:b001363fe8f05918d541ff8de543a253cce060e86eb3d73de717e314f2f4ab27
+          tag: 2.3.2@sha256:51daa3774b882cdc662cc1ad2bcbd08730dbd99e481b38743757d34271c14b8e
         env:
           TZ: Europe/Amsterdam
           # Source: https://docs.linuxserver.io/images/docker-orcaslicer/#hardware-acceleration-the-move-to-wayland
