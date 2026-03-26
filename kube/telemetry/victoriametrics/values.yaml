@@ -28,6 +28,23 @@ vmsingle:
 vmcluster:
   enabled: false
 
+kubelet:
+  vmScrape:
+    spec:
+      metricRelabelConfigs:
+        # Chart defaults
+        - action: labeldrop
+          regex: (uid)
+        - action: labeldrop
+          regex: (id|name)
+        - action: drop
+          source_labels: [__name__]
+          regex: (rest_client_request_duration_seconds_bucket|rest_client_request_duration_seconds_sum|rest_client_request_duration_seconds_count)
+        # Drop noisy node-feature-discovery labels that inflate series to 75+ labels,
+        # exceeding vmsingle's default maxLabelsPerTimeseries limit (30).
+        - action: labeldrop
+          regex: (feature_node_kubernetes_io_.+|beta_kubernetes_io_.+)
+
 defaultDashboards:
   enabled: true
 
