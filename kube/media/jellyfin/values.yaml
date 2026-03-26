@@ -1,4 +1,8 @@
 ---
+image:
+  repository: docker.io/jellyfin/jellyfin
+  tag: 10.11.6
+
 replicaCount: 1
 deploymentStrategy:
   type: Recreate # Using RWO backing volume.
