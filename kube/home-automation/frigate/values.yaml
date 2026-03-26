@@ -68,7 +68,7 @@ persistence:
 
 config: |
   mqtt:
-    host: "mochi-mqtt.home-automation.svc.cluster.local"
+    host: "mosquitto.home-automation.svc.cluster.local"
     port: 1883
 
   ffmpeg:

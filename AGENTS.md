@@ -59,3 +59,9 @@ Both `{namespace}` and `{app}` will be treated by ArgoCD as a dynamically-genera
 - A `values-*.yaml` file that defines the configuration of a specific Helm chart (referenced in `kustomization.yaml` under `helmCharts`)
 - (Optional) One or more Kubernetes resources manifests (e.g. `my-app-data.yaml` for a `my-app-data` PersistentVolumeClaim), to be imported under `kustomization.yaml` in `resources`
 - (Optional) A `ksops.yaml` file that references any `*.enc.yaml` file, which should be `Secret` resources encrypted using SOPS, and the `ksops.yaml` should be imported in `kustomization.yaml` under `generators`.
+
+## Adding apps and workloads to Kubernetes
+
+When adding apps and workloads to Kubernetes, you could use <https://kubesearch.dev> to research `HelmRelease` resources from open-source, home clusters on GitHub.
+
+You can then use those examples to map it into the format used in this repository.
