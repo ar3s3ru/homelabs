@@ -30,8 +30,6 @@ vmcluster:
 
 defaultDashboards:
   enabled: true
-  labels:
-    grafana_dashboard: "1"
 
 # kubeProxy:
 #   enabled: true
