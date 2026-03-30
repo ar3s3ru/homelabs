@@ -13,7 +13,7 @@ generators:
 helmCharts:
   - name: vaultwarden
     repo: https://gissilabs.github.io/charts
-    version: 1.3.0
+    version: 1.4.0
     releaseName: vaultwarden
     namespace: *namespace
     valuesFile: values.yaml
