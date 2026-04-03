@@ -42,6 +42,7 @@ secret:
         - { key: vaultwarden.client_secret.key, path: vaultwarden.client_secret.key }
         - { key: grafana.client_secret.key, path: grafana.client_secret.key }
         - { key: jellyseerr.client_secret.key, path: jellyseerr.client_secret.key }
+        - { key: kavita.client_secret.key, path: kavita.client_secret.key }
     authelia-cnpg-cluster-app:
       items:
         - { key: password, path: password }
