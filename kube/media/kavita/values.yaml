@@ -47,7 +47,10 @@ controllers:
         probes:
           liveness: { enabled: false }
           readiness: { enabled: false }
-          startup: { enabled: true }
+          startup:
+            enabled: true
+            spec:
+              failureThreshold: 30
 
 persistence:
   config:
