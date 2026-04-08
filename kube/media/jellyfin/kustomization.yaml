@@ -10,7 +10,7 @@ resources:
 helmCharts:
   - name: jellyfin
     repo: https://jellyfin.github.io/jellyfin-helm
-    version: 3.0.0
+    version: 3.2.0
     releaseName: jellyfin
     namespace: *namespace
     valuesFile: values.yaml
