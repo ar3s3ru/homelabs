@@ -61,7 +61,7 @@ configMaps:
       PROXY_CSP_CONFIG_FILE_LOCATION: &csp /etc/opencloud/csp.yaml
       # OIDC settings
       OC_EXCLUDE_RUN_SERVICES: "idp"
-      OC_OIDC_ISSUER: https://idpx.cianfr.one
+      OC_OIDC_ISSUER: https://idp.cianfr.one
       OC_OIDC_CLIENT_ID: opencloud
       PROXY_ROLE_ASSIGNMENT_DRIVER: oidc
       # PROXY_ROLE_ASSIGNMENT_DRIVER: default
