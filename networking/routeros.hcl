@@ -1,0 +1,37 @@
+generate "provider" {
+  path      = "provider.tf"
+  if_exists = "overwrite_terragrunt"
+  contents  = <<EOF
+terraform {
+  required_providers {
+    routeros = {
+      source = "terraform-routeros/routeros"
+      version = "1.99.0"
+    }
+  }
+}
+
+variable "routeros_hosturl" {
+  type        = string
+  description = "The URL of the RouterOS device"
+}
+
+variable "routeros_username" {
+  type        = string
+  description = "The username for authenticating with the RouterOS device"
+}
+
+variable "routeros_password" {
+  type        = string
+  description = "The password for authenticating with the RouterOS device"
+  sensitive   = true
+}
+
+provider "routeros" {
+  hosturl        = var.routeros_hosturl
+  username       = var.routeros_username
+  password       = var.routeros_password
+  insecure       = true
+}
+  EOF
+}
