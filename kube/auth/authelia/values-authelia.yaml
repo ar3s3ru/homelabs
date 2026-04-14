@@ -1,7 +1,14 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/authelia/chartrepo/refs/heads/master/charts/authelia/values.schema.json
 ingress:
-  enabled: false # Managed manually in a separate resource.
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: cianfr.one-acme
+    external-dns.alpha.kubernetes.io/hostname: idp.cianfr.one
+    external-dns.alpha.kubernetes.io/target: in.nl.cianfr.one
+  tls: { enabled: true }
+  traefikCRD: { enabled: false, disableIngressRoute: true }
 
 pod:
   kind: Deployment # Only need a single deployment/replica for now.
@@ -93,6 +100,7 @@ configMap:
   session:
     cookies:
       - domain: cianfr.one
+        subdomain: idp
     encryption_key: { secret_name: "authelia-secrets" }
     redis:
       enabled: true
@@ -163,6 +171,7 @@ configMap:
           client_name: "Immich"
           client_secret: { path: "/secrets/authelia-oidc-secrets/immich.client_secret.key" }
           public: false
+          require_pkce: false
           consent_mode: implicit
           authorization_policy: "one_factor"
           redirect_uris:
@@ -173,7 +182,12 @@ configMap:
             - "openid"
             - "profile"
             - "email"
-          userinfo_signed_response_alg: "none"
+          response_types:
+            - "code"
+          grant_types:
+            - "authorization_code"
+          id_token_signed_response_alg: "RS256"
+          userinfo_signed_response_alg: "RS256"
           token_endpoint_auth_method: "client_secret_post"
         - client_id: "home-assistant"
           client_name: "Home Assistant"
