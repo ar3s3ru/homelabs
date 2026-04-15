@@ -13,7 +13,7 @@ generators:
 helmCharts:
   - name: authelia
     repo: https://charts.authelia.com
-    version: 0.10.57
+    version: 0.10.58
     releaseName: authelia
     namespace: *namespace
     valuesFile: values-authelia.yaml
