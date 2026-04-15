@@ -7,6 +7,6 @@ namespace: &namespace kube-system
 helmCharts:
   - name: reloader
     repo: https://stakater.github.io/stakater-charts
-    version: 2.2.10
+    version: 2.2.11
     releaseName: reloader
     namespace: *namespace
