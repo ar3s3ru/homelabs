@@ -9,7 +9,7 @@ resources:
 helmCharts:
   - name: victoria-logs-single
     repo: https://victoriametrics.github.io/helm-charts/
-    version: 0.11.32
+    version: 0.12.0
     releaseName: victorialogs
     namespace: *namespace
     includeCRDs: true
