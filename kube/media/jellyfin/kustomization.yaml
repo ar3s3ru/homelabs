@@ -2,15 +2,8 @@
 # yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: &namespace media
+namespace: media
 
 resources:
+  - helmrelease.yaml
   - persistentvolumeclaims.yaml
-
-helmCharts:
-  - name: jellyfin
-    repo: https://jellyfin.github.io/jellyfin-helm
-    version: 3.2.0
-    releaseName: jellyfin
-    namespace: *namespace
-    valuesFile: values.yaml
