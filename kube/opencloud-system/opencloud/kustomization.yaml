@@ -5,7 +5,6 @@ kind: Kustomization
 namespace: &namespace opencloud-system
 
 resources:
-  # - opencloud-data-v2.yaml
   - opencloud-data-v3.yaml
 
 generators:
