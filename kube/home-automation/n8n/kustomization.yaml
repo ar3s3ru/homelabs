@@ -5,7 +5,6 @@ kind: Kustomization
 namespace: home-automation
 
 resources:
-  - n8n-data-v1.yaml
   - n8n-cnpg-cluster.yaml
   - helmrelease-redis.yaml
   - helmrelease.yaml

@@ -63,6 +63,11 @@ spec:
               port: 6379
 
       extraEnv: &extraEnv
+        # Shadow the Kubernetes-injected service-link env var
+        # (N8N_PORT=tcp://<svc-ip>:5678) that n8n misparses as its own
+        # listen-port config. The value matches the chart default.
+        N8N_PORT:
+          value: "5678"
         DB_POSTGRESDB_USER:
           valueFrom:
             secretKeyRef:
@@ -79,10 +84,12 @@ spec:
               name: n8n-secrets
               key: N8N_ENCRYPTION_KEY
 
+      # All durable state lives in Postgres. /home/node/.n8n is used only for
+      # transient scratch (crash journal, node cache) - emptyDir avoids the
+      # RWO multi-attach problem when workers replicate > 1.
       persistence:
         enabled: true
-        type: existing
-        existingClaim: n8n-data-v1
+        type: emptyDir
 
       replicaCount: 1
       deploymentStrategy:
@@ -137,9 +144,11 @@ spec:
       # Workers share DB + Redis + encryption key with the main pod.
       extraEnv: *extraEnv
 
-      # Workers don't need the main PVC; they coordinate via Redis + Postgres.
+      # Workers mount /home/node/.n8n (chart-hardcoded), but all durable state
+      # is in Postgres. Each worker gets its own emptyDir scratch.
       persistence:
-        enabled: false
+        enabled: true
+        type: emptyDir
 
       deploymentStrategy:
         type: RollingUpdate
