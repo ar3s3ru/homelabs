@@ -13,7 +13,7 @@ spec:
   valuesContent: |-
     image:
       repository: n8nio/n8n
-      tag: 2.16.1@sha256:ad20607cdd24bac004ec44804b6b8ded9a2fbf92ed46c4496bf007762c883af2
+      tag: 2.17.2@sha256:4e5be628f9eb05e3fde3cd242c84f6000165c95d2048d5076fcc569421ada4f3
       pullPolicy: IfNotPresent
 
     # Global ingress: Tailscale-only, served by the main pod.
