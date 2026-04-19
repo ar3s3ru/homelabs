@@ -2,15 +2,8 @@
 # yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: &namespace media
+namespace: media
 
 resources:
-  - persistentvolumeclaims.yaml
-
-# helmCharts:
-#   - name: app-template
-#     repo: https://bjw-s-labs.github.io/helm-charts
-#     version: 4.6.2
-#     releaseName: sabnzbd
-#     namespace: *namespace
-#     valuesFile: values.yaml
+  - helmrelease.yaml
+  - sabnzbd-config-v2.yaml
