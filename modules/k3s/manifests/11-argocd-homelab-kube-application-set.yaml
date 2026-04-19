@@ -5,6 +5,8 @@ metadata:
   name: namespaces
   namespace: argo-system
 spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
   generators:
     - git:
         repoURL: git@github.com:ar3s3ru/homelabs.git
@@ -13,13 +15,17 @@ spec:
           - path: kube/*
   template:
     metadata:
-      name: "ns-{{ path.basename }}" # ns-media, ns-networking, etc.
+      name: "ns-{{.path.basename}}" # ns-media, ns-networking, etc.
     spec:
       project: default
       source:
         repoURL: git@github.com:ar3s3ru/homelabs.git
         targetRevision: main
-        path: "{{ path }}"
+        path: "{{.path.path}}"
+      # Namespace resources under kube/<ns>/ are cluster-scoped Namespace
+      # objects, so the Application destination namespace is cosmetic here.
+      # Keep it at argo-system for clarity (that's where the Application
+      # object itself lives).
       destination:
         name: in-cluster
         namespace: argo-system
@@ -37,6 +43,8 @@ metadata:
   name: apps
   namespace: argo-system
 spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
   generators:
     - git:
         repoURL: git@github.com:ar3s3ru/homelabs.git
@@ -45,16 +53,22 @@ spec:
           - path: kube/*/* # Matches kube/<namespace>/<app>
   template:
     metadata:
-      name: "app-{{ path.basename }}" # app name is last path segment.
+      name: "app-{{.path.basename}}" # app name is last path segment.
     spec:
       project: default
       source:
         repoURL: git@github.com:ar3s3ru/homelabs.git
         targetRevision: main
-        path: "{{ path }}"
+        path: "{{.path.path}}"
+      # Derive destination namespace from the Git path: for
+      # kube/<namespace>/<app>, .path.segments is ["kube", "<namespace>",
+      # "<app>"], so index 1 is the namespace. This ensures Helm-rendered
+      # resources (which otherwise inherit the Application's destination
+      # namespace via ArgoCD's server-side apply) land in the correct
+      # namespace rather than argo-system.
       destination:
         name: in-cluster
-        namespace: argo-system
+        namespace: "{{index .path.segments 1}}"
       syncPolicy:
         automated:
           selfHeal: true
