@@ -71,9 +71,9 @@ spec:
       - name: media-data
         persistentVolumeClaim:
           claimName: media-data-v4
-      - name: media-videos
-        persistentVolumeClaim:
-          claimName: media-videos-v1
+      # - name: media-videos
+      #   persistentVolumeClaim:
+      #     claimName: media-videos-v1
 
     volumeMounts:
       - name: media-data
