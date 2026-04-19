@@ -12,8 +12,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   nfs:
     server: truenas.home.arpa
-    # FIXME: this must be moved to the other new dataset.
-    path: /mnt/pool0/kube/vol/pvc-bd6fd2d5-c40d-477d-a8fb-c4108277e0eb
+    path: /mnt/pool0/gallery/raws
   mountOptions:
     - nfsvers=4.1
     - hard

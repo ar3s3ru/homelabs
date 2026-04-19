@@ -71,15 +71,15 @@ spec:
       - name: media-data
         persistentVolumeClaim:
           claimName: media-data-v4
-      # - name: media-videos
-      #   persistentVolumeClaim:
-      #     claimName: media-videos-v1
+      - name: media-videos
+        persistentVolumeClaim:
+          claimName: media-videos-v1
 
     volumeMounts:
       - name: media-data
         mountPath: /data
-      # - name: media-videos
-      #   mountPath: /videos
+      - name: media-videos
+        mountPath: /videos
 
     persistence:
       config:

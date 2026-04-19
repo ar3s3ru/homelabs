@@ -134,10 +134,10 @@ persistence:
       - path: *config-file
         subPath: immich-config.yaml
         readOnly: true
-  # external-videos:
-  #   type: persistentVolumeClaim
-  #   existingClaim: media-videos-v1
-  #   globalMounts: [{ path: /external/videos }]
+  external-videos:
+    type: persistentVolumeClaim
+    existingClaim: media-videos-v1
+    globalMounts: [{ path: /external/videos }]
   library:
     type: persistentVolumeClaim
     existingClaim: immich-library-v4
