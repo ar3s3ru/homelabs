@@ -2,18 +2,11 @@
 # yaml-language-server: $schema=https://www.schemastore.org/kustomization.json
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: &namespace media
+namespace: media
 
 resources:
+  - helmrelease.yaml
   - slskd-config.yaml
 
 generators:
   - ksops.yaml
-
-helmCharts:
-  - name: app-template
-    repo: https://bjw-s-labs.github.io/helm-charts
-    version: 4.6.2
-    releaseName: slskd
-    namespace: *namespace
-    valuesFile: values.yaml
