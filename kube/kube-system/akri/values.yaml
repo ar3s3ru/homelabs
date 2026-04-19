@@ -1,7 +1,0 @@
----
-prometheus:
-  enabled: true
-
-udev:
-  discovery:
-    enabled: true
