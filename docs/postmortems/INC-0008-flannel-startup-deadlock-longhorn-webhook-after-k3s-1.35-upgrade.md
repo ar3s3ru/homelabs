@@ -205,9 +205,11 @@ ssh root@nl-k8s-01 'kubectl -n longhorn-system get pods -o wide'
 ### High priority
 
 - [ ] **Make the Longhorn webhook `failurePolicy: Ignore` persistent in Nix/ArgoCD.** The patch applied during the incident is only in cluster state and will be overwritten the next time ArgoCD syncs the Longhorn Helm chart. Either:
-  - **(preferred)** Override `webhook.failurePolicy` (or equivalent) in `kube/longhorn-system/longhorn/values.yaml` if the chart exposes it.
+  - **(preferred)** Override `webhook.failurePolicy` (or equivalent) in `kube/longhorn-system/longhorn/values.yaml` if the chart exposes it. **Update (Apr 23):** investigation during [INC-0009](./INC-0009-nl-pve-01-memory-overcommit-hang-and-flannel-webhook-deadlock.md) confirmed the `longhorn` Helm chart v1.11.1 does **not** expose a `webhook.failurePolicy` value (see <https://raw.githubusercontent.com/longhorn/longhorn/v1.11.1/chart/values.yaml>). The fallback path is the correct implementation.
   - **(fallback)** Add a Kustomize strategic-merge patch under `kube/longhorn-system/longhorn/` that rewrites `failurePolicy` on both webhook configurations after the Helm rendering step.
   - **(nuclear option)** Remove the core `v1.Node UPDATE` rule entirely from both webhooks — Longhorn does not critically rely on it; its other rules on `longhorn.io/v1beta2` resources are sufficient for normal operation.
+
+  > ⚠️ **This action item was NOT completed and caused a regression:** On Apr 23, 2026, [INC-0009](./INC-0009-nl-pve-01-memory-overcommit-hang-and-flannel-webhook-deadlock.md) hit the **exact same deadlock** on a single node (nl-k8s-02) after a hypervisor crash forced a cold reboot. The in-cluster patch from this incident had been silently reverted by an ArgoCD Longhorn chart reconcile at some point between Apr 19 and Apr 23 (evidence: a stuck `longhorn-pre-upgrade` Job from a post-INC-0008 Helm run). The same two `kubectl patch` commands from this runbook were applied again to recover. This action item is now retroactively promoted to blocking — no further Longhorn changes should ship until it's closed.
 
 - [ ] **Do not reboot all four nodes simultaneously during upgrades.** Switch the colmena apply to an explicit serial rollout:
   ```
@@ -287,6 +289,7 @@ ssh root@nl-k8s-01 'kubectl -n longhorn-system get pods -o wide'
 
 - **INC-0001** (Nov 13, 2025): Flannel VXLAN failure after a previous k3s upgrade. Surface symptoms were similar (pods on different nodes unable to communicate, flannel interface missing), but the root cause was a stuck flannel process on a single node after a service restart — recoverable with `systemctl restart k3s`. INC-0008 is the "cluster-wide, chicken-and-egg" cousin of INC-0001.
 - **INC-0007** (Apr 17, 2026): Cluster cascade failure from OOM on nl-k8s-02. Overlaps with this incident in that Longhorn webhook pods failing / being unschedulable has been implicated in two catastrophic cluster outages in 3 days. Strongly motivates action item #1 (make the Longhorn webhook `failurePolicy: Ignore` persistent).
+- **[INC-0009](./INC-0009-nl-pve-01-memory-overcommit-hang-and-flannel-webhook-deadlock.md)** (Apr 23, 2026): Single-node recurrence of the exact deadlock described here, triggered by a cold reboot of nl-k8s-02 after its hypervisor (nl-pve-01) hung under memory pressure. INC-0009 is the "one node walks into the deadlock in isolation while the cluster is otherwise healthy" variant of INC-0008 — same root cause, same 30-second webhook-patch fix. INC-0009 exists because action item #1 above was never completed; ArgoCD reverted the in-cluster patch applied during this incident's resolution, leaving the cluster again vulnerable.
 
 ## References
 
