@@ -39,3 +39,20 @@ resource "routeros_interface_list_member" "wan_vlan6_ether8" {
   list      = routeros_interface_list.wan.name
   interface = routeros_interface_vlan.vlan6-ether8.name
 }
+
+# DHCPv6 client on the PPPoE interface — requests a /48 prefix delegation from
+# KPN. The received prefix is added to pool-dhcp-v6-prefix-delegation, from
+# which interface-specific GUA addresses are derived.
+resource "routeros_ipv6_dhcp_client" "pppoe-kpn" {
+  interface              = routeros_interface_pppoe_client.pppoe-kpn.name
+  request                = ["prefix"]
+  pool_name              = "pool-dhcp-v6-prefix-delegation"
+  pool_prefix_length     = 64
+  prefix_hint            = "::/0"
+  add_default_route      = true
+  default_route_distance = 1
+  default_route_tables   = ["default"]
+  use_peer_dns           = false
+  allow_reconfigure      = true
+  validate_server_duid   = true
+}

@@ -5,6 +5,16 @@
 #   - No IPv6 GUA, ULA only through DHCPv6
 #   - LAN -> IOT allowed for home automation and monitoring
 
+locals {
+  ipv4_iot_address_cidr    = "10.90.0.1/24"
+  ipv4_iot_network         = "10.90.0.0"
+  ipv4_iot_address_gateway = "10.90.0.1"
+  ipv4_iot_dhcp_pool       = "10.90.0.10-10.90.0.254"
+
+  ipv6_iot_ula_prefix = "fd00:cafe:90::/64"
+  ipv6_iot_ula_addr   = "fd00:cafe:90::1"
+}
+
 resource "routeros_interface_vlan" "vlan90-iot" {
   name      = "vlan90-iot"
   comment   = "iot network"
@@ -44,14 +54,14 @@ resource "routeros_interface_bridge_port" "ether4" {
 
 resource "routeros_ip_address" "vlan90-iot" {
   comment   = "iot network"
-  address   = "10.90.0.1/24"
+  address   = local.ipv4_iot_address_cidr
   interface = routeros_interface_vlan.vlan90-iot.name
 }
 
 resource "routeros_ip_pool" "pool-dhcp-v4-iot" {
   name    = "pool-dhcp-v4-iot"
   comment = "iot: DHCPv4 pool"
-  ranges  = ["10.90.0.10-10.90.0.254"]
+  ranges  = [local.ipv4_iot_dhcp_pool]
 }
 
 resource "routeros_ip_dhcp_server" "dhcp-v4-iot" {
@@ -60,4 +70,55 @@ resource "routeros_ip_dhcp_server" "dhcp-v4-iot" {
   address_pool = routeros_ip_pool.pool-dhcp-v4-iot.name
   interface    = routeros_interface_vlan.vlan90-iot.name
   lease_time   = "30m"
+}
+
+# IPv6 networking --------------------------------------------------------------
+#
+# IoT is fully airgapped — no GUA address (the network has no upstream IPv6
+# connectivity), only ULA. Clients get ULA via stateful DHCPv6 for static
+# bindings (no autonomous SLAAC).
+
+
+# ULA pool for static DHCPv6 bindings on the IoT network.
+resource "routeros_ipv6_pool" "pool-dhcp-v6-ula-iot" {
+  name          = "pool-dhcp-v6-ula-iot"
+  prefix        = local.ipv6_iot_ula_prefix
+  prefix_length = 128
+}
+
+# Router ULA address on the IoT VLAN.
+resource "routeros_ipv6_address" "ula_iot" {
+  interface = routeros_interface_vlan.vlan90-iot.name
+  address   = "${local.ipv6_iot_ula_addr}/64"
+  advertise = false
+  comment   = "iot: ULA addresses"
+}
+
+# Stateful DHCPv6 server on the IoT VLAN — issues static-only ULA bindings.
+resource "routeros_ipv6_dhcp_server" "dhcp-v6-ula-iot" {
+  name         = "dhcp-v6-ula-iot"
+  interface    = routeros_interface_vlan.vlan90-iot.name
+  address_pool = routeros_ipv6_pool.pool-dhcp-v6-ula-iot.name
+  prefix_pool  = "static-only"
+  lease_time   = "3d"
+  rapid_commit = true
+  preference   = 255
+}
+
+# Router advertisements on the IoT VLAN — managed-address signals stateful
+# DHCPv6, DNS pushes the router ULA as resolver.
+resource "routeros_ipv6_neighbor_discovery" "iot" {
+  interface                     = routeros_interface_vlan.vlan90-iot.name
+  managed_address_configuration = true
+  other_configuration           = true
+  dns                           = local.ipv6_iot_ula_addr
+}
+
+# Advertise the ULA prefix on-link (autonomous=false because addressing is
+# handled by stateful DHCPv6, not SLAAC).
+resource "routeros_ipv6_nd_prefix" "ula_iot" {
+  interface  = routeros_interface_vlan.vlan90-iot.name
+  prefix     = local.ipv6_iot_ula_prefix
+  on_link    = true
+  autonomous = false
 }
