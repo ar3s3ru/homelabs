@@ -72,8 +72,15 @@ resource "routeros_ip_dhcp_server" "dhcp-v4-iot" {
   lease_time   = "30m"
 }
 
+resource "routeros_ip_dhcp_server_network" "iot" {
+  address    = "${local.ipv4_iot_network}/24"
+  gateway    = local.ipv4_iot_address_gateway
+  dns_server = [local.ipv4_iot_address_gateway]
+  comment    = "iot: DHCPv4 network"
+}
+
 # IPv6 networking --------------------------------------------------------------
-#
+
 # IoT is fully airgapped — no GUA address (the network has no upstream IPv6
 # connectivity), only ULA. Clients get ULA via stateful DHCPv6 for static
 # bindings (no autonomous SLAAC).

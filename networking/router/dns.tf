@@ -13,9 +13,14 @@
 resource "routeros_ip_dns" "dns" {
   allow_remote_requests = true
 
+  # Each server is a separate list entry — RouterOS internally splits any
+  # comma-paired form into individual entries, so declaring them paired causes
+  # constant Terraform drift on every plan.
   servers = [
-    "2606:4700:4700::1111,1.1.1.1",
-    "2606:4700:4700::1001,1.0.0.1",
+    "2606:4700:4700::1111",
+    "1.1.1.1",
+    "2606:4700:4700::1001",
+    "1.0.0.1",
   ]
 
   mdns_repeat_ifaces = [

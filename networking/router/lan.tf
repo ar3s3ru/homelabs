@@ -53,16 +53,22 @@ resource "routeros_ip_dhcp_server" "dhcp-v4" {
   lease_time      = "30m"
 }
 
+resource "routeros_ip_dhcp_server_network" "lan" {
+  address    = "${local.ipv4_lan_network}/16"
+  gateway    = local.ipv4_lan_address_gateway
+  dns_server = [local.ipv4_lan_address_gateway]
+  domain     = "home.arpa"
+  comment    = "defconf"
+}
+
 # IPv6 networking --------------------------------------------------------------
 
-# ULA pool for static DHCPv6 bindings on the LAN.
 resource "routeros_ipv6_pool" "pool-dhcp-v6-ula-lan" {
   name          = "pool-dhcp-v6-ula-lan"
   prefix        = local.ipv6_lan_ula_prefix
   prefix_length = 128
 }
 
-# Router ULA address on bridge.
 resource "routeros_ipv6_address" "ula_lan" {
   interface = routeros_interface_bridge.bridge.name
   address   = "${local.ipv6_lan_ula_addr}/64"

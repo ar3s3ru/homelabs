@@ -47,6 +47,13 @@ resource "routeros_ip_dhcp_server" "dhcp-v4-guest" {
   lease_time      = "30m"
 }
 
+resource "routeros_ip_dhcp_server_network" "guest" {
+  address    = "${local.ipv4_guest_network}/24"
+  gateway    = local.ipv4_guest_address_gateway
+  dns_server = [local.ipv4_guest_address_gateway]
+  comment    = "guest network"
+}
+
 # IPv6 networking --------------------------------------------------------------
 
 resource "routeros_ipv6_pool" "pool-dhcp-v6-ula-guest" {
@@ -85,9 +92,6 @@ resource "routeros_ipv6_dhcp_server_option" "dns-guest" {
   value = "0xfd00cafe008000000000000000000001"
 }
 
-# Stateful DHCPv6 server on the guest VLAN — issues static-only ULA bindings.
-# DNS is pushed via DHCPv6 option 23 because RA RDNSS is suppressed (see
-# routeros_ipv6_neighbor_discovery.guest).
 resource "routeros_ipv6_dhcp_server" "dhcp-v6-ula-guest" {
   name         = "dhcp-v6-ula-guest"
   interface    = routeros_interface_vlan.vlan80-guest.name
