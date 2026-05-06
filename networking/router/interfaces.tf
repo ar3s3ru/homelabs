@@ -59,3 +59,26 @@ resource "routeros_interface_ethernet" "sfp-sfpplus1" {
   factory_name = "sfp-sfpplus1"
   name         = "sfp-sfpplus1"
 }
+
+# Bridge ports for all VLAN-1 (LAN) interfaces. ether4 is excluded because it
+# is the IoT untagged access port (pvid=90, declared in iot.tf). ether8 is
+# excluded because it is the WAN uplink (carries vlan6-ether8 to KPN, not
+# bridged). All ports use defconf settings (pvid=1, hw-offload=on).
+locals {
+  bridge_lan_ports = toset([
+    routeros_interface_ethernet.ether1.name,
+    routeros_interface_ethernet.ether2.name,
+    routeros_interface_ethernet.ether3.name,
+    routeros_interface_ethernet.ether5.name,
+    routeros_interface_ethernet.ether6.name,
+    routeros_interface_ethernet.ether7.name,
+    routeros_interface_ethernet.sfp-sfpplus1.name,
+  ])
+}
+
+resource "routeros_interface_bridge_port" "lan" {
+  for_each  = local.bridge_lan_ports
+  bridge    = routeros_interface_bridge.bridge.name
+  interface = each.value
+  comment   = "defconf"
+}

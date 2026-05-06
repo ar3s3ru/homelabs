@@ -25,6 +25,16 @@ resource "routeros_interface_list_member" "guest_vlan80" {
   interface = routeros_interface_vlan.vlan80-guest.name
 }
 
+resource "routeros_interface_bridge_vlan" "vlan80-guest" {
+  bridge   = routeros_interface_bridge.bridge.name
+  vlan_ids = ["${routeros_interface_vlan.vlan80-guest.vlan_id}"]
+  tagged = [
+    routeros_interface_bridge.bridge.name,
+    routeros_interface_ethernet.ether2.name,
+  ]
+  untagged = ["none"]
+}
+
 # IPv4 networking --------------------------------------------------------------
 
 resource "routeros_ip_address" "ipv4_guest" {
