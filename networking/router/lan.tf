@@ -69,8 +69,6 @@ resource "routeros_ipv6_address" "ula_lan" {
   advertise = false
 }
 
-# Router GUA address derived from the PPPoE prefix delegation, advertised to
-# clients on the LAN segment for outbound IPv6 connectivity.
 resource "routeros_ipv6_address" "gua_lan" {
   interface = routeros_interface_bridge.bridge.name
   address   = "::1"
@@ -83,8 +81,14 @@ resource "routeros_ipv6_address" "gua_lan" {
   }
 }
 
-# Stateful DHCPv6 server on the LAN — issues static-only ULA bindings (no
-# dynamic addressing; clients get GUA via SLAAC from the ND prefix below).
+# DHCPv6 option 23 (DNS servers, RFC 3646) carrying the LAN router ULA.
+# Value is the 16-byte network-order hex encoding of fd00:cafe::1.
+resource "routeros_ipv6_dhcp_server_option" "dns-lan" {
+  name  = "dns-server-lan"
+  code  = 23
+  value = "0xfd00cafe000000000000000000000001"
+}
+
 resource "routeros_ipv6_dhcp_server" "dhcp-v6-ula-lan" {
   name         = "dhcp-v6-ula-lan"
   interface    = routeros_interface_bridge.bridge.name
@@ -93,15 +97,14 @@ resource "routeros_ipv6_dhcp_server" "dhcp-v6-ula-lan" {
   lease_time   = "3d"
   rapid_commit = true
   preference   = 255
+  dhcp_option  = [routeros_ipv6_dhcp_server_option.dns-lan.name]
 }
 
-# Router advertisements on the LAN — managed-address signals stateful DHCPv6,
-# DNS pushes the router ULA as resolver.
 resource "routeros_ipv6_neighbor_discovery" "lan" {
   interface                     = routeros_interface_bridge.bridge.name
   managed_address_configuration = true
   other_configuration           = true
-  dns                           = local.ipv6_lan_ula_addr
+  advertise_dns                 = false # No RA RDNSS, we use DHCPv6 for it.
 }
 
 # Advertise the ULA prefix on-link (autonomous=false because addressing is

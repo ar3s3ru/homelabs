@@ -94,7 +94,14 @@ resource "routeros_ipv6_address" "ula_iot" {
   comment   = "iot: ULA addresses"
 }
 
-# Stateful DHCPv6 server on the IoT VLAN — issues static-only ULA bindings.
+# DHCPv6 option 23 (DNS servers, RFC 3646) carrying the IoT router ULA.
+# Value is the 16-byte network-order hex encoding of fd00:cafe:90::1.
+resource "routeros_ipv6_dhcp_server_option" "dns-iot" {
+  name  = "dns-server-iot"
+  code  = 23
+  value = "0xfd00cafe009000000000000000000001"
+}
+
 resource "routeros_ipv6_dhcp_server" "dhcp-v6-ula-iot" {
   name         = "dhcp-v6-ula-iot"
   interface    = routeros_interface_vlan.vlan90-iot.name
@@ -103,15 +110,14 @@ resource "routeros_ipv6_dhcp_server" "dhcp-v6-ula-iot" {
   lease_time   = "3d"
   rapid_commit = true
   preference   = 255
+  dhcp_option  = [routeros_ipv6_dhcp_server_option.dns-iot.name]
 }
 
-# Router advertisements on the IoT VLAN — managed-address signals stateful
-# DHCPv6, DNS pushes the router ULA as resolver.
 resource "routeros_ipv6_neighbor_discovery" "iot" {
   interface                     = routeros_interface_vlan.vlan90-iot.name
   managed_address_configuration = true
   other_configuration           = true
-  dns                           = local.ipv6_iot_ula_addr
+  advertise_dns                 = false # No RA RDNSS, we use DHCPv6 for it.
 }
 
 # Advertise the ULA prefix on-link (autonomous=false because addressing is

@@ -77,7 +77,17 @@ resource "routeros_ipv6_address" "gua_guest" {
   }
 }
 
+# DHCPv6 option 23 (DNS servers, RFC 3646) carrying the guest router ULA.
+# Value is the 16-byte network-order hex encoding of fd00:cafe:80::1.
+resource "routeros_ipv6_dhcp_server_option" "dns-guest" {
+  name  = "dns-server-guest"
+  code  = 23
+  value = "0xfd00cafe008000000000000000000001"
+}
+
 # Stateful DHCPv6 server on the guest VLAN — issues static-only ULA bindings.
+# DNS is pushed via DHCPv6 option 23 because RA RDNSS is suppressed (see
+# routeros_ipv6_neighbor_discovery.guest).
 resource "routeros_ipv6_dhcp_server" "dhcp-v6-ula-guest" {
   name         = "dhcp-v6-ula-guest"
   interface    = routeros_interface_vlan.vlan80-guest.name
@@ -87,15 +97,14 @@ resource "routeros_ipv6_dhcp_server" "dhcp-v6-ula-guest" {
   rapid_commit = true
   preference   = 255
   comment      = "guest: DHCPv6 ULA server"
+  dhcp_option  = [routeros_ipv6_dhcp_server_option.dns-guest.name]
 }
 
-# Router advertisements on the guest VLAN — managed-address signals stateful
-# DHCPv6, DNS pushes the router ULA as resolver.
 resource "routeros_ipv6_neighbor_discovery" "guest" {
   interface                     = routeros_interface_vlan.vlan80-guest.name
   managed_address_configuration = true
   other_configuration           = true
-  dns                           = local.ipv6_guest_ula_address_gateway
+  advertise_dns                 = false # No RA RDNSS, we use DHCPv6 for it.
 }
 
 # Advertise the ULA prefix on-link (autonomous=false because addressing is
