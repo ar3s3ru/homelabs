@@ -167,3 +167,38 @@ resource "routeros_ip_firewall_addr_list" "lan" {
   comment  = lookup(each.value, "comment", null)
 }
 
+# Static DHCP leases ----------------------------------------------------------
+#
+# NOTE: DHCPv6 static leases not supported by terraform-routeros yet, leaving
+# these as documentation mostly. Check the router directly for the actual
+# source of truth.
+
+locals {
+  lan_leases_by_mac_address = {
+    "04:F4:1C:84:3C:E8" = { v4 = "10.0.0.2", v6_ula = null, v6_duid = null, comment = "CRS310-8G+2S+" }
+    "7C:F1:7E:74:FD:6E" = { v4 = "10.0.0.3", v6_ula = null, v6_duid = null, comment = "EAP-245" }
+    "34:97:F6:3E:A5:50" = { v4 = "10.0.0.4", v6_ula = null, v6_duid = null, comment = "ASUS AP" }
+    "AE:15:95:A0:DC:09" = { v4 = "10.0.0.5", v6_ula = "fd00:cafe::1:e", v6_duid = "0xae1595a0dc09", comment = "NanoPi R5C" }
+    "44:07:0B:90:CE:B6" = { v4 = "10.0.0.12", v6_ula = null, v6_duid = null, comment = "Google Home Mini" }
+    "BC:24:11:DE:69:E3" = { v4 = "10.0.1.20", v6_ula = null, v6_duid = null, comment = "nl-pve-01 TrueNAS" }
+    "6C:1F:F7:57:07:49" = { v4 = "10.0.1.1", v6_ula = "fd00:cafe::1:1", v6_duid = "0x30cc9a646c1ff7570749", comment = "nl-k8s-01" }
+    "BC:24:11:A2:94:61" = { v4 = "10.0.1.2", v6_ula = "fd00:cafe::1:2", v6_duid = "0x30cc9793bc2411a29461", comment = "nl-k8s-02" }
+    "BC:24:11:07:69:C7" = { v4 = "10.0.1.3", v6_ula = "fd00:cafe::1:3", v6_duid = "0x30cc94bbbc24110769c7", comment = "nl-k8s-03" }
+    "54:E1:AD:A5:1D:0F" = { v4 = "10.0.1.4", v6_ula = "fd00:cafe::1:4", v6_duid = "0x30ae39387a830ccf2c25", comment = "nl-k8s-04" }
+    "58:47:CA:7F:76:99" = { v4 = "10.0.2.1", v6_ula = null, v6_duid = null, comment = "nl-pve-01" }
+    "98:FA:9B:13:C8:E8" = { v4 = "10.0.2.2", v6_ula = null, v6_duid = null, comment = "nl-pve-02" }
+  }
+}
+
+resource "routeros_ip_dhcp_server_lease" "lan" {
+  for_each    = local.lan_leases_by_mac_address
+  address     = each.value.v4
+  comment     = each.value.comment
+  mac_address = each.key
+  server      = routeros_ip_dhcp_server.dhcp-v4.name
+
+  lifecycle {
+    ignore_changes = [client_id, block_access]
+  }
+}
+

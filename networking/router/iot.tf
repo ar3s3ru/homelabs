@@ -158,3 +158,30 @@ resource "routeros_ip_firewall_addr_list" "iot" {
   address  = each.value.address
   comment  = lookup(each.value, "comment", null)
 }
+
+# Static DHCP leases ----------------------------------------------------------
+#
+# NOTE: DHCPv6 static leases not supported by terraform-routeros yet, leaving
+# these as documentation mostly. Check the router directly for the actual
+# source of truth.
+
+locals {
+  iot_leases_by_mac_address = {
+    "CC:7B:5C:4B:EF:8F" = { v4 = "10.90.0.253", v6_ula = null, v6_duid = null, comment = "slimmelezer" }
+    "EC:71:DB:59:96:BB" = { v4 = "10.90.0.12", v6_ula = null, v6_duid = null, comment = "e1-zoom-02" }
+    "24:3F:75:DD:7D:FB" = { v4 = "10.90.0.11", v6_ula = null, v6_duid = null, comment = "e1-zoom-01" }
+    "DC:DA:0C:28:B1:20" = { v4 = "10.90.0.13", v6_ula = null, v6_duid = null, comment = "Bambu Lab P1S" }
+  }
+}
+
+resource "routeros_ip_dhcp_server_lease" "iot" {
+  for_each    = local.iot_leases_by_mac_address
+  address     = each.value.v4
+  comment     = each.value.comment
+  mac_address = each.key
+  server      = routeros_ip_dhcp_server.dhcp-v4-iot.name
+
+  lifecycle {
+    ignore_changes = [client_id, block_access]
+  }
+}

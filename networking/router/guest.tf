@@ -148,6 +148,8 @@ locals {
   }
 
   ipv6_address_lists_guest = {
+    # FIXME: this should be using the ULA address, not the SLAAC. Otherwise if the WAN connection changes
+    # or the IPv6 prefix pool changes, this breaks.
     (local.address_list_airplay_targets) = [
       { address = "2a02:a469:9060:1:fab9:5aff:fe65:e236/128", comment = "LG webOS TV OLED55BX9LB (SLAAC global)" },
     ]
@@ -178,4 +180,28 @@ resource "routeros_ipv6_firewall_addr_list" "guest" {
   list     = each.value.list
   address  = each.value.address
   comment  = lookup(each.value, "comment", null)
+}
+
+# Static DHCP leases ----------------------------------------------------------
+#
+# NOTE: DHCPv6 static leases not supported by terraform-routeros yet, leaving
+# these as documentation mostly. Check the router directly for the actual
+# source of truth.
+
+locals {
+  guest_leases_by_mac_address = {
+    "F8:B9:5A:65:E2:36" = { v4 = "10.80.0.249", v6_ula = null, v6_duid = null, comment = "LG BX 55" }
+  }
+}
+
+resource "routeros_ip_dhcp_server_lease" "guest" {
+  for_each    = local.guest_leases_by_mac_address
+  address     = each.value.v4
+  comment     = each.value.comment
+  mac_address = each.key
+  server      = routeros_ip_dhcp_server.dhcp-v4-guest.name
+
+  lifecycle {
+    ignore_changes = [client_id, block_access]
+  }
 }
