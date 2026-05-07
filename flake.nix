@@ -42,7 +42,7 @@
               nixd
               gnumake
               git-crypt
-              terraform
+              opentofu
               terragrunt
               kubectl
               k9s
@@ -74,6 +74,10 @@
               {
                 name = "KUBECONFIG";
                 eval = "$PRJ_ROOT/kube/config.yaml";
+              }
+              {
+                name = "TG_TF_PATH";
+                eval = "tofu";
               }
             ];
           };
