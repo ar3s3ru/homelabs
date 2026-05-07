@@ -122,3 +122,48 @@ resource "routeros_ipv6_nd_prefix" "ula_lan" {
   autonomous = false
 }
 
+# Firewall address-list entries -----------------------------------------------
+
+locals {
+  # Internal-IPv4 supernet aggregate covering all locally-managed VLANs
+  # (LAN, guest, IoT). Replaces the older defconf "ipv4-local" (10.0.0.0/8)
+  # with a tighter, explicit definition that only matches actually-used
+  # subnets. Firewall rules should prefer this over ipv4-local.
+  address_list_internal_ipv4 = "internal-ipv4"
+
+  # MetalLB-assigned LoadBalancer IPs for k8s services exposed on the LAN.
+  # IPs are hardcoded here to mirror MetalLB IPAddressPool config in
+  # kube/networking/metallb. If those change, both sides must be updated.
+  address_list_k8s_ingress = "ipv4-k8s-ingress-controller"
+  address_list_slskd       = "ipv4-slskd"
+  address_list_qbittorrent = "ipv4-qbittorrent"
+
+  ipv4_address_lists_lan = {
+    (local.address_list_internal_ipv4) = [
+      { address = "${local.ipv4_lan_network}/16", comment = "lan: internal IPv4 supernet" },
+    ]
+    (local.address_list_k8s_ingress) = [
+      { address = "10.0.3.1" },
+    ]
+    (local.address_list_slskd) = [
+      { address = "10.0.3.2" },
+    ]
+    (local.address_list_qbittorrent) = [
+      { address = "10.0.3.3" },
+    ]
+  }
+
+  ipv4_address_entries_lan = merge([
+    for list_name, entries in local.ipv4_address_lists_lan : {
+      for e in entries : "${list_name}/${e.address}" => merge({ list = list_name }, e)
+    }
+  ]...)
+}
+
+resource "routeros_ip_firewall_addr_list" "lan" {
+  for_each = local.ipv4_address_entries_lan
+  list     = each.value.list
+  address  = each.value.address
+  comment  = lookup(each.value, "comment", null)
+}
+

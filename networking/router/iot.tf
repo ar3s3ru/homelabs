@@ -135,3 +135,26 @@ resource "routeros_ipv6_nd_prefix" "ula_iot" {
   on_link    = true
   autonomous = false
 }
+
+# Firewall address-list entries -----------------------------------------------
+
+locals {
+  ipv4_address_lists_iot = {
+    (local.address_list_internal_ipv4) = [
+      { address = "${local.ipv4_iot_network}/24", comment = "iot: internal IPv4 supernet" },
+    ]
+  }
+
+  ipv4_address_entries_iot = merge([
+    for list_name, entries in local.ipv4_address_lists_iot : {
+      for e in entries : "${list_name}/${e.address}" => merge({ list = list_name }, e)
+    }
+  ]...)
+}
+
+resource "routeros_ip_firewall_addr_list" "iot" {
+  for_each = local.ipv4_address_entries_iot
+  list     = each.value.list
+  address  = each.value.address
+  comment  = lookup(each.value, "comment", null)
+}

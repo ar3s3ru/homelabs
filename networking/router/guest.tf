@@ -129,3 +129,53 @@ resource "routeros_ipv6_nd_prefix" "ula_guest" {
   on_link    = true
   autonomous = false
 }
+
+# Firewall address-list entries -----------------------------------------------
+
+locals {
+  # AirPlay receivers — used by mDNS-rebroadcast firewall rules to allow
+  # cross-VLAN AirPlay traffic from clients (LAN, guest) to receivers on
+  # the guest VLAN (currently the LG webOS TV).
+  address_list_airplay_targets = "airplay-targets"
+
+  ipv4_address_lists_guest = {
+    (local.address_list_internal_ipv4) = [
+      { address = "${local.ipv4_guest_network}/24", comment = "guest: internal IPv4 supernet" },
+    ]
+    (local.address_list_airplay_targets) = [
+      { address = "10.80.0.249", comment = "LG webOS TV OLED55BX9LB" },
+    ]
+  }
+
+  ipv6_address_lists_guest = {
+    (local.address_list_airplay_targets) = [
+      { address = "2a02:a469:9060:1:fab9:5aff:fe65:e236/128", comment = "LG webOS TV OLED55BX9LB (SLAAC global)" },
+    ]
+  }
+
+  ipv4_addr_entries_guest = merge([
+    for list_name, entries in local.ipv4_address_lists_guest : {
+      for e in entries : "${list_name}/${e.address}" => merge({ list = list_name }, e)
+    }
+  ]...)
+
+  ipv6_addr_entries_guest = merge([
+    for list_name, entries in local.ipv6_address_lists_guest : {
+      for e in entries : "${list_name}/${e.address}" => merge({ list = list_name }, e)
+    }
+  ]...)
+}
+
+resource "routeros_ip_firewall_addr_list" "guest" {
+  for_each = local.ipv4_addr_entries_guest
+  list     = each.value.list
+  address  = each.value.address
+  comment  = lookup(each.value, "comment", null)
+}
+
+resource "routeros_ipv6_firewall_addr_list" "guest" {
+  for_each = local.ipv6_addr_entries_guest
+  list     = each.value.list
+  address  = each.value.address
+  comment  = lookup(each.value, "comment", null)
+}
