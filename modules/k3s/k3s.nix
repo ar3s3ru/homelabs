@@ -25,6 +25,7 @@
   };
 
   networking.firewall.allowedTCPPorts = [
+    179 # BGP (MetalLB)
     2379
     2380 # k3s etcd cluster coordination
     6052 # esphome hostNetwork
