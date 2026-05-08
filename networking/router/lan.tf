@@ -134,9 +134,15 @@ locals {
   # MetalLB-assigned LoadBalancer IPs for k8s services exposed on the LAN.
   # IPs are hardcoded here to mirror MetalLB IPAddressPool config in
   # kube/networking/metallb. If those change, both sides must be updated.
+  # NOTE: These are referenced by manually-configured firewall rules on the
+  # router (port-forwarding to ingress-nginx, slskd, qbittorrent).
   address_list_k8s_ingress = "ipv4-k8s-ingress-controller"
   address_list_slskd       = "ipv4-slskd"
   address_list_qbittorrent = "ipv4-qbittorrent"
+
+  address_list_k8s_ingress_v6 = "ipv6-k8s-ingress-controller"
+  address_list_slskd_v6       = "ipv6-slskd"
+  address_list_qbittorrent_v6 = "ipv6-qbittorrent"
 
   ipv4_address_lists_lan = {
     (local.address_list_internal_ipv4) = [
@@ -153,8 +159,29 @@ locals {
     ]
   }
 
+  ipv6_address_lists_lan = {
+    (local.address_list_k8s_ingress_v6) = [
+      # FIXME(ar3s3ru): Hardcoded KPN GUA prefix. Must update after moving to new ISP.
+      { address = "2a02:a469:9060:3::1", comment = "k8s: ingress-nginx GUA" },
+    ]
+    (local.address_list_slskd_v6) = [
+      # FIXME(ar3s3ru): Hardcoded KPN GUA prefix. Must update after moving to new ISP.
+      { address = "2a02:a469:9060:3::2", comment = "k8s: slskd GUA" },
+    ]
+    (local.address_list_qbittorrent_v6) = [
+      # FIXME(ar3s3ru): Hardcoded KPN GUA prefix. Must update after moving to new ISP.
+      { address = "2a02:a469:9060:3::3", comment = "k8s: qbittorrent GUA" },
+    ]
+  }
+
   ipv4_address_entries_lan = merge([
     for list_name, entries in local.ipv4_address_lists_lan : {
+      for e in entries : "${list_name}/${e.address}" => merge({ list = list_name }, e)
+    }
+  ]...)
+
+  ipv6_address_entries_lan = merge([
+    for list_name, entries in local.ipv6_address_lists_lan : {
       for e in entries : "${list_name}/${e.address}" => merge({ list = list_name }, e)
     }
   ]...)
@@ -162,6 +189,13 @@ locals {
 
 resource "routeros_ip_firewall_addr_list" "lan" {
   for_each = local.ipv4_address_entries_lan
+  list     = each.value.list
+  address  = each.value.address
+  comment  = lookup(each.value, "comment", null)
+}
+
+resource "routeros_ipv6_firewall_addr_list" "lan" {
+  for_each = local.ipv6_address_entries_lan
   list     = each.value.list
   address  = each.value.address
   comment  = lookup(each.value, "comment", null)
