@@ -9,14 +9,8 @@ domainFilters:
   - cianfr.one
 sources:
   - ingress
-  - crd
-
-extraArgs:
-  - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
-  - --crd-source-kind=DNSEndpoint
 
 env:
-  # TODO: move to its own secret and token.
   - name: CF_API_TOKEN
     valueFrom:
       secretKeyRef:

@@ -2,25 +2,14 @@
 apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
 metadata:
-  name: metallb-pool-internal
+  name: metallb-pool
   namespace: metallb-system
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
-  autoAssign: false
+  autoAssign: true
   addresses:
     - 10.0.3.0/24
     - fd00:cafe::3:0/64
----
-apiVersion: metallb.io/v1beta1
-kind: IPAddressPool
-metadata:
-  name: metallb-pool-external
-  namespace: metallb-system
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  autoAssign: false
-  addresses:
     # FIXME(ar3s3ru): Hardcoded KPN GUA prefix. Must update after moving to new ISP.
     - 2a02:a469:9060:3::/64

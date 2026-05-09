@@ -2,25 +2,12 @@
 apiVersion: metallb.io/v1beta1
 kind: BGPAdvertisement
 metadata:
-  name: bgp-advertisement-internal
+  name: bgp-advertisement
   namespace: metallb-system
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
   ipAddressPools:
-    - metallb-pool-internal
-  aggregationLength: 32
-  aggregationLengthV6: 128
----
-apiVersion: metallb.io/v1beta1
-kind: BGPAdvertisement
-metadata:
-  name: bgp-advertisement-external
-  namespace: metallb-system
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  ipAddressPools:
-    - metallb-pool-external
+    - metallb-pool
   aggregationLength: 32
   aggregationLengthV6: 128
