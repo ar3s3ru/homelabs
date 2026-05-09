@@ -2,18 +2,25 @@
 provider: cloudflare
 
 managedRecordTypes:
+  - A
+  - AAAA
   - CNAME
 domainFilters:
   - cianfr.one
 sources:
   - ingress
+  - crd
+
+extraArgs:
+  - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
+  - --crd-source-kind=DNSEndpoint
 
 env:
   # TODO: move to its own secret and token.
   - name: CF_API_TOKEN
     valueFrom:
       secretKeyRef:
-        name: cloudflare-ddns-secrets
+        name: external-dns-secrets
         key: CLOUDFLARE_API_TOKEN
 
 serviceMonitor:

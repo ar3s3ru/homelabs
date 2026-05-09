@@ -17,8 +17,12 @@ service:
   torrent:
     controller: main
     type: LoadBalancer
+    ipFamilyPolicy: RequireDualStack
+    ipFamilies:
+      - IPv4
+      - IPv6
     annotations:
-      metallb.io/loadBalancerIPs: 10.0.3.3
+      metallb.io/loadBalancerIPs: "10.0.3.3,2a02:a469:9060:3::3"
     ports:
       bt-tcp:
         port: &torrent 30963
