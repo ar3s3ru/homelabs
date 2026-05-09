@@ -2,9 +2,12 @@
 controller:
   service:
     externalTrafficPolicy: Local # To preserve the original client IP address.
+    ipFamilyPolicy: RequireDualStack
+    ipFamilies:
+      - IPv4
+      - IPv6
     annotations:
-      # Fixes the IP of the Ingress Controller; we should expose 80 and 443 on this IP.
-      metallb.io/loadBalancerIPs: 10.0.3.1
+      metallb.io/loadBalancerIPs: "10.0.3.1,2a02:a469:9060:3::1"
 
   metrics:
     enabled: true

@@ -3,10 +3,17 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: &namespace networking
 
+resources:
+  - in-nl-dnsendpoint.yaml
+
+generators:
+  - ksops.yaml
+
 helmCharts:
   - name: external-dns
     repo: https://kubernetes-sigs.github.io/external-dns/
     version: 1.21.1
     releaseName: external-dns-cloudflare
     namespace: *namespace
+    includeCRDs: true
     valuesFile: values-cloudflare.yaml

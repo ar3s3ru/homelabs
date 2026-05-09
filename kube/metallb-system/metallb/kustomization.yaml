@@ -6,7 +6,9 @@ namespace: &namespace metallb-system
 
 resources:
   - metallb-pool.yaml
-  - l2-advertisement.yaml
+  - bfd-profile.yaml
+  - bgp-peers.yaml
+  - bgp-advertisement.yaml
 
 helmCharts:
   - name: metallb
