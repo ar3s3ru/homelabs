@@ -157,43 +157,6 @@ resource "routeros_ip_firewall_filter" "forward_drop_invalid" {
   comment          = "defconf: drop invalid"
 }
 
-resource "routeros_ip_firewall_filter" "forward_allow_ingress_nginx" {
-  chain             = "forward"
-  action            = "accept"
-  connection_state  = "new"
-  protocol          = "tcp"
-  dst_address_list  = "ipv4-k8s-ingress-controller"
-  in_interface_list = "WAN"
-  dst_port          = "80,443"
-  log               = false
-  log_prefix        = ""
-  comment           = "allow port forwarding to k8s ingress controller"
-}
-
-resource "routeros_ip_firewall_filter" "forward_allow_slskd" {
-  chain             = "forward"
-  action            = "accept"
-  protocol          = "tcp"
-  dst_address_list  = "ipv4-slskd"
-  in_interface_list = "WAN"
-  dst_port          = "50429"
-  log               = false
-  log_prefix        = ""
-  comment           = "allow port forwarding to slskd"
-}
-
-resource "routeros_ip_firewall_filter" "forward_allow_qbittorrent" {
-  chain             = "forward"
-  action            = "accept"
-  protocol          = "tcp"
-  dst_address_list  = "ipv4-qbittorrent"
-  in_interface_list = "WAN"
-  dst_port          = "30963"
-  log               = false
-  log_prefix        = ""
-  comment           = "allow port forwarding to qbittorrent"
-}
-
 resource "routeros_ip_firewall_filter" "forward_drop_wan_not_dstnated" {
   chain                = "forward"
   action               = "drop"
@@ -213,16 +176,6 @@ resource "routeros_ip_firewall_filter" "forward_guest_to_internet" {
   log                = true
   log_prefix         = "GUEST-ALLOW: "
   comment            = "allow guest to internet"
-}
-
-resource "routeros_ip_firewall_filter" "forward_guest_to_ingress" {
-  chain             = "forward"
-  action            = "accept"
-  protocol          = "tcp"
-  dst_address_list  = "ipv4-k8s-ingress-controller"
-  in_interface_list = "GUEST"
-  dst_port          = "80,443"
-  comment           = "allow guest to k8s ingress"
 }
 
 resource "routeros_ip_firewall_filter" "forward_airplay_return" {
@@ -282,15 +235,15 @@ resource "routeros_ip_firewall_filter" "forward_guest_lan_to_guest" {
 
 resource "routeros_move_items" "ip_firewall_forward" {
   resource_name = "routeros_ip_firewall_filter"
-  sequence = [
-    routeros_ip_firewall_filter.forward_allow_ingress_nginx.id,
-    routeros_ip_firewall_filter.forward_allow_slskd.id,
-    routeros_ip_firewall_filter.forward_allow_qbittorrent.id,
-    routeros_ip_firewall_filter.forward_drop_wan_not_dstnated.id,
-    routeros_ip_firewall_filter.forward_guest_to_ingress.id,
-    routeros_ip_firewall_filter.forward_airplay_return.id,
-    routeros_ip_firewall_filter.forward_block_guest_to_lan.id,
-  ]
+  sequence = concat(
+    [for k in sort(keys(local.port_forwards)) : routeros_ip_firewall_filter.service_forward_v4_wan[k].id],
+    [routeros_ip_firewall_filter.forward_drop_wan_not_dstnated.id],
+    [for k in sort(keys(local.port_forwards_with_guest)) : routeros_ip_firewall_filter.service_forward_v4_guest[k].id],
+    [
+      routeros_ip_firewall_filter.forward_airplay_return.id,
+      routeros_ip_firewall_filter.forward_block_guest_to_lan.id,
+    ],
+  )
 }
 
 # ipv4 nat chain --------------------------------------------------------------
@@ -317,93 +270,12 @@ resource "routeros_ip_firewall_nat" "dstnat_bypass_router_mgmt" {
   comment           = "bypass dstnat for router mgmt (LAN)"
 }
 
-resource "routeros_ip_firewall_nat" "dstnat_ingress_http" {
-  chain             = "dstnat"
-  action            = "dst-nat"
-  protocol          = "tcp"
-  dst_address_type  = "local"
-  in_interface_list = "all"
-  dst_port          = "80"
-  to_addresses      = "10.0.3.1"
-  to_ports          = "80"
-  log               = false
-  log_prefix        = ""
-  comment           = "port forward http to k8s ingress controller"
-}
-
-resource "routeros_ip_firewall_nat" "dstnat_ingress_https" {
-  chain             = "dstnat"
-  action            = "dst-nat"
-  protocol          = "tcp"
-  dst_address_type  = "local"
-  in_interface_list = "all"
-  dst_port          = "443"
-  to_addresses      = "10.0.3.1"
-  to_ports          = "443"
-  log               = false
-  log_prefix        = ""
-  comment           = "port forward https to k8s ingress controller"
-}
-
-resource "routeros_ip_firewall_nat" "dstnat_slskd" {
-  chain             = "dstnat"
-  action            = "dst-nat"
-  protocol          = "tcp"
-  dst_address_type  = "local"
-  in_interface_list = "all"
-  to_addresses      = "10.0.3.2"
-  to_ports          = "50429"
-  log               = false
-  log_prefix        = ""
-  comment           = "port forward soulseek to slskd"
-}
-
-resource "routeros_ip_firewall_nat" "dstnat_qbittorrent" {
-  chain             = "dstnat"
-  action            = "dst-nat"
-  protocol          = "tcp"
-  dst_address_type  = "local"
-  in_interface_list = "all"
-  to_addresses      = "10.0.3.3"
-  to_ports          = "30963"
-  log               = false
-  log_prefix        = ""
-  comment           = "port forward qbittorrent"
-}
-
-resource "routeros_ip_firewall_nat" "srcnat_hairpin_http" {
-  chain            = "srcnat"
-  action           = "masquerade"
-  protocol         = "tcp"
-  src_address_list = "ipv4-local"
-  dst_address_list = "ipv4-k8s-ingress-controller"
-  dst_port         = "80"
-  log              = false
-  log_prefix       = ""
-  comment          = "hairpin NAT http to k8s ingress controller"
-}
-
-resource "routeros_ip_firewall_nat" "srcnat_hairpin_https" {
-  chain            = "srcnat"
-  action           = "masquerade"
-  protocol         = "tcp"
-  src_address_list = "ipv4-local"
-  dst_address_list = "ipv4-k8s-ingress-controller"
-  dst_port         = "443"
-  log              = false
-  log_prefix       = ""
-  comment          = "hairpin NAT https to k8s ingress controller"
-}
-
 resource "routeros_move_items" "ip_firewall_nat" {
   resource_name = "routeros_ip_firewall_nat"
-  sequence = [
-    routeros_ip_firewall_nat.dstnat_bypass_router_mgmt.id,
-    routeros_ip_firewall_nat.dstnat_ingress_http.id,
-    routeros_ip_firewall_nat.dstnat_ingress_https.id,
-    routeros_ip_firewall_nat.dstnat_slskd.id,
-    routeros_ip_firewall_nat.dstnat_qbittorrent.id,
-  ]
+  sequence = concat(
+    [routeros_ip_firewall_nat.dstnat_bypass_router_mgmt.id],
+    [for k in sort(keys(local.port_forwards)) : routeros_ip_firewall_nat.service_dstnat[k].id],
+  )
 }
 
 # IPv6 firewall filter rules ---------------------------------------------------
@@ -690,36 +562,6 @@ resource "routeros_ipv6_firewall_filter" "forward_airplay_return_v6" {
   comment            = "allow AirPlay UDP return stream from airplay-targets to LAN (IPv6)"
 }
 
-resource "routeros_ipv6_firewall_filter" "forward_allow_ingress_nginx_v6" {
-  chain             = "forward"
-  action            = "accept"
-  protocol          = "tcp"
-  in_interface_list = "WAN"
-  dst_address_list  = "ipv6-k8s-ingress-controller"
-  dst_port          = "80,443"
-  comment           = "allow port forwarding to k8s ingress controller (IPv6)"
-}
-
-resource "routeros_ipv6_firewall_filter" "forward_allow_slskd_v6" {
-  chain             = "forward"
-  action            = "accept"
-  protocol          = "tcp"
-  in_interface_list = "WAN"
-  dst_address_list  = "ipv6-slskd"
-  dst_port          = "50429"
-  comment           = "allow port forwarding to slskd (IPv6)"
-}
-
-resource "routeros_ipv6_firewall_filter" "forward_allow_qbittorrent_v6" {
-  chain             = "forward"
-  action            = "accept"
-  protocol          = "tcp"
-  in_interface_list = "WAN"
-  dst_address_list  = "ipv6-qbittorrent"
-  dst_port          = "30963"
-  comment           = "allow port forwarding to qbittorrent (IPv6)"
-}
-
 resource "routeros_ipv6_firewall_filter" "forward_drop_not_lan_v6" {
   chain             = "forward"
   action            = "drop"
@@ -794,22 +636,22 @@ resource "routeros_ipv6_firewall_filter" "forward_iot_ra_guard_v6" {
 
 resource "routeros_move_items" "ipv6_firewall_forward" {
   resource_name = "routeros_ipv6_firewall_filter"
-  sequence = [
-    routeros_ipv6_firewall_filter.forward_drop_invalid_v6.id,
-    routeros_ipv6_firewall_filter.forward_drop_bad_src_v6.id,
-    routeros_ipv6_firewall_filter.forward_drop_bad_dst_v6.id,
-    routeros_ipv6_firewall_filter.forward_drop_hop_limit_1.id,
-    routeros_ipv6_firewall_filter.forward_accept_icmpv6.id,
-    routeros_ipv6_firewall_filter.forward_accept_hip_v6.id,
-    routeros_ipv6_firewall_filter.forward_accept_ike_v6.id,
-    routeros_ipv6_firewall_filter.forward_accept_ipsec_ah_v6.id,
-    routeros_ipv6_firewall_filter.forward_accept_ipsec_esp_v6.id,
-    routeros_ipv6_firewall_filter.forward_accept_ipsec_policy_v6.id,
-    routeros_ipv6_firewall_filter.forward_guest_to_wan_v6.id,
-    routeros_ipv6_firewall_filter.forward_airplay_return_v6.id,
-    routeros_ipv6_firewall_filter.forward_allow_ingress_nginx_v6.id,
-    routeros_ipv6_firewall_filter.forward_allow_slskd_v6.id,
-    routeros_ipv6_firewall_filter.forward_allow_qbittorrent_v6.id,
-    routeros_ipv6_firewall_filter.forward_drop_not_lan_v6.id,
-  ]
+  sequence = concat(
+    [
+      routeros_ipv6_firewall_filter.forward_drop_invalid_v6.id,
+      routeros_ipv6_firewall_filter.forward_drop_bad_src_v6.id,
+      routeros_ipv6_firewall_filter.forward_drop_bad_dst_v6.id,
+      routeros_ipv6_firewall_filter.forward_drop_hop_limit_1.id,
+      routeros_ipv6_firewall_filter.forward_accept_icmpv6.id,
+      routeros_ipv6_firewall_filter.forward_accept_hip_v6.id,
+      routeros_ipv6_firewall_filter.forward_accept_ike_v6.id,
+      routeros_ipv6_firewall_filter.forward_accept_ipsec_ah_v6.id,
+      routeros_ipv6_firewall_filter.forward_accept_ipsec_esp_v6.id,
+      routeros_ipv6_firewall_filter.forward_accept_ipsec_policy_v6.id,
+      routeros_ipv6_firewall_filter.forward_guest_to_wan_v6.id,
+      routeros_ipv6_firewall_filter.forward_airplay_return_v6.id,
+    ],
+    [for k in sort(keys(local.port_forwards)) : routeros_ipv6_firewall_filter.service_forward_v6_wan[k].id],
+    [routeros_ipv6_firewall_filter.forward_drop_not_lan_v6.id],
+  )
 }
