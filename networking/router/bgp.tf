@@ -13,7 +13,7 @@ resource "routeros_routing_bgp_connection" "metallb_v4" {
   name             = "metallb-${each.key}-v4"
   as               = "64512"
   address_families = "ip"
-  use_bfd          = true
+  use_bfd          = false
 
   remote {
     address = each.value.v4
@@ -37,7 +37,7 @@ resource "routeros_routing_bgp_connection" "metallb_v6" {
   name             = "metallb-${each.key}-v6"
   as               = "64512"
   address_families = "ipv6"
-  use_bfd          = true
+  use_bfd          = false
 
   remote {
     address = each.value.v6

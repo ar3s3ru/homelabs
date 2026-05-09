@@ -10,7 +10,6 @@ spec:
   myASN: 64512
   peerASN: 64512
   peerAddress: 10.0.0.1
-  bfdProfile: fast
 ---
 apiVersion: metallb.io/v1beta2
 kind: BGPPeer
@@ -23,4 +22,3 @@ spec:
   myASN: 64512
   peerASN: 64512
   peerAddress: fd00:cafe::1
-  bfdProfile: fast
