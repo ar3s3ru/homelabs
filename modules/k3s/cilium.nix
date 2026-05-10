@@ -4,40 +4,42 @@
     repo = "https://helm.cilium.io/";
     version = "1.19.3";
     hash = "sha256-yOBd+eq/kBnmL1ED4fNYFLTxtDkW+IUZ5a5ONsaapCs=";
-      targetNamespace = "networking";
-      createNamespace = true;
-      values = {
-        # Replace kube-proxy with eBPF datapath.
-        kubeProxyReplacement = true;
-        k8sServiceHost = "10.0.1.1";
-        k8sServicePort = 6443;
+    targetNamespace = "networking";
+    createNamespace = true;
+    values = {
+      # Replace kube-proxy with eBPF datapath.
+      kubeProxyReplacement = true;
+      k8sServiceHost = "10.0.1.1";
+      k8sServicePort = 6443;
 
-        # IPAM: honour per-node podCIDRs allocated by k3s controller-manager.
-        ipam.mode = "kubernetes";
+      # IPAM: honour per-node podCIDRs allocated by k3s controller-manager.
+      ipam.mode = "kubernetes";
 
-        # Native routing mode with autoDirectNodeRoutes (each agent installs
-        # host routes to other nodes' pod CIDRs via their node IPs).
-        # Tunnel mode caused MSS rewrites that broke etcd peer connectivity.
-        routingMode = "native";
-        autoDirectNodeRoutes = true;
+      # Native routing mode with autoDirectNodeRoutes (each agent installs
+      # host routes to other nodes' pod CIDRs via their node IPs).
+      # Tunnel mode caused MSS rewrites that broke etcd peer connectivity.
+      routingMode = "native";
+      autoDirectNodeRoutes = true;
 
-        # Dual-stack.
-        ipv4.enabled = true;
-        ipv6.enabled = true;
+      # Dual-stack.
+      ipv4.enabled = true;
+      ipv6.enabled = true;
 
-        # Tell Cilium which CIDRs are pod-native (so host networking is left alone).
-        ipv4NativeRoutingCIDR = "10.42.0.0/16";
-        ipv6NativeRoutingCIDR = "fd00:cafe:42::/48";
+      # Tell Cilium which CIDRs are pod-native (so host networking is left alone).
+      ipv4NativeRoutingCIDR = "10.42.0.0/16";
+      ipv6NativeRoutingCIDR = "fd00:cafe:42::/48";
 
-        # Masquerade.
-        # bpf.masquerade=true caused severe TCP throughput collapse on the
-        # Tailscale-operator-managed proxy pods (laptop ↔ ts-* ↔ ClusterIP).
-        # Falling back to iptables masquerade restores parity with kube-proxy
-        # behaviour pre-Cilium. Slight perf hit for high-throughput pod→external,
-        # but our actual workloads aren't bottlenecked by that.
-        enableIPv4Masquerade = true;
-        enableIPv6Masquerade = true;
-        bpf.masquerade = false;
+      # Masquerade via eBPF (faster than iptables masquerade).
+      enableIPv4Masquerade = true;
+      enableIPv6Masquerade = true;
+      bpf.masquerade = true;
+
+      # Track IPv4/IPv6 fragments. Without this, BPF drops fragmented packets
+      # at egress, which breaks Tailscale userspace WG (MTU 1280) carrying
+      # large TCP segments from cluster-internal backends. Observed >350 MB
+      # of "Fragmented packet" drops on a single agent before enabling.
+      enableIPv4FragmentsTracking = true;
+      enableIPv6FragmentsTracking = true;
 
       # BGP Control Plane (replaces MetalLB).
       bgpControlPlane.enabled = true;
