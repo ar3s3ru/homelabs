@@ -30,9 +30,14 @@
         ipv6NativeRoutingCIDR = "fd00:cafe:42::/48";
 
         # Masquerade.
+        # bpf.masquerade=true caused severe TCP throughput collapse on the
+        # Tailscale-operator-managed proxy pods (laptop ↔ ts-* ↔ ClusterIP).
+        # Falling back to iptables masquerade restores parity with kube-proxy
+        # behaviour pre-Cilium. Slight perf hit for high-throughput pod→external,
+        # but our actual workloads aren't bottlenecked by that.
         enableIPv4Masquerade = true;
         enableIPv6Masquerade = true;
-        bpf.masquerade = true;
+        bpf.masquerade = false;
 
       # BGP Control Plane (replaces MetalLB).
       bgpControlPlane.enabled = true;
