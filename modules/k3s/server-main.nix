@@ -1,6 +1,7 @@
 {
   imports = [
     ./server.nix
+    ./cilium.nix
     ./argocd.nix
     ./tailscale.nix
   ];
