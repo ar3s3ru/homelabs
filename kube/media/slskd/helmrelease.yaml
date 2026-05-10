@@ -26,7 +26,7 @@ spec:
           - IPv4
           - IPv6
         annotations:
-          metallb.io/loadBalancerIPs: "10.0.3.2,2a02:a469:9060:3::2"
+          io.cilium/lb-ipam-ips: "10.0.3.2,2a02:a469:9060:3::2"
         ports:
           http:
             port: &port 8080
