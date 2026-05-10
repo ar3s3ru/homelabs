@@ -34,12 +34,15 @@
       enableIPv6Masquerade = true;
       bpf.masquerade = true;
 
-      # Track IPv4/IPv6 fragments. Without this, BPF drops fragmented packets
-      # at egress, which breaks Tailscale userspace WG (MTU 1280) carrying
-      # large TCP segments from cluster-internal backends. Observed >350 MB
-      # of "Fragmented packet" drops on a single agent before enabling.
-      enableIPv4FragmentsTracking = true;
-      enableIPv6FragmentsTracking = true;
+      # Track IPv4 fragments in the BPF datapath. Without this, BPF drops
+      # fragmented packets at egress, which breaks Tailscale userspace WG
+      # (MTU 1280) carrying large TCP segments from cluster-internal backends.
+      # Observed >350 MB of "Fragmented packet" drops on a single agent.
+      fragmentTracking = true;
+
+      # Send ICMP "Fragmentation Needed" so endpoints can do PMTU discovery
+      # rather than relying on fragmentation in the first place.
+      pmtuDiscovery.enabled = true;
 
       # BGP Control Plane (replaces MetalLB).
       bgpControlPlane.enabled = true;
