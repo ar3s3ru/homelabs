@@ -36,10 +36,14 @@ spec:
                 # storage), since volumes can re-attach across nodes. cnpg
                 # primary pods are protected via PodDisruptionBudget so
                 # descheduler will skip them.
+                #
+                # PodsWithPVC protection is already off by default (no
+                # opt-in needed). PodsWithLocalStorage is on by default and
+                # disabled here so pods using emptyDir/hostPath are still
+                # considered.
                 podProtections:
                   defaultDisabled:
                     - "PodsWithLocalStorage"
-                    - "PodsWithPVC"
             - name: RemoveDuplicates
             - name: RemovePodsHavingTooManyRestarts
               args:
