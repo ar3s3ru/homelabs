@@ -37,7 +37,7 @@
       # leaving an effective application MTU of ~1140 — anything larger gets
       # silently dropped, triggering massive TCP retransmits.
       # See: https://github.com/tailscale/tailscale/issues/18565
-      mtu = 1500;
+      MTU = 1500;
 
       # Masquerade via eBPF (faster than iptables masquerade).
       enableIPv4Masquerade = true;
