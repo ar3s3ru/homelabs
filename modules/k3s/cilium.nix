@@ -84,7 +84,16 @@
       };
 
       # Gateway API (parallel to ingress-nginx).
-      gatewayAPI.enabled = true;
+      # Sync TLS secrets into the `networking` namespace instead of the
+      # default `cilium-secrets`, to keep all networking-related resources
+      # co-located with the Cilium release itself.
+      gatewayAPI = {
+        enabled = true;
+        secretsNamespace = {
+          name = "networking";
+          create = false;
+        };
+      };
 
       # Prometheus metrics for Cilium itself.
       prometheus.enabled = true;
