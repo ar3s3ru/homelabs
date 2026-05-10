@@ -18,6 +18,8 @@
     kubernetes-helm
     docker
     runc
+    cilium-cli
+    hubble
   ];
 
   environment.variables = {

@@ -58,6 +58,8 @@
               garage # Management of garage system.
               argocd # CLI for interacting with ArgoCD.
               kustomize
+              cilium-cli # Cilium CLI
+              hubble
             ] ++
             # Go packages for tool development.
             [

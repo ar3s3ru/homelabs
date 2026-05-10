@@ -1,7 +1,7 @@
 {
   imports = [
     ./server.nix
-    ./cilium.nix
+    # ./cilium.nix  # Disabled: autoDeployCharts can't bootstrap CNI (chicken/egg). Manual helm install.
     ./argocd.nix
     ./tailscale.nix
   ];

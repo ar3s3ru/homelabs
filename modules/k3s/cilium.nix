@@ -3,31 +3,36 @@
     name = "cilium";
     repo = "https://helm.cilium.io/";
     version = "1.19.3";
-    hash = "sha256-rt3TlLpIMTLyN+DZFRpHItt7tadQ3k+BghkfwhI8Yaw=";
-    targetNamespace = "kube-system";
-    createNamespace = true;
-    values = {
-      # Replace kube-proxy with eBPF datapath.
-      kubeProxyReplacement = true;
-      k8sServiceHost = "10.0.1.1";
-      k8sServicePort = 6443;
+    hash = "sha256-yOBd+eq/kBnmL1ED4fNYFLTxtDkW+IUZ5a5ONsaapCs=";
+      targetNamespace = "networking";
+      createNamespace = true;
+      values = {
+        # Replace kube-proxy with eBPF datapath.
+        kubeProxyReplacement = true;
+        k8sServiceHost = "10.0.1.1";
+        k8sServicePort = 6443;
 
-      # IPAM: honour per-node podCIDRs allocated by k3s controller-manager.
-      ipam.mode = "kubernetes";
+        # IPAM: honour per-node podCIDRs allocated by k3s controller-manager.
+        ipam.mode = "kubernetes";
 
-      # Start in VXLAN tunnel mode (mirrors current Flannel overlay).
-      # Future follow-up: switch to native routing once Cilium BGP is proven.
-      routingMode = "tunnel";
-      tunnelProtocol = "vxlan";
+        # Native routing mode with autoDirectNodeRoutes (each agent installs
+        # host routes to other nodes' pod CIDRs via their node IPs).
+        # Tunnel mode caused MSS rewrites that broke etcd peer connectivity.
+        routingMode = "native";
+        autoDirectNodeRoutes = true;
 
-      # Dual-stack.
-      ipv4.enabled = true;
-      ipv6.enabled = true;
+        # Dual-stack.
+        ipv4.enabled = true;
+        ipv6.enabled = true;
 
-      # Masquerade.
-      enableIPv4Masquerade = true;
-      enableIPv6Masquerade = true;
-      bpf.masquerade = true;
+        # Tell Cilium which CIDRs are pod-native (so host networking is left alone).
+        ipv4NativeRoutingCIDR = "10.42.0.0/16";
+        ipv6NativeRoutingCIDR = "fd00:cafe:42::/48";
+
+        # Masquerade.
+        enableIPv4Masquerade = true;
+        enableIPv6Masquerade = true;
+        bpf.masquerade = true;
 
       # BGP Control Plane (replaces MetalLB).
       bgpControlPlane.enabled = true;
