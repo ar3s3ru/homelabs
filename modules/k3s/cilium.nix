@@ -60,13 +60,38 @@
       # Operator HA.
       operator = {
         replicas = 2;
-        prometheus.enabled = true;
+        # cilium-operator metrics on :9963. ServiceMonitor lets
+        # VictoriaMetrics scrape operator-side stats (LB-IPAM allocation
+        # errors, BGP peering events, reconcile latencies).
+        # trustCRDsExist=true skips the helm-time CRD precondition check —
+        # required when rendered by k3s helm-controller (no cluster
+        # context). VictoriaMetrics installs the prometheus-operator CRDs.
+        prometheus = {
+          enabled = true;
+          serviceMonitor = {
+            enabled = true;
+            trustCRDsExist = true;
+          };
+        };
       };
 
       # Hubble observability.
       hubble = {
         enabled = true;
-        relay.enabled = true;
+        relay = {
+          enabled = true;
+          # Expose hubble-relay metrics on :9966 and create a ServiceMonitor
+          # so VictoriaMetrics scrapes them. Gives relay-side stats (flows
+          # processed, peer connectivity, dropped messages) on top of the
+          # per-agent hubble-metrics endpoint below.
+          prometheus = {
+            enabled = true;
+            serviceMonitor = {
+              enabled = true;
+              trustCRDsExist = true;
+            };
+          };
+        };
         ui = {
           enabled = true;
           ingress = {
@@ -80,7 +105,29 @@
           enabled = true;
           method = "helm";
         };
-        metrics.enabled = [ "dns" "drop" "tcp" "flow" "icmp" "http" ];
+        # L7 / per-flow metrics exported by each cilium-agent on :9965. The
+        # `dns,drop,tcp,flow,icmp,http` set covers DNS errors, dropped
+        # packets, TCP flow counts, generic flow events, ICMP, and HTTP
+        # request rates + latencies — the L4 + L7 telemetry we need to
+        # observe traffic through Cilium Gateway API (Envoy).
+        # The ServiceMonitor lets VictoriaMetrics auto-discover the
+        # hubble-metrics Service (already created by the chart).
+        metrics = {
+          enabled = [ "dns" "drop" "tcp" "flow" "icmp" "http" ];
+          serviceMonitor = {
+            enabled = true;
+            trustCRDsExist = true;
+          };
+        };
+      };
+
+      # cilium-envoy proxy metrics on :9964. Required for L7 visibility
+      # into Gateway API HTTPRoute traffic (Envoy is the actual data
+      # plane). ServiceMonitor flag applies to both cilium-envoy and
+      # cilium-agent when Envoy is enabled.
+      envoy.prometheus.serviceMonitor = {
+        enabled = true;
+        trustCRDsExist = true;
       };
 
       # Gateway API (parallel to ingress-nginx).
@@ -95,8 +142,16 @@
         };
       };
 
-      # Prometheus metrics for Cilium itself.
-      prometheus.enabled = true;
+      # Cilium-agent metrics on :9962. ServiceMonitor exposes the per-node
+      # eBPF datapath stats (L3/L4 forwarded/dropped packets, NAT, conntrack,
+      # endpoint count, BPF map pressure) to VictoriaMetrics.
+      prometheus = {
+        enabled = true;
+        serviceMonitor = {
+          enabled = true;
+          trustCRDsExist = true;
+        };
+      };
 
       # Service types handled by Cilium eBPF.
       nodePort.enabled = true;
