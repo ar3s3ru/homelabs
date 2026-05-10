@@ -29,6 +29,16 @@
       ipv4NativeRoutingCIDR = "10.42.0.0/16";
       ipv6NativeRoutingCIDR = "fd00:cafe:42::/48";
 
+      # Force MTU 1500 (Ethernet default). Cilium's auto-detection picks 1280
+      # from the host's tailscale0 device, but pod traffic does NOT traverse
+      # tailscale0 — it flows through the LAN NICs (1500). The artificially
+      # low MTU collapses Tailscale-operator-managed proxy pods to ~18 KB/s
+      # because their userspace WG netstack adds another ~140 bytes overhead,
+      # leaving an effective application MTU of ~1140 — anything larger gets
+      # silently dropped, triggering massive TCP retransmits.
+      # See: https://github.com/tailscale/tailscale/issues/18565
+      mtu = 1500;
+
       # Masquerade via eBPF (faster than iptables masquerade).
       enableIPv4Masquerade = true;
       enableIPv6Masquerade = true;
