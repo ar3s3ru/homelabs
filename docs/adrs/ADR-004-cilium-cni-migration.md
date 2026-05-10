@@ -159,7 +159,30 @@ New/modified files (build-only, no `colmena apply`):
 3. **`modules/k3s/server-main.nix`**: import `modules/k3s/cilium.nix`.
 4. **`modules/k3s/server.nix`**: add k3s flags (`--flannel-backend=none`, `--disable-network-policy`, `--disable-kube-proxy`) and remove `--flannel-ipv6-masq`.
 5. **`modules/k3s/agent.nix`**: add `--node-label=bgp-policy=nl` is **not needed** (no node selector). No changes required.
-6. `nix flake check` must pass.
+6. **Open Cilium control-plane ports in NixOS firewall** (`modules/k3s/k3s.nix` `networking.firewall.allowedTCPPorts`). Required for inter-node Cilium control traffic — without these, host-to-host TCP to Cilium ports is silently dropped by `nixos-fw-log-refuse`, breaking Hubble Relay, cilium-health probes, and any pod whose ClusterIP resolves to a remote node's host port.
+
+   Required TCP ports:
+   - `4240` — cilium-health (cluster health checker, also requires `networking.firewall.allowPing = true` for ICMP probes)
+   - `4244` — Hubble peer service (consumed by hubble-relay across nodes)
+   - `4245` — Hubble relay (gRPC API for `hubble` CLI / Hubble UI)
+   - `9962` — cilium-agent Prometheus exporter (optional, only if scraped externally)
+   - `9963` — cilium-operator Prometheus exporter (optional)
+   - `9964` — cilium-envoy Prometheus exporter (optional)
+
+   Port `179` (BGP) is already open for MetalLB and reused by Cilium BGP — no change needed there.
+
+   The `8472/udp` flannel port should remain in `allowedUDPPorts` until Phase 6 cleanup.
+7. **Force Cilium pod MTU to 1500** via the `MTU` Helm value (note: uppercase, lowercase `mtu` is silently ignored by the chart).
+
+   Cilium's MTU auto-detection picks the smallest MTU among devices it considers, including `tailscale0` (1280) on hosts running tailscaled. Pod traffic does NOT traverse `tailscale0` — pods route via cilium_host → host LAN NIC (1500) → other node — but Cilium auto-MTU still factors `tailscale0` in and clamps pod eth0 / cilium_host to 1280.
+
+   The downstream effect is brutal: any pod that re-encapsulates traffic (notably the **Tailscale operator-managed Ingress proxy pods**, which run userspace WireGuard via netstack and add ~140 bytes of overhead) ends up with an effective application MTU of ~1140. Backend pods sending normal 1240-byte TCP segments produce packets that silently get dropped by the proxy pod's userspace WG. TCP retransmits. Throughput collapses to ~18 KB/s for any non-trivial response (Grafana dashboards, Longhorn UI, Hubble UI streams, Home Assistant, etc.).
+
+   `MTU = 1500` in `cilium.nix` is the fix. Pod-to-pod traffic uses 1500-byte packets natively on LAN. Tailscale proxies regain ~1360 bytes effective MSS and run at LAN-native speeds (>1 MB/s observed).
+
+   Ref: [tailscale#18565](https://github.com/tailscale/tailscale/issues/18565).
+8. **Enable BPF datapath fragment tracking + PMTU discovery** (`fragmentTracking = true`, `pmtuDiscovery.enabled = true`). Defends the datapath when fragmentation does occur (e.g., a transient PMTU mismatch on a Tailscale path) so packets aren't dropped silently. Without these, you'll see large `Fragmented packet` drop counts in `cilium-dbg bpf metrics list`.
+9. `nix flake check` must pass.
 
 ### Phase 2 — CNI cutover (~30 min window)
 
@@ -233,6 +256,9 @@ New/modified files (build-only, no `colmena apply`):
 | Tailscale operator interaction with Cilium LB | Low | Tailscale LB class (`tailscale`) is independent. Cilium pool only covers `LoadBalancerIP` Services. |
 | ArgoCD tries to recreate MetalLB after deletion | Low | Commit deletion, push, ArgoCD reconciles to MissingResource → Healthy. Manual namespace delete if needed. |
 | Longhorn volumes don't reattach after CNI swap | Low | Longhorn uses Service DNS, not pod IPs. Should reattach automatically. Verify before uncordoning. |
+| NixOS firewall blocks Cilium control ports → silent failures (Hubble Relay crashloops, cluster health degraded, ClusterIP-to-host-port hangs) | High if missed | Open `4240`, `4244`, `4245` (and optionally `9962-9964`) in `networking.firewall.allowedTCPPorts`, plus `networking.firewall.allowPing = true`. Symptoms are subtle: pod-to-pod cross-node traffic works (uses cilium_host direct routes), but pod-to-ClusterIP that backends to a remote host's port silently times out — looks like Cilium policy/datapath issue. See Phase 1 step 6. |
+| Cilium auto-MTU detects `tailscale0` (1280) and clamps pod eth0 / cilium_host to 1280, collapsing throughput through Tailscale-operator-managed Ingress proxy pods to ~18 KB/s (Grafana / Longhorn / Hubble UI / Home Assistant unusable) | High if missed | Set `MTU = 1500` (uppercase!) in cilium Helm values. The chart silently ignores lowercase `mtu`. See Phase 1 step 7. Existing pods need to restart to pick up the new MTU; rolling restart of the cilium DaemonSet plus the Tailscale operator StatefulSets is enough. Ref: [tailscale#18565](https://github.com/tailscale/tailscale/issues/18565). |
+| Helm values use schema-incorrect key names (e.g. `mtu` vs `MTU`, `enableIPv4FragmentsTracking` vs `fragmentTracking`) | Medium | The Cilium chart silently ignores unknown top-level keys. Always cross-check against `helm show values cilium/cilium --version <version>` before committing. Symptoms are "config didn't apply" with no error. |
 
 ## Rollback Plan
 
