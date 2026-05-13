@@ -2,7 +2,7 @@
   services.k3s.autoDeployCharts.cilium = {
     name = "cilium";
     repo = "https://helm.cilium.io/";
-    version = "1.19.3";
+    version = "1.19.4";
     hash = "sha256-yOBd+eq/kBnmL1ED4fNYFLTxtDkW+IUZ5a5ONsaapCs=";
     targetNamespace = "networking";
     createNamespace = true;
