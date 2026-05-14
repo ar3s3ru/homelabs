@@ -1,0 +1,42 @@
+---
+# Shared Cilium Gateway. Reuses the LB IPs previously held by
+# ingress-nginx-controller (10.0.3.1 / 2a02:a469:9060:3::1) so router
+# port-forwards and external-dns targets remain unchanged during the
+# per-app HTTPRoute migration.
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: shared-gateway
+  namespace: networking
+  annotations:
+    cert-manager.io/cluster-issuer: cianfr.one-acme
+    external-dns.alpha.kubernetes.io/target: in.nl.cianfr.one
+spec:
+  gatewayClassName: cilium
+  addresses:
+    - type: IPAddress
+      value: 10.0.3.1
+    - type: IPAddress
+      value: 2a02:a469:9060:3::1
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      # Only the same-namespace 301 redirect HTTPRoute attaches here.
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https
+      protocol: HTTPS
+      port: 443
+      # Wildcard hostname → cert-manager issues one Certificate with
+      # dnsNames=[*.cianfr.one] via DNS-01. Per-app HTTPRoutes attach
+      # concrete hostnames matched via SNI.
+      hostname: "*.cianfr.one"
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: cianfr.one-wildcard-tls
+      allowedRoutes:
+        namespaces:
+          from: All

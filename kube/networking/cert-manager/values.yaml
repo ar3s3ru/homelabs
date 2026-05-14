@@ -8,6 +8,14 @@ global:
 crds:
   enabled: true
 
+# Gateway-shim: cert-manager generates Certificates from the
+# cert-manager.io/cluster-issuer annotation on Gateway resources.
+# Requires a pod restart after Gateway API CRDs are first installed.
+config:
+  apiVersion: controller.config.cert-manager.io/v1alpha1
+  kind: ControllerConfiguration
+  enableGatewayAPI: true
+
 prometheus:
   enabled: true
   servicemonitor:
