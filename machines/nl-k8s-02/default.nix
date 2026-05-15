@@ -3,7 +3,10 @@
 { lib, ... }:
 
 {
-  deployment.targetHost = "10.0.1.2";
+  # NOTE: overrides the Tailnet hostname target, only to be used if on LAN
+  # and Tailscale is giving problems.
+  #
+  # deployment.targetHost = "10.0.1.2";
   deployment.targetUser = "root";
   deployment.tags = [ "type-server" "k8s-server" "region-nl" ];
 

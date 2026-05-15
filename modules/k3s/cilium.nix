@@ -3,7 +3,7 @@
     name = "cilium";
     repo = "https://helm.cilium.io/";
     version = "1.19.4";
-    hash = "sha256-yOBd+eq/kBnmL1ED4fNYFLTxtDkW+IUZ5a5ONsaapCs=";
+    hash = "sha256-xqeI5r10WYojX3mHkwhg9VTC3YBIFU0auopTK83pDNY=";
     targetNamespace = "networking";
     createNamespace = true;
     values = {

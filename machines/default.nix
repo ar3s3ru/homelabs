@@ -11,7 +11,10 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
     overlays = [ ];
   };
 
-  defaults = { pkgs, lib, ... }: {
+  defaults = { pkgs, lib, config, ... }: {
+    # By default, use the Tailnet hostname.
+    deployment.targetHost = lib.mkDefault "${config.networking.hostName}.tail2ff90.ts.net";
+
     nix.settings.substituters = [ "https://nl-attic.tail2ff90.ts.net/main" ];
     nix.settings.trusted-public-keys = [ "main:n0xPC74lOqQnzDSNH3QBE0aWLRdXwuK9ztFxxpMG/Xg=" ];
 
@@ -88,7 +91,6 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
     users.users.root.hashedPassword = "$6$IAwKbqRXgvJXNTPI$w8m6U48i5j9kCG9GoMSgeUC5XzIrxz9IA.8EmV91bZdlM.B82zI2.wdxR6SD.U8xBPlm3nIgtJGUvWChD.yYX/";
     users.users.root.openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOT8pC2k4pixtod7Z7NS3n3qZR+yhR/KCqfVWVlqXysv ar3s3ru@teriyaki.ar3s3ru.dev"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB8pfB5IIXKbJQaxezmQ2oC+uJl+dg0MCoFYwcsjhrm+ ar3s3ru@polus"
     ];
 
     networking.firewall.allowedTCPPorts = [
