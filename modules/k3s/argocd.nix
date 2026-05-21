@@ -16,7 +16,7 @@
   services.k3s.autoDeployCharts.argocd = {
     name = "argo-cd";
     repo = "https://argoproj.github.io/argo-helm";
-    version = "9.5.14";
+    version = "9.5.15";
     hash = "sha256-3Dws6JyctCsonegPUpXRbV5/l/KWMztx613Polh31f0=";
     targetNamespace = "argo-system";
     createNamespace = true;
