@@ -23,7 +23,7 @@
   services.k3s.autoDeployCharts.tailscale-operator = rec {
     name = "tailscale-operator";
     repo = "https://pkgs.tailscale.com/helmcharts";
-    version = "1.96.5";
+    version = "1.98.3";
     hash = "sha256-lVmVHGtWmvPbRY42IuiPEn6y4RSvkGu0E80NffoBvRA=";
     targetNamespace = "networking";
     extraFieldDefinitions = {
