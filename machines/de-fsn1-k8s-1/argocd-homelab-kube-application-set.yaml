@@ -1,0 +1,68 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: namespaces
+  namespace: argo-system
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: git@github.com:ar3s3ru/homelabs.git
+        revision: main
+        directories:
+          - path: kube-hetzner/*
+  template:
+    metadata:
+      name: "ns-{{.path.basename}}"
+    spec:
+      project: default
+      source:
+        repoURL: git@github.com:ar3s3ru/homelabs.git
+        targetRevision: main
+        path: "{{.path.path}}"
+      destination:
+        name: in-cluster
+        namespace: argo-system
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+          - ServerSideApply=true
+          - ApplyOutOfSyncOnly=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: apps
+  namespace: argo-system
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: git@github.com:ar3s3ru/homelabs.git
+        revision: main
+        directories:
+          - path: kube-hetzner/*/*
+  template:
+    metadata:
+      name: "app-{{.path.basename}}"
+    spec:
+      project: default
+      source:
+        repoURL: git@github.com:ar3s3ru/homelabs.git
+        targetRevision: main
+        path: "{{.path.path}}"
+      destination:
+        name: in-cluster
+        namespace: "{{index .path.segments 1}}"
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+          - ServerSideApply=true
+          - ApplyOutOfSyncOnly=true

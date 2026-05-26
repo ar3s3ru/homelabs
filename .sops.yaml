@@ -10,6 +10,7 @@ keys:
   - &nl-k8s-02 age143yn95y2n546rlqrhgy2nzrz0w87ks7fk9dlwp3ylt0dfflczuhqrv2lmv
   - &nl-k8s-03 age1n6eedefn6afu4e2f492xhfhckrayvp65jp7hla3x4nwj2zwz7sasw6ls6k
   - &nl-k8s-04 age12g62sqmpz4pztx8zn94n8rxzklj7fj805g78m50kxu44yqy26azs2vph2y
+  - &de-fsn1-k8s-1 age1tcaqw9c5sfdys359kzs2t599d2sje7sg7fha8ts42955qk9t3yss075kcn
 creation_rules:
   - path_regex: "machines/secrets.yaml"
     key_groups:
@@ -21,6 +22,7 @@ creation_rules:
           - *nl-k8s-02
           - *nl-k8s-03
           - *nl-k8s-04
+          - *de-fsn1-k8s-1
   - path_regex: "machines/dejima/secrets.yaml"
     key_groups:
       - pgp:
@@ -34,12 +36,6 @@ creation_rules:
         age:
           - *github-actions
           - *nl-k8s-04
-  - path_regex: "clusters/.*"
-    key_groups:
-      - pgp:
-          - *ar3s3ru
-        age:
-          - *github-actions
   - path_regex: "modules/.*/secrets.yaml"
     key_groups:
       - pgp:
@@ -50,6 +46,7 @@ creation_rules:
           - *nl-k8s-02
           - *nl-k8s-03
           - *nl-k8s-04
+          - *de-fsn1-k8s-1
   - path_regex: "modules/k3s/secrets/.*.yaml"
     encrypted_regex: "^(data|stringData)$"
     key_groups:
@@ -61,7 +58,15 @@ creation_rules:
           - *nl-k8s-02
           - *nl-k8s-03
           - *nl-k8s-04
+          - *de-fsn1-k8s-1
   - path_regex: "kube/.*.enc.yaml"
+    encrypted_regex: "^(data|stringData)$"
+    key_groups:
+      - pgp:
+          - *ar3s3ru
+        age:
+          - *argocd
+  - path_regex: "kube-hetzner/.*.enc.yaml"
     encrypted_regex: "^(data|stringData)$"
     key_groups:
       - pgp:
