@@ -9,7 +9,7 @@ spec:
   goTemplateOptions: ["missingkey=error"]
   generators:
     - git:
-        repoURL: git@github.com:ar3s3ru/homelabs.git
+        repoURL: &repo git@github.com:iitsdani/homelabs.git
         revision: main
         directories:
           - path: kube/*
@@ -19,7 +19,7 @@ spec:
     spec:
       project: default
       source:
-        repoURL: git@github.com:ar3s3ru/homelabs.git
+        repoURL: *repo
         targetRevision: main
         path: "{{.path.path}}"
       # Namespace resources under kube/<ns>/ are cluster-scoped Namespace
@@ -47,7 +47,7 @@ spec:
   goTemplateOptions: ["missingkey=error"]
   generators:
     - git:
-        repoURL: git@github.com:ar3s3ru/homelabs.git
+        repoURL: &repo git@github.com:iitsdani/homelabs.git
         revision: main
         directories:
           - path: kube/*/* # Matches kube/<namespace>/<app>
@@ -57,7 +57,7 @@ spec:
     spec:
       project: default
       source:
-        repoURL: git@github.com:ar3s3ru/homelabs.git
+        repoURL: *repo
         targetRevision: main
         path: "{{.path.path}}"
       # Derive destination namespace from the Git path: for
