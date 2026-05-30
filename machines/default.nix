@@ -5,7 +5,6 @@ inputs@{ nixpkgs, sops-nix, disko, ... }:
   nl-k8s-02 = import ./nl-k8s-02 inputs;
   nl-k8s-03 = import ./nl-k8s-03 inputs;
   nl-k8s-04 = import ./nl-k8s-04 inputs;
-  de-fsn1-k8s-1 = import ./de-fsn1-k8s-1 inputs;
 
   meta.nixpkgs = import nixpkgs {
     system = "x86_64-linux";
